@@ -39,6 +39,7 @@ function loadAdminData() {
     loadAnalytics();
     loadActivityLog();
     setupThemeControls();
+    setupBackgroundControls();
 }
 
 // ============ GAMES MANAGEMENT ============
@@ -260,6 +261,153 @@ function resetTheme() {
         setupThemeControls();
         showToast('🔄 Theme reset to default', 'success');
     }
+}
+
+// ============ BACKGROUND IMAGE MANAGEMENT ============
+
+let backgroundShuffleInterval = null;
+let currentBgIndex = 0;
+let backgroundImages = [];
+
+function setupBackgroundControls() {
+    const bgImages = DataManager.getBackgroundImages();
+    if (bgImages && bgImages.length > 0) {
+        backgroundImages = bgImages;
+        document.getElementById('backgroundImages').value = backgroundImages.join('\n');
+        updateBgPreview();
+        
+        const autoShuffle = DataManager.getAutoShuffle();
+        document.getElementById('autoShuffleToggle').checked = autoShuffle !== false;
+        
+        if (autoShuffle !== false) {
+            startBackgroundShuffle();
+        }
+    }
+}
+
+function saveBackgroundImages() {
+    const textareaValue = document.getElementById('backgroundImages').value.trim();
+    
+    if (!textareaValue) {
+        showToast('⚠️ Please add at least one background image URL', 'warning');
+        return;
+    }
+    
+    backgroundImages = textareaValue
+        .split('\n')
+        .map(url => url.trim())
+        .filter(url => url.length > 0);
+    
+    if (backgroundImages.length === 0) {
+        showToast('❌ Please enter valid image URLs', 'error');
+        return;
+    }
+    
+    // Validate URLs
+    for (let url of backgroundImages) {
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            showToast('❌ All URLs must start with http:// or https://', 'error');
+            return;
+        }
+    }
+    
+    DataManager.saveBackgroundImages(backgroundImages);
+    currentBgIndex = 0;
+    updateBgPreview();
+    
+    const autoShuffle = document.getElementById('autoShuffleToggle').checked;
+    DataManager.setAutoShuffle(autoShuffle);
+    
+    if (autoShuffle) {
+        startBackgroundShuffle();
+    } else {
+        stopBackgroundShuffle();
+    }
+    
+    showToast('💾 Background images saved successfully!', 'success');
+}
+
+function toggleAutoShuffle() {
+    const isEnabled = document.getElementById('autoShuffleToggle').checked;
+    DataManager.setAutoShuffle(isEnabled);
+    
+    if (isEnabled && backgroundImages.length > 0) {
+        startBackgroundShuffle();
+        showToast('✅ Auto-shuffle enabled (4 seconds)', 'success');
+    } else {
+        stopBackgroundShuffle();
+        showToast('⏸️ Auto-shuffle disabled', 'warning');
+    }
+}
+
+function startBackgroundShuffle() {
+    if (backgroundImages.length < 2) return;
+    
+    // Clear existing interval
+    if (backgroundShuffleInterval) {
+        clearInterval(backgroundShuffleInterval);
+    }
+    
+    // Shuffle every 4 seconds
+    backgroundShuffleInterval = setInterval(() => {
+        currentBgIndex = (currentBgIndex + 1) % backgroundImages.length;
+        updateBgPreview();
+        applyBackgroundToSite();
+    }, 4000);
+}
+
+function stopBackgroundShuffle() {
+    if (backgroundShuffleInterval) {
+        clearInterval(backgroundShuffleInterval);
+        backgroundShuffleInterval = null;
+    }
+}
+
+function updateBgPreview() {
+    if (backgroundImages.length === 0) return;
+    
+    const bgUrl = backgroundImages[currentBgIndex];
+    const preview = document.getElementById('bgPreviewBox');
+    
+    if (preview) {
+        preview.style.backgroundImage = `url('${bgUrl}')`;
+        preview.style.backgroundSize = 'cover';
+        preview.style.backgroundPosition = 'center';
+    }
+}
+
+function applyBackgroundToSite() {
+    if (backgroundImages.length === 0) return;
+    
+    const bgUrl = backgroundImages[currentBgIndex];
+    const root = document.documentElement;
+    
+    // Create a CSS rule for the body background
+    const styleTag = document.getElementById('bgShuffleStyle');
+    if (styleTag) {
+        styleTag.remove();
+    }
+    
+    const newStyle = document.createElement('style');
+    newStyle.id = 'bgShuffleStyle';
+    newStyle.textContent = `
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('${bgUrl}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+    `;
+    document.head.appendChild(newStyle);
 }
 
 // ============ ANALYTICS ============

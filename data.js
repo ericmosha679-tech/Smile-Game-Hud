@@ -349,6 +349,26 @@ const DataManager = {
         return this.updateUser(userId, { subscription });
     },
 
+    // ============ BACKGROUND IMAGE OPERATIONS ============
+    getBackgroundImages() {
+        const images = localStorage.getItem('backgroundImages');
+        return images ? JSON.parse(images) : [];
+    },
+
+    saveBackgroundImages(images) {
+        localStorage.setItem('backgroundImages', JSON.stringify(images));
+        this.addActivity('Background images updated');
+    },
+
+    getAutoShuffle() {
+        const shuffle = localStorage.getItem('autoShuffle');
+        return shuffle ? JSON.parse(shuffle) : false;
+    },
+
+    setAutoShuffle(enabled) {
+        localStorage.setItem('autoShuffle', JSON.stringify(enabled));
+    },
+
     // ============ ANALYTICS OPERATIONS ============
     getAnalytics() {
         const games = this.getGames();
