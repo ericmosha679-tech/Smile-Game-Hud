@@ -47,11 +47,13 @@
             <div class="subscription-card free-tier">
                 <h3>Free Trial</h3>
                 <div class="price">$0<span class="period">/month</span></div>
+                <div class="trial-duration">1 Month Trial Only</div>
                 <ul class="features">
-                    <li>✓ Download 3 games</li>
+                    <li>✓ Access 3 games</li>
+                    <li>✓ 1 month free trial</li>
                     <li>✓ Basic support</li>
                     <li>✓ Standard downloads</li>
-                    <li>✗ No priority access</li>
+                    <li class="warning">⚠️ Cannot use trial again</li>
                 </ul>
                 <button class="btn btn-select" onclick="selectSubscription('free')">Get Free Trial</button>
             </div>
@@ -59,22 +61,26 @@
                 <div class="featured-badge">Most Popular</div>
                 <h3>Premium</h3>
                 <div class="price">$6.9<span class="period">/month</span></div>
+                <div class="free-games">6 Free Games</div>
                 <ul class="features">
-                    <li>✓ Download unlimited games</li>
+                    <li>✓ Access 6 free games</li>
                     <li>✓ Fast downloads</li>
                     <li>✓ Priority support</li>
                     <li>✓ Exclusive deals</li>
+                    <li>✓ Ad-free experience</li>
                 </ul>
                 <button class="btn btn-select" onclick="selectSubscription('premium')">Choose Premium</button>
             </div>
             <div class="subscription-card pro-tier">
                 <h3>Pro Premium</h3>
                 <div class="price">$12.9<span class="period">/month</span></div>
+                <div class="free-games">10 Free Games</div>
                 <ul class="features">
-                    <li>✓ Everything in Premium</li>
+                    <li>✓ Access 10 free games</li>
                     <li>✓ Ultra-fast downloads</li>
                     <li>✓ VIP support (24/7)</li>
                     <li>✓ Early access to new games</li>
+                    <li>✓ Premium content</li>
                 </ul>
                 <button class="btn btn-select" onclick="selectSubscription('pro')">Choose Pro Premium</button>
             </div>
@@ -156,9 +162,22 @@
             <div class="footer-section">
                 <h4>Follow Us</h4>
                 <div class="social-links">
-                    <a href="https://www.instagram.com/bee_thevillan?igsh=NDF3N2hhZDYwMmF2&utm_source=qr" target="_blank" class="social-link instagram">📷 Instagram</a>
-                    <a href="https://www.tiktok.com/@thecaptaintrq" target="_blank" class="social-link tiktok">🎵 TikTok</a>
-                    <a href="https://www.facebook.com/share/1FgEX3sSvg/?mibextid=wwXIfr" target="_blank" class="social-link facebook">👍 Facebook</a>
+                    <a href="https://www.instagram.com/bee_thevillan?igsh=NDF3N2hhZDYwMmF2&utm_source=qr" target="_blank" class="social-icon-link instagram" title="Instagram">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13.026 2H10.974C6.465 2 2 6.465 2 10.974v2.052C2 17.535 6.465 22 10.974 22h2.052C17.535 22 22 17.535 22 13.026v-2.052C22 6.465 17.535 2 13.026 2zm0 0" />
+                            <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 0M17.5 6.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 0" fill="white"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@thecaptaintrq" target="_blank" class="social-icon-link tiktok" title="TikTok">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.85 8.75c1.66 0 3.1-1.08 3.75-2.55V2h-3.98v13.02c0 1.3-1.04 2.36-2.32 2.36a2.35 2.35 0 0 1-2.32-2.36c0-1.3 1.04-2.36 2.32-2.36.38 0 .74.09 1.06.25V9.69a5.8 5.8 0 0 0-1.06-.1c-3.02 0-5.46 2.45-5.46 5.46 0 3.02 2.44 5.46 5.46 5.46 3.02 0 5.46-2.44 5.46-5.46v-6.3zm0 0M2 17.5v-11c0-1.1.9-2 2-2h3.5v3.5H4v11h12v-11H8.5V4.5H4c-1.1 0-2 .9-2 2v11zm0 0" fill="white"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.facebook.com/share/1FgEX3sSvg/?mibextid=wwXIfr" target="_blank" class="social-icon-link facebook" title="Facebook">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="white"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>

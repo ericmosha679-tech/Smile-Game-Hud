@@ -98,9 +98,25 @@ function displayGames(games) {
         return;
     }
 
+    const currentUser = DataManager.getCurrentUser();
     games.forEach(game => {
         const gameCard = createGameCard(game);
         gamesGrid.appendChild(gameCard);
+        
+        // Add subscription info if user is logged in
+        if (currentUser && currentUser.subscription) {
+            const subInfo = DataManager.getUserSubscriptionInfo(currentUser.id);
+            const subInfoElement = document.getElementById(`subInfo-${game.id}`);
+            if (subInfoElement) {
+                const tierEmoji = {
+                    'free': '🎯',
+                    'premium': '⭐',
+                    'pro': '👑'
+                };
+                subInfoElement.innerHTML = `${tierEmoji[subInfo.tier] || ''} ${subInfo.tier.toUpperCase()}: ${subInfo.remaining} games remaining`;
+                subInfoElement.className = subInfo.remaining <= 1 ? 'remaining warning' : 'remaining';
+            }
+        }
     });
 }
 
@@ -108,12 +124,18 @@ function createGameCard(game) {
     const card = document.createElement('div');
     card.className = 'game-card';
     card.innerHTML = `
-        <img src="${game.imageUrl}" alt="${game.title}" class="game-image" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(game.title)}'">
+        <div class="game-image-container">
+            <img src="${game.imageUrl}" alt="${game.title}" class="game-image" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(game.title)}'">
+            <div class="download-badge">
+                <span class="download-icon">⬇️</span>
+                <span class="download-count">${game.downloads}</span>
+            </div>
+        </div>
         <div class="game-content">
             <h3 class="game-title">${game.title}</h3>
             <span class="game-category">${capitalizeFirst(game.category)}</span>
             <p class="game-description">${game.description.substring(0, 100)}...</p>
-            <div class="game-rating">⭐ ${game.rating} (${game.downloads} downloads)</div>
+            <div class="game-rating">⭐ ${game.rating}</div>
             <div class="game-footer">
                 <div class="game-price">
                     ${game.price === 0 ? 'FREE' : '$' + game.price.toFixed(2)}
@@ -123,8 +145,12 @@ function createGameCard(game) {
                     <button class="game-action-btn secondary" onclick="openCommentsModal(${game.id}, '${game.title}')">💬 Reviews</button>
                 </div>
             </div>
+            <div class="subscription-info">
+                <small id="subInfo-${game.id}"></small>
+            </div>
         </div>
     `;
+    card.id = `game-card-${game.id}`;
     return card;
 }
 
@@ -163,6 +189,30 @@ function initiateDownload(gameId, gameTitle) {
     if (!currentUser) {
         showToast('Please log in to download games', 'warning');
         setTimeout(() => openModal('loginModal'), 500);
+        return;
+    }
+
+    // Check subscription and access
+    const subInfo = DataManager.getUserSubscriptionInfo(currentUser.id);
+    
+    if (subInfo.status === 'inactive') {
+        showToast('Please choose a subscription plan to download games', 'warning');
+        setTimeout(() => toggleSubscription(), 500);
+        return;
+    }
+
+    if (subInfo.status === 'expired') {
+        showToast('Your subscription has expired. Please renew your subscription.', 'warning');
+        setTimeout(() => toggleSubscription(), 500);
+        return;
+    }
+
+    // Check if user has reached game limit
+    if (subInfo.remaining <= 0) {
+        const message = subInfo.tier === 'free' 
+            ? 'You have reached your free trial limit. Please upgrade your subscription.' 
+            : 'You have reached your game access limit. Please check back next month.';
+        showToast(message, 'warning');
         return;
     }
 
@@ -271,6 +321,11 @@ function completeDownload(gameId, gameTitle) {
     if (currentUser) {
         DataManager.addDownloadToUser(currentUser.id, gameId);
         DataManager.increaseDownloadCount(gameId);
+        
+        // Track game access for subscription users
+        if (currentUser.subscription) {
+            DataManager.addGameAccess(currentUser.id);
+        }
         
         // Update current user session
         const updatedUser = DataManager.getUserByEmail(currentUser.email);

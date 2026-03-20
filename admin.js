@@ -99,10 +99,26 @@ function editGame(gameId) {
     document.getElementById('gamePrice').value = game.price;
     document.getElementById('gameRating').value = game.rating;
     document.getElementById('gameDescription').value = game.description;
-    document.getElementById('gameImageUrl').value = game.imageUrl;
+    document.getElementById('gameImage').value = '';
+    document.getElementById('gameImagePreview').style.display = 'none';
     document.getElementById('gameError').classList.remove('active');
 
     openModal('gameModal');
+}
+
+function previewGameImage() {
+    const fileInput = document.getElementById('gameImage');
+    const preview = document.getElementById('gameImagePreview');
+    const previewImg = document.getElementById('imagePreviewImg');
+    
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
 }
 
 function saveGame() {
@@ -111,13 +127,13 @@ function saveGame() {
     const price = parseFloat(document.getElementById('gamePrice').value);
     const rating = parseFloat(document.getElementById('gameRating').value);
     const description = document.getElementById('gameDescription').value.trim();
-    const imageUrl = document.getElementById('gameImageUrl').value.trim();
+    const imageFile = document.getElementById('gameImage').files[0];
     const errorDiv = document.getElementById('gameError');
 
     errorDiv.classList.remove('active');
 
-    if (!name || !category || isNaN(price) || isNaN(rating) || !description || !imageUrl) {
-        errorDiv.textContent = 'Please fill in all fields';
+    if (!name || !category || isNaN(price) || isNaN(rating) || !description || !imageFile) {
+        errorDiv.textContent = 'Please fill in all fields including image';
         errorDiv.classList.add('active');
         return;
     }
@@ -134,27 +150,33 @@ function saveGame() {
         return;
     }
 
-    const gameData = {
-        title: name,
-        category: category,
-        price: parseFloat(price.toFixed(2)),
-        rating: parseFloat(rating.toFixed(1)),
-        description: description,
-        imageUrl: imageUrl
+    // Read image file as base64
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const gameData = {
+            title: name,
+            category: category,
+            price: parseFloat(price.toFixed(2)),
+            rating: parseFloat(rating.toFixed(1)),
+            description: description,
+            imageUrl: e.target.result // Store as base64 data URL
+        };
+
+        if (currentEditingGameId) {
+            // Update existing game
+            DataManager.updateGame(currentEditingGameId, gameData);
+            showToast(`✅ Game "${name}" updated successfully!`, 'success');
+        } else {
+            // Add new game
+            DataManager.addGame(gameData);
+            showToast(`✅ Game "${name}" added successfully!`, 'success');
+        }
+
+        closeModal('gameModal');
+        loadAdminGamesTable();
     };
-
-    if (currentEditingGameId) {
-        // Update existing game
-        DataManager.updateGame(currentEditingGameId, gameData);
-        showToast(`✅ Game "${name}" updated successfully!`, 'success');
-    } else {
-        // Add new game
-        DataManager.addGame(gameData);
-        showToast(`✅ Game "${name}" added successfully!`, 'success');
-    }
-
-    closeModal('gameModal');
-    loadAdminGamesTable();
+    
+    reader.readAsDataURL(imageFile);
 }
 
 function deleteGame(gameId) {

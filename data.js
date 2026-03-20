@@ -346,7 +346,106 @@ const DataManager = {
 
     // ============ SUBSCRIPTION OPERATIONS ============
     updateUserSubscription(userId, subscription) {
-        return this.updateUser(userId, { subscription });
+        const user = this.getUsers().find(u => u.id === userId);
+        if (!user) return null;
+
+        const subscriptionData = {
+            tier: subscription,
+            startDate: new Date().toISOString(),
+            expiryDate: null,
+            trialUsed: subscription === 'free' ? true : false,
+            gamesAccessed: 0,
+            maxGames: this.getMaxGamesForTier(subscription)
+        };
+
+        // Set expiry date based on subscription tier
+        if (subscription === 'free') {
+            const expiryDate = new Date();
+            expiryDate.setMonth(expiryDate.getMonth() + 1);
+            subscriptionData.expiryDate = expiryDate.toISOString();
+        } else {
+            // Premium and Pro auto-renew, set monthly expiry
+            const expiryDate = new Date();
+            expiryDate.setMonth(expiryDate.getMonth() + 1);
+            subscriptionData.expiryDate = expiryDate.toISOString();
+        }
+
+        return this.updateUser(userId, { subscription: subscriptionData });
+    },
+
+    getMaxGamesForTier(tier) {
+        switch(tier) {
+            case 'free': return 3;
+            case 'premium': return 6;
+            case 'pro': return 10;
+            default: return 0;
+        }
+    },
+
+    canAccessGame(userId) {
+        const user = this.getUsers().find(u => u.id === userId);
+        if (!user || !user.subscription) return false;
+
+        const subscription = user.subscription;
+        
+        // Check if subscription has expired
+        if (subscription.expiryDate) {
+            const expiryDate = new Date(subscription.expiryDate);
+            if (new Date() > expiryDate) {
+                return false;
+            }
+        }
+
+        // Check if user has reached game limit
+        if (subscription.gamesAccessed >= subscription.maxGames) {
+            return false;
+        }
+
+        return true;
+    },
+
+    addGameAccess(userId) {
+        const users = this.getUsers();
+        const user = users.find(u => u.id === userId);
+        if (user && user.subscription) {
+            user.subscription.gamesAccessed = (user.subscription.gamesAccessed || 0) + 1;
+            localStorage.setItem('usersData', JSON.stringify(users));
+        }
+    },
+
+    getUserSubscriptionInfo(userId) {
+        const user = this.getUsers().find(u => u.id === userId);
+        if (!user || !user.subscription) {
+            return {
+                tier: 'none',
+                maxGames: 0,
+                gamesAccessed: 0,
+                remaining: 0,
+                status: 'inactive'
+            };
+        }
+
+        const subscription = user.subscription;
+        const remaining = Math.max(0, subscription.maxGames - subscription.gamesAccessed);
+        
+        // Check if expired
+        let status = 'active';
+        if (subscription.expiryDate) {
+            const expiryDate = new Date(subscription.expiryDate);
+            if (new Date() > expiryDate) {
+                status = 'expired';
+            }
+        }
+
+        return {
+            tier: subscription.tier,
+            maxGames: subscription.maxGames,
+            gamesAccessed: subscription.gamesAccessed,
+            remaining: remaining,
+            status: status,
+            expiryDate: subscription.expiryDate,
+            trialUsed: subscription.trialUsed
+        };
     },
 
     // ============ BACKGROUND IMAGE OPERATIONS ============

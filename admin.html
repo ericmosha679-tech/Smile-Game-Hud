@@ -260,9 +260,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="gameImageUrl">Image URL:</label>
-                    <input type="text" id="gameImageUrl" placeholder="https://example.com/image.jpg" class="form-input">
-                    <small>Use a direct image URL (JPG, PNG, GIF, WebP)</small>
+                    <label for="gameImage">Game Image:</label>
+                    <input type="file" id="gameImage" accept="image/*" class="form-input" onchange="previewGameImage()">
+                    <small>Upload image file (JPG, PNG, GIF, WebP)</small>
+                    <div id="gameImagePreview" style="margin-top: 1rem; display: none;">
+                        <small style="color: var(--text-secondary);">Preview:</small>
+                        <img id="imagePreviewImg" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 0.5rem;">
+                    </div>
                 </div>
 
                 <div id="gameError" class="error-message"></div>
