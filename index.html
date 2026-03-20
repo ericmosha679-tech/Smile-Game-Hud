@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smile Gaming Hub - Download & Play Games</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <span class="logo-icon">🎮</span>
+                <span class="logo-text">Smile Gaming Hub</span>
+            </div>
+            <nav class="nav-links">
+                <button id="subscriptionBtn" class="nav-btn subscription-btn">💎 Subscription</button>
+                <button id="loginBtn" class="nav-btn login-btn">Login</button>
+                <button id="signupBtn" class="nav-btn signup-btn">Sign Up</button>
+                <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none">Dashboard</button>
+                <button id="logoutBtn" class="nav-btn logout-btn" style="display:none">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to Smile Gaming Hub</h1>
+            <p class="hero-subtitle">Discover, Download & Play Amazing Games</p>
+            <div class="hero-buttons">
+                <button id="exploreBtn" class="btn btn-primary">Start Exploring</button>
+                <button id="adminAccessBtn" class="btn btn-secondary">Admin Access</button>
+            </div>
+        </div>
+        <div class="hero-background"></div>
+    </section>
+
+    <!-- Subscription Tiers Section -->
+    <section class="subscription-section" id="subscriptionSection" style="display: none;">
+        <div class="section-header">
+            <h2>Choose Your Plan</h2>
+            <p>Select the perfect plan for your gaming needs</p>
+        </div>
+        <div class="subscription-cards">
+            <div class="subscription-card free-tier">
+                <h3>Free Trial</h3>
+                <div class="price">$0<span class="period">/month</span></div>
+                <ul class="features">
+                    <li>✓ Download 3 games</li>
+                    <li>✓ Basic support</li>
+                    <li>✓ Standard downloads</li>
+                    <li>✗ No priority access</li>
+                </ul>
+                <button class="btn btn-select" onclick="selectSubscription('free')">Get Free Trial</button>
+            </div>
+            <div class="subscription-card premium-tier">
+                <div class="featured-badge">Most Popular</div>
+                <h3>Premium</h3>
+                <div class="price">$6.9<span class="period">/month</span></div>
+                <ul class="features">
+                    <li>✓ Download unlimited games</li>
+                    <li>✓ Fast downloads</li>
+                    <li>✓ Priority support</li>
+                    <li>✓ Exclusive deals</li>
+                </ul>
+                <button class="btn btn-select" onclick="selectSubscription('premium')">Choose Premium</button>
+            </div>
+            <div class="subscription-card pro-tier">
+                <h3>Pro Premium</h3>
+                <div class="price">$12.9<span class="period">/month</span></div>
+                <ul class="features">
+                    <li>✓ Everything in Premium</li>
+                    <li>✓ Ultra-fast downloads</li>
+                    <li>✓ VIP support (24/7)</li>
+                    <li>✓ Early access to new games</li>
+                </ul>
+                <button class="btn btn-select" onclick="selectSubscription('pro')">Choose Pro Premium</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Categories Bar -->
+    <section class="categories-section">
+        <div class="categories-header">
+            <h2>Explore by Category</h2>
+        </div>
+        <div class="categories-bar">
+            <button class="category-btn active" data-category="all">All Games (12)</button>
+            <button class="category-btn" data-category="action">Action</button>
+            <button class="category-btn" data-category="rpg">RPG</button>
+            <button class="category-btn" data-category="puzzle">Puzzle</button>
+            <button class="category-btn" data-category="strategy">Strategy</button>
+            <button class="category-btn" data-category="sports">Sports</button>
+            <button class="category-btn" data-category="adventure">Adventure</button>
+            <button class="category-btn" data-category="simulation">Simulation</button>
+            <button class="category-btn" data-category="casual">Casual</button>
+            <button class="category-btn" data-category="indie">Indie</button>
+            <button class="category-btn" data-category="multiplayer">Multiplayer</button>
+            <button class="category-btn" data-category="horror">Horror</button>
+        </div>
+    </section>
+
+    <!-- Featured/Trending Games Table -->
+    <section class="featured-games-section">
+        <div class="section-header">
+            <h2 class="section-title">⭐ Featured Games</h2>
+            <p>The hottest games right now</p>
+        </div>
+        <div class="games-table-container">
+            <table class="games-table">
+                <thead>
+                    <tr>
+                        <th>Game Title</th>
+                        <th>Category</th>
+                        <th>Rating</th>
+                        <th>Price</th>
+                        <th>Downloads</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="featuredTable">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Games Grid -->
+    <section class="games-section">
+        <div class="section-header">
+            <h2 class="section-title">All Games</h2>
+            <p>Choose from our amazing collection</p>
+        </div>
+        <div class="games-grid" id="gamesGrid">
+            <!-- Games populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Us</h4>
+                <p>Smile Gaming Hub is your destination for amazing games. Download and play your favorites today!</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#" onclick="scrollToCategories()">Browse Games</a></li>
+                    <li><a href="#" onclick="toggleSubscription()">Pricing</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/bee_thevillan?igsh=NDF3N2hhZDYwMmF2&utm_source=qr" target="_blank" class="social-link instagram">📷 Instagram</a>
+                    <a href="https://www.tiktok.com/@thecaptaintrq" target="_blank" class="social-link tiktok">🎵 TikTok</a>
+                    <a href="https://www.facebook.com/share/1FgEX3sSvg/?mibextid=wwXIfr" target="_blank" class="social-link facebook">👍 Facebook</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Smile Gaming Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- Admin Password Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content admin-modal">
+            <div class="modal-header">
+                <h2>🔐 Admin Access</h2>
+                <button class="modal-close" onclick="closeModal('adminModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="adminPassword">Enter Admin Password:</label>
+                <input type="password" id="adminPassword" placeholder="Enter password" class="form-input">
+                <div id="adminError" class="error-message"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('adminModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="verifyAdminPassword()">Access Admin Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to Your Account</h2>
+                <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" class="form-input">
+                </div>
+                <div id="loginError" class="error-message"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('loginModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="loginUser()">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Your Account</h2>
+                <button class="modal-close" onclick="closeModal('signupModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="signupName">Full Name:</label>
+                    <input type="text" id="signupName" placeholder="John Doe" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" placeholder="your@email.com" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" placeholder="••••••••" class="form-input">
+                </div>
+                <div id="signupError" class="error-message"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('signupModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="signupUser()">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content payment-modal">
+            <div class="modal-header">
+                <h2>Complete Payment</h2>
+                <button class="modal-close" onclick="closeModal('paymentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="gameInfo" class="game-payment-info">
+                    <!-- Populated by JavaScript -->
+                </div>
+                
+                <div class="payment-methods">
+                    <h3>Select Payment Method</h3>
+                    <div class="payment-tabs">
+                        <button class="payment-tab active" onclick="switchPaymentTab('card')">💳 Card/Bank</button>
+                        <button class="payment-tab" onclick="switchPaymentTab('mobile')">📱 Mobile Money</button>
+                    </div>
+
+                    <!-- Card Payment -->
+                    <div id="cardPayment" class="payment-method active">
+                        <h4>Credit/Debit Card Payment</h4>
+                        <div class="form-group">
+                            <label for="cardholderName">Cardholder Name:</label>
+                            <input type="text" id="cardholderName" placeholder="John Doe" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number:</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" class="form-input" maxlength="19">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cardExpiry">Expiry Date:</label>
+                                <input type="text" id="cardExpiry" placeholder="MM/YY" class="form-input" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardCVV">CVV:</label>
+                                <input type="text" id="cardCVV" placeholder="123" class="form-input" maxlength="4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Money Payment -->
+                    <div id="mobilePayment" class="payment-method">
+                        <h4>Mobile Money Payment</h4>
+                        <div class="form-group">
+                            <label for="phoneName">Full Name:</label>
+                            <input type="text" id="phoneName" placeholder="John Doe" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number:</label>
+                            <input type="tel" id="phoneNumber" placeholder="+1 (555) 000-0000" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="mobileProvider">Mobile Provider:</label>
+                            <select id="mobileProvider" class="form-input">
+                                <option value="">Select Provider</option>
+                                <option value="airtel">Airtel Money</option>
+                                <option value="vodafone">Vodafone Cash</option>
+                                <option value="mtn">MTN Money</option>
+                                <option value="globus">Globus Money</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="paymentError" class="error-message"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('paymentModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="processPayment()">Complete Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div class="modal" id="commentsModal">
+        <div class="modal-content comments-modal">
+            <div class="modal-header">
+                <h2 id="commentsGameTitle">Game Comments</h2>
+                <button class="modal-close" onclick="closeModal('commentsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="commentsContainer" class="comments-container">
+                    <!-- Comments populated by JavaScript -->
+                </div>
+
+                <div class="add-comment-section">
+                    <h4>Leave a Review</h4>
+                    <div class="rating-input">
+                        <label>Rate this game:</label>
+                        <div class="star-rating" id="ratingInput">
+                            <span class="star" onclick="setRating(1)">★</span>
+                            <span class="star" onclick="setRating(2)">★</span>
+                            <span class="star" onclick="setRating(3)">★</span>
+                            <span class="star" onclick="setRating(4)">★</span>
+                            <span class="star" onclick="setRating(5)">★</span>
+                        </div>
+                        <span id="ratingValue">0</span>/5
+                    </div>
+                    <textarea id="commentText" placeholder="Share your thoughts about this game..." class="form-input" rows="4"></textarea>
+                    <div id="commentError" class="error-message"></div>
+                    <button class="btn btn-primary" onclick="submitComment()">Post Comment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard Modal -->
+    <div class="modal" id="dashboardModal">
+        <div class="modal-content dashboard-modal">
+            <div class="modal-header">
+                <h2>My Dashboard</h2>
+                <button class="modal-close" onclick="closeModal('dashboardModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="dashboard-tabs">
+                    <button class="dashboard-tab active" onclick="switchDashboardTab('profile')">Profile</button>
+                    <button class="dashboard-tab" onclick="switchDashboardTab('downloads')">My Downloads</button>
+                    <button class="dashboard-tab" onclick="switchDashboardTab('comments')">My Comments</button>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profileTab" class="dashboard-tab-content active">
+                    <div class="profile-info">
+                        <h3 id="userNameDisplay">User Name</h3>
+                        <p><strong>Email:</strong> <span id="userEmailDisplay">user@email.com</span></p>
+                        <p><strong>Subscription: </strong><span id="userSubscriptionDisplay" class="subscription-badge">Free Trial</span></p>
+                        <p><strong>Member Since:</strong> <span id="userDateDisplay">Today</span></p>
+                    </div>
+                </div>
+
+                <!-- Downloads Tab -->
+                <div id="downloadsTab" class="dashboard-tab-content">
+                    <h3>My Downloads</h3>
+                    <div id="downloadsList" class="downloads-list">
+                        <p class="empty-message">No downloads yet. Start downloading games!</p>
+                    </div>
+                </div>
+
+                <!-- Comments Tab -->
+                <div id="commentsTab" class="dashboard-tab-content">
+                    <h3>My Comments</h3>
+                    <div id="myCommentsList" class="comments-list">
+                        <p class="empty-message">No comments yet. Leave a review on a game!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="data.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
