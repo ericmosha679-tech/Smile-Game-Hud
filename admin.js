@@ -9,7 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
     verifyAdminAccess();
     loadAdminData();
     setupAdminEventListeners();
+    applyAdminDeviceOptimizations();
 });
+
+// ============ DEVICE OPTIMIZATION ============
+
+function applyAdminDeviceOptimizations() {
+    const width = window.innerWidth;
+    const isTablet = window.innerHeight < 1024 && width < 1024;
+    const isMobile = width < 768;
+    
+    document.body.classList.add(`admin-device-${isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop'}`);
+    
+    if (isMobile) {
+        // Adjust admin panels for mobile
+        const sidebar = document.querySelector('.admin-sidebar');
+        const main = document.querySelector('.admin-main');
+        if (sidebar) sidebar.style.maxHeight = '200px';
+        if (main) main.style.padding = '1rem';
+    }
+}
 
 // ============ ADMIN ACCESS VERIFICATION ============
 

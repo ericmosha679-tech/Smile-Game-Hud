@@ -81,6 +81,99 @@ function checkUserSession() {
     }
 }
 
+// ============ DEVICE DETECTION & OPTIMIZATION ============
+
+function detectDeviceType() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent);
+    const isTablet = /tablet|ipad/i.test(userAgent);
+    const isDesktop = !isMobile && !isTablet;
+    
+    return {
+        isMobile: isMobile,
+        isTablet: isTablet,
+        isDesktop: isDesktop,
+        isTouchDevice: () => {
+            return (('ontouchstart' in window) ||
+                    (navigator.maxTouchPoints > 0) ||
+                    (navigator.msMaxTouchPoints > 0));
+        },
+        isLandscape: () => {
+            return window.innerHeight < window.innerWidth;
+        },
+        screenSize: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            type: getScreenSizeType()
+        }
+    };
+}
+
+function getScreenSizeType() {
+    const width = window.innerWidth;
+    if (width < 480) return 'small-mobile';
+    if (width < 768) return 'mobile';
+    if (width < 1024) return 'tablet';
+    if (width < 1200) return 'tablet-landscape';
+    return 'desktop';
+}
+
+// Detect device and apply optimizations
+const deviceInfo = detectDeviceType();
+
+// Add device class to body for CSS targeting
+document.addEventListener('DOMContentLoaded', () => {
+    const screenType = getScreenSizeType();
+    document.body.classList.add(`device-${screenType}`);
+    
+    if (deviceInfo.isTouchDevice()) {
+        document.body.classList.add('touch-device');
+    }
+    
+    if (deviceInfo.isTablet) {
+        document.body.classList.add('tablet-device');
+    }
+    
+    if (deviceInfo.isDesktop) {
+        document.body.classList.add('desktop-device');
+    }
+    
+    // Prevent accidental zoom on double-tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300 && event.touches.length === 0) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+});
+
+// Handle orientation changes
+window.addEventListener('orientationchange', () => {
+    // Re-layout elements after orientation change
+    setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, 300);
+});
+
+// Optimize for landscape mode
+window.addEventListener('resize', () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const isLandscape = height < width;
+    
+    const navbar = document.querySelector('.navbar');
+    const hero = document.querySelector('.hero');
+    
+    if (isLandscape && width < 768) {
+        // Reduce padding and height for mobile landscape
+        if (hero) hero.style.minHeight = '200px';
+    } else if (hero) {
+        hero.style.minHeight = '';
+    }
+});
+
 // ============ GAMES DISPLAY & FILTERING ============
 
 function loadGamesGrid() {
