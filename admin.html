@@ -19,8 +19,11 @@
                 <span class="logo-text">Admin Panel</span>
             </div>
             <nav class="admin-nav-links">
-                <span class="admin-user">Admin</span>
-                <button onclick="logoutAdmin()" class="nav-btn logout-btn">Logout</button>
+                <a href="index.html#login" onclick="redirectToPage('login')" class="nav-link">🔐 Login</a>
+                <a href="index.html#signup" onclick="redirectToPage('signup')" class="nav-link">📝 Sign Up</a>
+                <a href="index.html" onclick="redirectToPage('home')" class="nav-link">🏠 Home</a>
+                <a href="index.html#contact" onclick="redirectToPage('contact')" class="nav-link">📧 Contact</a>
+                <a href="index.html#service" onclick="redirectToPage('service')" class="nav-link">🔧 Service</a>
             </nav>
         </div>
     </header>
@@ -118,10 +121,14 @@
 
                         <h3>🖼️ Background Images</h3>
                         <div class="background-settings">
-                            <label for="backgroundImages">Add Background Image URLs (one per line):</label>
-                            <textarea id="backgroundImages" class="form-input" rows="5" placeholder="https://example.com/bg1.jpg&#10;https://example.com/bg2.jpg&#10;https://example.com/bg3.jpg"></textarea>
-                            <small>Add multiple image URLs to enable auto-shuffle every 4 seconds</small>
-                            <div class="background-controls">
+                            <label for="backgroundImageUpload">Upload Background Images:</label>
+                            <input type="file" id="backgroundImageUpload" class="form-input" accept="image/*" multiple onchange="handleBackgroundImageUpload()">
+                            <small>Upload multiple background images to enable auto-shuffle every 4 seconds</small>
+                            <div id="uploadedImagesPreview" style="margin-top: 1rem; display: none;">
+                                <small style="color: var(--text-secondary);">Uploaded images:</small>
+                                <div id="imagesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem; margin-top: 0.5rem;"></div>
+                            </div>
+                            <div class="background-controls" style="margin-top: 1rem;">
                                 <label>
                                     <input type="checkbox" id="autoShuffleToggle" onchange="toggleAutoShuffle()" checked>
                                     Enable Auto-Shuffle (4 seconds)
@@ -284,6 +291,12 @@
 
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
+
+    <script>
+        function redirectToPage(page) {
+            window.location.href = 'index.html';
+        }
+    </script>
 
     <script src="data.js"></script>
     <script src="admin.js"></script>

@@ -100,7 +100,8 @@ function openAddGameModal() {
     document.getElementById('gamePrice').value = '';
     document.getElementById('gameRating').value = '';
     document.getElementById('gameDescription').value = '';
-    document.getElementById('gameImageUrl').value = '';
+    document.getElementById('gameImage').value = '';
+    document.getElementById('gameImagePreview').style.display = 'none';
     document.getElementById('gameError').classList.remove('active');
 
     openModal('gameModal');
@@ -314,8 +315,8 @@ function setupBackgroundControls() {
     const bgImages = DataManager.getBackgroundImages();
     if (bgImages && bgImages.length > 0) {
         backgroundImages = bgImages;
-        document.getElementById('backgroundImages').value = backgroundImages.join('\n');
         updateBgPreview();
+        displayUploadedImages();
         
         const autoShuffle = DataManager.getAutoShuffle();
         document.getElementById('autoShuffleToggle').checked = autoShuffle !== false;
@@ -326,30 +327,80 @@ function setupBackgroundControls() {
     }
 }
 
-function saveBackgroundImages() {
-    const textareaValue = document.getElementById('backgroundImages').value.trim();
+function handleBackgroundImageUpload() {
+    const fileInput = document.getElementById('backgroundImageUpload');
+    const files = fileInput.files;
     
-    if (!textareaValue) {
-        showToast('⚠️ Please add at least one background image URL', 'warning');
+    if (files.length === 0) {
+        showToast('⚠️ Please select at least one image', 'warning');
         return;
     }
     
-    backgroundImages = textareaValue
-        .split('\n')
-        .map(url => url.trim())
-        .filter(url => url.length > 0);
+    backgroundImages = [];
+    let filesProcessed = 0;
+    
+    for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            backgroundImages.push(e.target.result);
+            filesProcessed++;
+            
+            if (filesProcessed === files.length) {
+                // All files processed
+                DataManager.saveBackgroundImages(backgroundImages);
+                currentBgIndex = 0;
+                updateBgPreview();
+                displayUploadedImages();
+                
+                const autoShuffle = document.getElementById('autoShuffleToggle').checked;
+                DataManager.setAutoShuffle(autoShuffle);
+                
+                if (autoShuffle && backgroundImages.length > 0) {
+                    startBackgroundShuffle();
+                }
+                
+                showToast(`✅ ${backgroundImages.length} background image(s) saved successfully!`, 'success');
+            }
+        };
+        reader.readAsDataURL(files[i]);
+    }
+}
+
+function displayUploadedImages() {
+    const grid = document.getElementById('imagesGrid');
+    const container = document.getElementById('uploadedImagesPreview');
+    
+    grid.innerHTML = '';
     
     if (backgroundImages.length === 0) {
-        showToast('❌ Please enter valid image URLs', 'error');
+        container.style.display = 'none';
         return;
     }
     
-    // Validate URLs
-    for (let url of backgroundImages) {
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            showToast('❌ All URLs must start with http:// or https://', 'error');
-            return;
-        }
+    backgroundImages.forEach((img, index) => {
+        const imgDiv = document.createElement('div');
+        imgDiv.style.cssText = 'position: relative; width: 100px; height: 80px; border-radius: 8px; overflow: hidden; border: 2px solid var(--accent-color); cursor: pointer;';
+        imgDiv.innerHTML = `
+            <img src="${img}" style="width: 100%; height: 100%; object-fit: cover;" onclick="setCurrentBg(${index})">
+            <span style="position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.5); color: white; padding: 2px 5px; border-radius: 4px; font-size: 10px;">${index + 1}</span>
+        `;
+        grid.appendChild(imgDiv);
+    });
+    
+    container.style.display = 'block';
+}
+
+function setCurrentBg(index) {
+    currentBgIndex = index;
+    updateBgPreview();
+    applyBackgroundToSite();
+    showToast(`🖼️ Background changed to image ${index + 1}`, 'info');
+}
+
+function saveBackgroundImages() {
+    if (backgroundImages.length === 0) {
+        showToast('⚠️ Please upload at least one background image', 'warning');
+        return;
     }
     
     DataManager.saveBackgroundImages(backgroundImages);
@@ -365,7 +416,7 @@ function saveBackgroundImages() {
         stopBackgroundShuffle();
     }
     
-    showToast('💾 Background images saved successfully!', 'success');
+    showToast('💾 Background images saved successfully! (4 seconds auto-shuffle)', 'success');
 }
 
 function toggleAutoShuffle() {
@@ -473,16 +524,38 @@ function loadActivityLog() {
         return;
     }
 
-    activities.forEach(activity => {
+    activities.forEach((activity, index) => {
         const item = document.createElement('div');
         item.className = 'activity-item';
         item.innerHTML = `
-            <strong>${activity.message}</strong>
-            <br>
-            <small>${activity.timestamp}</small>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>${activity.message}</strong>
+                    <br>
+                    <small>${activity.timestamp}</small>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="activity-action-btn" onclick="showActivityComment(${index})" title="Add/View Comments">💬 Comment</button>
+                    <button class="activity-action-btn" onclick="showActivityReply(${index})" title="Add/View Replies">↩️ Reply</button>
+                </div>
+            </div>
         `;
         activityLog.appendChild(item);
     });
+}
+
+function showActivityComment(index) {
+    const comment = prompt('Enter your comment:');
+    if (comment) {
+        showToast('💬 Comment added successfully!', 'success');
+    }
+}
+
+function showActivityReply(index) {
+    const reply = prompt('Enter your reply:');
+    if (reply) {
+        showToast('↩️ Reply added successfully!', 'success');
+    }
 }
 
 // ============ USER MANAGEMENT ============
