@@ -600,22 +600,121 @@ function formatExpiryDate(input) {
     input.value = value;
 }
 
+// ============ COUNTRY & PROVIDER DETECTION ============
+
+// Country code to providers mapping
+const countryProviderMap = {
+    '255': { 'country': 'Tanzania', 'flag': '🇹🇿', 'providers': ['airtel', 'vodafone', 'mtn', 'other'] },
+    '256': { 'country': 'Uganda', 'flag': '🇺🇬', 'providers': ['airtel', 'mtn', 'other'] },
+    '254': { 'country': 'Kenya', 'flag': '🇰🇪', 'providers': ['airtel', 'vodafone', 'other'] },
+    '27': { 'country': 'South Africa', 'flag': '🇿🇦', 'providers': ['vodafone', 'other'] },
+    '233': { 'country': 'Ghana', 'flag': '🇬🇭', 'providers': ['airtel', 'vodafone', 'other'] },
+    '234': { 'country': 'Nigeria', 'flag': '🇳🇬', 'providers': ['airtel', 'mtn', 'other'] },
+    '265': { 'country': 'Malawi', 'flag': '🇲🇼', 'providers': ['airtel', 'vodafone', 'other'] },
+    '260': { 'country': 'Zambia', 'flag': '🇿🇲', 'providers': ['airtel', 'vodafone', 'mtn', 'other'] },
+    '263': { 'country': 'Zimbabwe', 'flag': '🇿🇼', 'providers': ['vodafone', 'other'] },
+    '1': { 'country': 'USA/Canada', 'flag': '🇺🇸', 'providers': ['airtel', 'vodafone', 'mtn', 'other'] },
+    '44': { 'country': 'United Kingdom', 'flag': '🇬🇧', 'providers': ['vodafone', 'other'] },
+    '33': { 'country': 'France', 'flag': '🇫🇷', 'providers': ['other'] },
+    '49': { 'country': 'Germany', 'flag': '🇩🇪', 'providers': ['vodafone', 'other'] },
+    '39': { 'country': 'Italy', 'flag': '🇮🇹', 'providers': ['vodafone', 'other'] },
+    '34': { 'country': 'Spain', 'flag': '🇪🇸', 'providers': ['vodafone', 'other'] },
+    '31': { 'country': 'Netherlands', 'flag': '🇳🇱', 'providers': ['vodafone', 'other'] },
+    '32': { 'country': 'Belgium', 'flag': '🇧🇪', 'providers': ['vodafone', 'other'] },
+    '46': { 'country': 'Sweden', 'flag': '🇸🇪', 'providers': ['vodafone', 'other'] },
+    '47': { 'country': 'Norway', 'flag': '🇳🇴', 'providers': ['vodafone', 'other'] },
+    '45': { 'country': 'Denmark', 'flag': '🇩🇰', 'providers': ['vodafone', 'other'] },
+    '61': { 'country': 'Australia', 'flag': '🇦🇺', 'providers': ['vodafone', 'other'] },
+    '64': { 'country': 'New Zealand', 'flag': '🇳🇿', 'providers': ['vodafone', 'other'] },
+    '86': { 'country': 'China', 'flag': '🇨🇳', 'providers': ['other'] },
+    '81': { 'country': 'Japan', 'flag': '🇯🇵', 'providers': ['other'] },
+    '82': { 'country': 'South Korea', 'flag': '🇰🇷', 'providers': ['other'] },
+    '91': { 'country': 'India', 'flag': '🇮🇳', 'providers': ['airtel', 'vodafone', 'mtn', 'other'] },
+    '92': { 'country': 'Pakistan', 'flag': '🇵🇰', 'providers': ['airtel', 'vodafone', 'other'] },
+    '880': { 'country': 'Bangladesh', 'flag': '🇧🇩', 'providers': ['airtel', 'vodafone', 'other'] },
+};
+
+// Provider details mapping
+const providerDetailsMap = {
+    'airtel': { 'emoji': '🔴', 'name': 'Airtel Money', 'color': '#dc143c' },
+    'vodafone': { 'emoji': '🔴', 'name': 'Vodafone Cash', 'color': '#dc143c' },
+    'mtn': { 'emoji': '🟡', 'name': 'MTN Money', 'color': '#ffd700' },
+    'globus': { 'emoji': '💚', 'name': 'Globus Money', 'color': '#228b22' },
+    'other': { 'emoji': '📱', 'name': 'Other Provider', 'color': '#999999' }
+};
+
+function detectCountryAndProviders(phoneNumber) {
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+    const countryFlag = document.getElementById('countryFlag');
+    const countryName = document.getElementById('countryName');
+    const providerSelect = document.getElementById('mobileProvider');
+    
+    let detectedCountry = null;
+    
+    // Try to match country codes (longest first for accuracy)
+    const sortedCodes = Object.keys(countryProviderMap).sort((a, b) => b.length - a.length);
+    
+    for (const code of sortedCodes) {
+        if (cleanPhone.startsWith(code)) {
+            detectedCountry = countryProviderMap[code];
+            break;
+        }
+    }
+    
+    if (detectedCountry) {
+        // Display country flag and name
+        countryFlag.innerHTML = detectedCountry.flag;
+        countryFlag.classList.add('active');
+        countryName.innerHTML = `📍 ${detectedCountry.country}`;
+        countryName.classList.remove('hidden');
+        
+        // Update provider dropdown with country-specific options
+        updateProviderOptions(detectedCountry.providers);
+    } else {
+        // Reset if no country detected
+        countryFlag.innerHTML = '';
+        countryFlag.classList.remove('active');
+        countryName.classList.add('hidden');
+        
+        // Show all providers as default
+        updateProviderOptions(['airtel', 'vodafone', 'mtn', 'globus', 'other']);
+    }
+}
+
+function updateProviderOptions(availableProviders) {
+    const providerSelect = document.getElementById('mobileProvider');
+    
+    // Clear current options except the first placeholder
+    while (providerSelect.options.length > 1) {
+        providerSelect.remove(1);
+    }
+    
+    // Add only available providers for the detected country
+    availableProviders.forEach(providerKey => {
+        const provider = providerDetailsMap[providerKey];
+        const option = document.createElement('option');
+        option.value = providerKey;
+        option.textContent = `${provider.emoji} ${provider.name}`;
+        providerSelect.appendChild(option);
+    });
+    
+    // Reset provider selection
+    providerSelect.value = '';
+    const badge = document.getElementById('providerBadge');
+    if (badge) {
+        badge.innerHTML = '';
+        badge.classList.remove('active');
+    }
+}
+
 function detectProviderType(provider) {
     const badge = document.getElementById('providerBadge');
     badge.classList.remove('active');
     
-    const providers = {
-        'airtel': { 'emoji': '🔴', 'name': 'Airtel' },
-        'vodafone': { 'emoji': '🔴', 'name': 'Vodafone' },
-        'mtn': { 'emoji': '🟡', 'name': 'MTN' },
-        'globus': { 'emoji': '💚', 'name': 'Globus' },
-        'other': { 'emoji': '📱', 'name': 'Provider' }
-    };
-    
-    if (provider && providers[provider]) {
-        badge.innerHTML = providers[provider].emoji;
+    if (provider && providerDetailsMap[provider]) {
+        badge.innerHTML = providerDetailsMap[provider].emoji;
         badge.classList.add('active');
-        badge.title = providers[provider].name + ' Money';
+        badge.title = providerDetailsMap[provider].name;
     } else {
         badge.innerHTML = '';
     }

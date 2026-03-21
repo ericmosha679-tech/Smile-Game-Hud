@@ -418,8 +418,12 @@
                         </div>
                         <div class="form-group">
                             <label for="phoneNumber">Phone Number</label>
-                            <input type="tel" id="phoneNumber" placeholder="+1 (555) 000-0000" class="form-input">
-                            <small class="sub-text">Must be registered with your mobile provider</small>
+                            <div class="phone-input-wrapper">
+                                <input type="tel" id="phoneNumber" placeholder="+1 (555) 000-0000" class="form-input" oninput="detectCountryAndProviders(this.value)">
+                                <div class="country-flag" id="countryFlag"></div>
+                            </div>
+                            <small class="sub-text">Must be registered with your mobile provider. Country auto-detected from phone code.</small>
+                            <small class="country-name" id="countryName"></small>
                         </div>
                         <div class="form-group">
                             <label for="mobileProvider">Mobile Provider</label>
@@ -434,10 +438,9 @@
                                 </select>
                                 <div class="provider-badge" id="providerBadge"></div>
                             </div>
-                            <small class="sub-text">Choose the mobile money service you use</small>
+                            <small class="sub-text">Available providers for your country</small>
                         </div>
                     </div>
-                            </select>
                         </div>
                     </div>
                 </div>

@@ -1369,6 +1369,47 @@ textarea {
 /* Mobile Money Provider Section */
 /* ============================================ */
 
+.phone-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.phone-input-wrapper .form-input {
+    flex: 1;
+    padding-right: 45px;
+}
+
+.country-flag {
+    position: absolute;
+    right: 12px;
+    font-size: 1.8rem;
+    transition: transform 0.2s ease;
+    cursor: default;
+}
+
+.country-flag.active {
+    animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.country-name {
+    display: block;
+    color: #ff6b35;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    font-weight: 600;
+}
+
+.country-name.hidden {
+    display: none;
+}
+
 .provider-select-wrapper {
     position: relative;
     display: flex;
@@ -1406,6 +1447,34 @@ textarea {
     font-size: 0.85rem;
     margin-top: 0.4rem;
     display: block;
+}
+
+.provider-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.provider-select {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.provider-badge {
+    position: absolute;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+.provider-badge.active {
+    transform: scale(1.1);
 }
 
 /* ============================================ */
