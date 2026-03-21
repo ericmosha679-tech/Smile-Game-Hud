@@ -528,6 +528,13 @@ function showPaymentModal(game) {
     document.querySelectorAll('.card-icon').forEach(icon => icon.classList.remove('active'));
     document.querySelector('.visa-icon').classList.add('active');
 
+    // Reset provider badge
+    const providerBadge = document.getElementById('providerBadge');
+    if (providerBadge) {
+        providerBadge.innerHTML = '';
+        providerBadge.classList.remove('active');
+    }
+
     currentPaymentMethod = 'card';
     switchPaymentMethod('card');
     openModal('paymentModal');
@@ -591,6 +598,27 @@ function formatExpiryDate(input) {
     }
     
     input.value = value;
+}
+
+function detectProviderType(provider) {
+    const badge = document.getElementById('providerBadge');
+    badge.classList.remove('active');
+    
+    const providers = {
+        'airtel': { 'emoji': '🔴', 'name': 'Airtel' },
+        'vodafone': { 'emoji': '🔴', 'name': 'Vodafone' },
+        'mtn': { 'emoji': '🟡', 'name': 'MTN' },
+        'globus': { 'emoji': '💚', 'name': 'Globus' },
+        'other': { 'emoji': '📱', 'name': 'Provider' }
+    };
+    
+    if (provider && providers[provider]) {
+        badge.innerHTML = providers[provider].emoji;
+        badge.classList.add('active');
+        badge.title = providers[provider].name + ' Money';
+    } else {
+        badge.innerHTML = '';
+    }
 }
 
 function processPayment() {

@@ -1366,6 +1366,49 @@ textarea {
 }
 
 /* ============================================ */
+/* Mobile Money Provider Section */
+/* ============================================ */
+
+.provider-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.provider-select {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.provider-badge {
+    position: absolute;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+.provider-badge.active {
+    transform: scale(1.1);
+}
+
+#mobilePayment .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#mobilePayment .sub-text {
+    color: #999;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    display: block;
+}
+
+/* ============================================ */
 /* Star Rating */
 /* ============================================ */
 

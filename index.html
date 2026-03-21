@@ -414,20 +414,29 @@
                         <div class="form-group">
                             <label for="phoneName">Full Name</label>
                             <input type="text" id="phoneName" placeholder="John Doe" class="form-input">
+                            <small class="sub-text">Your registered name with the mobile provider</small>
                         </div>
                         <div class="form-group">
                             <label for="phoneNumber">Phone Number</label>
                             <input type="tel" id="phoneNumber" placeholder="+1 (555) 000-0000" class="form-input">
+                            <small class="sub-text">Must be registered with your mobile provider</small>
                         </div>
                         <div class="form-group">
                             <label for="mobileProvider">Mobile Provider</label>
-                            <select id="mobileProvider" class="form-input-select">
-                                <option value="">Select Provider</option>
-                                <option value="airtel">Airtel Money</option>
-                                <option value="vodafone">Vodafone Cash</option>
-                                <option value="mtn">MTN Money</option>
-                                <option value="globus">Globus Money</option>
-                                <option value="other">Other</option>
+                            <div class="provider-select-wrapper">
+                                <select id="mobileProvider" class="form-input-select provider-select" onchange="detectProviderType(this.value)">
+                                    <option value="">Select Your Provider</option>
+                                    <option value="airtel">🔴 Airtel Money</option>
+                                    <option value="vodafone">🔴 Vodafone Cash</option>
+                                    <option value="mtn">🟡 MTN Money</option>
+                                    <option value="globus">💚 Globus Money</option>
+                                    <option value="other">📱 Other Provider</option>
+                                </select>
+                                <div class="provider-badge" id="providerBadge"></div>
+                            </div>
+                            <small class="sub-text">Choose the mobile money service you use</small>
+                        </div>
+                    </div>
                             </select>
                         </div>
                     </div>
