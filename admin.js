@@ -33,21 +33,31 @@ function applyAdminDeviceOptimizations() {
 // ============ ADMIN ACCESS VERIFICATION ============
 
 function verifyAdminAccess() {
-    // Admin page should only be accessible if user verified password
-    // This is a simple check - in production, use proper authentication
-    const isAccessingFromHistory = performance.navigation.type === 2;
+    // Check if admin access was already granted in this session
+    const isAdminGranted = sessionStorage.getItem('adminAccessGranted') === 'true';
     
-    if (!isAccessingFromHistory && !sessionStorage.getItem('adminAccessGranted')) {
-        // If no valid access, redirect to home
-        // This can be bypassed by directly opening admin.html, but the real protection
-        // is accessing it through the password modal on index.html
-        sessionStorage.setItem('adminAccessGranted', 'true');
+    if (!isAdminGranted) {
+        // No admin access in this session, show password prompt
+        const password = prompt('🔐 Enter Admin Password:', '');
+        
+        // Verify password (Admin password: Ciontatenx83)
+        if (password === 'Ciontatenx83') {
+            sessionStorage.setItem('adminAccessGranted', 'true');
+        } else {
+            // Password incorrect or cancelled
+            alert('❌ Invalid password or access denied!');
+            window.location.href = 'index.html';
+            return;
+        }
     }
 }
 
 function logoutAdmin() {
     sessionStorage.removeItem('adminAccessGranted');
-    window.location.href = 'index.html';
+    showToast('🚪 Admin logout successful', 'success');
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 500);
 }
 
 // ============ ADMIN DATA LOADING ============
@@ -627,7 +637,7 @@ function toggleBlockUser(userId, userName) {
     const userIndex = users.findIndex(u => u.id === userId);
     if (userIndex >= 0) {
         users[userIndex] = user;
-        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('usersData', JSON.stringify(users));
     }
     
     loadAdminUsersTable();

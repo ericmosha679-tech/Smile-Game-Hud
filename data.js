@@ -222,6 +222,8 @@ const DataManager = {
         user.createdAt = new Date().toLocaleDateString();
         user.subscription = 'free';
         user.downloads = [];
+        user.wishlist = [];
+        user.trialUsed = false;
         users.push(user);
         localStorage.setItem('usersData', JSON.stringify(users));
         this.addActivity(`New user registered: ${user.name}`);
@@ -349,6 +351,11 @@ const DataManager = {
         const user = this.getUsers().find(u => u.id === userId);
         if (!user) return null;
 
+        // Check if user already used free trial
+        if (subscription === 'free' && user.trialUsed) {
+            return { error: 'Free trial has already been used and cannot be used again' };
+        }
+
         const subscriptionData = {
             tier: subscription,
             startDate: new Date().toISOString(),
@@ -446,6 +453,44 @@ const DataManager = {
             expiryDate: subscription.expiryDate,
             trialUsed: subscription.trialUsed
         };
+    },
+
+    // ============ WISHLIST OPERATIONS ============
+    isGameInWishlist(userId, gameId) {
+        const user = this.getUsers().find(u => u.id === userId);
+        if (!user || !user.wishlist) return false;
+        return user.wishlist.includes(parseInt(gameId));
+    },
+
+    addToWishlist(userId, gameId) {
+        const users = this.getUsers();
+        const user = users.find(u => u.id === userId);
+        if (user) {
+            if (!user.wishlist) user.wishlist = [];
+            if (!user.wishlist.includes(parseInt(gameId))) {
+                user.wishlist.push(parseInt(gameId));
+                localStorage.setItem('usersData', JSON.stringify(users));
+                const game = this.getGameById(gameId);
+                this.addActivity(`User added to wishlist: ${game?.title}`);
+            }
+        }
+    },
+
+    removeFromWishlist(userId, gameId) {
+        const users = this.getUsers();
+        const user = users.find(u => u.id === userId);
+        if (user && user.wishlist) {
+            user.wishlist = user.wishlist.filter(id => id !== parseInt(gameId));
+            localStorage.setItem('usersData', JSON.stringify(users));
+            const game = this.getGameById(gameId);
+            this.addActivity(`User removed from wishlist: ${game?.title}`);
+        }
+    },
+
+    getUserWishlist(userId) {
+        const user = this.getUsers().find(u => u.id === userId);
+        if (!user || !user.wishlist || user.wishlist.length === 0) return [];
+        return user.wishlist.map(gameId => this.getGameById(gameId)).filter(game => game !== undefined);
     },
 
     // ============ BACKGROUND IMAGE OPERATIONS ============

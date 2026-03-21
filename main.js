@@ -4,6 +4,7 @@
 
 let currentRating = 0;
 let currentPaymentGameId = null;
+let currentCommentsGameId = null;
 let currentPaymentMethod = 'card';
 let currentCategory = 'all';
 let currentSearchQuery = '';
@@ -358,10 +359,16 @@ function showSearchResults(query) {
                     <div class="search-result-meta">⭐ ${game.rating} • ${capitalizeFirst(game.category)}</div>
                 </div>
             `;
-            resultItem.onclick = (e) => {
+            // Use mousedown instead of click to ensure it fires before blur event on input
+            resultItem.addEventListener('mousedown', (e) => {
                 e.preventDefault();
                 selectSearchResult(game.id);
-            };
+            });
+            // Also support keyboard selection
+            resultItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                selectSearchResult(game.id);
+            });
             searchResultsList.appendChild(resultItem);
         });
     }
@@ -1019,7 +1026,7 @@ function switchDashboardTab(tab) {
 
 function openCommentsModal(gameId, gameTitle) {
     document.getElementById('commentsGameTitle').textContent = `${gameTitle} - Reviews`;
-    currentPaymentGameId = gameId;
+    currentCommentsGameId = gameId;
     currentRating = 0;
     
     loadComments(gameId);
@@ -1097,7 +1104,7 @@ function submitComment() {
     }
 
     const comment = {
-        gameId: currentPaymentGameId,
+        gameId: currentCommentsGameId,
         userId: currentUser.id,
         userName: currentUser.name,
         rating: currentRating,
@@ -1108,7 +1115,7 @@ function submitComment() {
     showToast('✅ Comment posted successfully!', 'success');
     
     // Reload comments
-    loadComments(currentPaymentGameId);
+    loadComments(currentCommentsGameId);
     
     // Reset form
     document.getElementById('commentText').value = '';
@@ -1263,6 +1270,11 @@ function capitalizeFirst(str) {
 
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
+    if (!toast) {
+        console.warn('Toast element with id "toast" not found');
+        return;
+    }
+    
     toast.textContent = message;
     toast.className = `toast show ${type}`;
 
