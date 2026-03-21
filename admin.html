@@ -19,11 +19,9 @@
                 <span class="logo-text">Admin Panel</span>
             </div>
             <nav class="admin-nav-links">
-                <a href="index.html#login" onclick="redirectToPage('login')" class="nav-link">🔐 Login</a>
-                <a href="index.html#signup" onclick="redirectToPage('signup')" class="nav-link">📝 Sign Up</a>
-                <a href="index.html" onclick="redirectToPage('home')" class="nav-link">🏠 Home</a>
-                <a href="index.html#contact" onclick="redirectToPage('contact')" class="nav-link">📧 Contact</a>
-                <a href="index.html#service" onclick="redirectToPage('service')" class="nav-link">🔧 Service</a>
+                <a href="index.html" class="nav-link" title="Go to main site">🏠 Main Site</a>
+                <a href="#" onclick="event.preventDefault(); refreshAdminData()" class="nav-link" title="Refresh data">🔄 Refresh</a>
+                <a href="#" onclick="event.preventDefault(); logoutAdmin()" class="nav-link logout-link" title="Logout">🚪 Logout</a>
             </nav>
         </div>
     </header>
@@ -94,29 +92,43 @@
                     </div>
 
                     <div class="theme-options">
-                        <h3>🎨 Color Settings</h3>
+                        <h3>🎨 Professional Color Scheme</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">Customize your gaming hub with a professional color palette</p>
+                        
                         <div class="color-setting">
-                            <label for="bgColor">Primary Background Color:</label>
+                            <label for="bgColor">🌌 Primary Background Color</label>
+                            <small style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Main dark background for the interface</small>
                             <div class="color-input-group">
-                                <input type="color" id="bgColor" value="#0d1b2a" onchange="updateTheme()">
-                                <input type="text" id="bgColorText" value="#0d1b2a" onchange="updateTheme()" class="color-text-input">
+                                <div style="position: relative;">
+                                    <input type="color" id="bgColor" value="#0d1b2a" onchange="updateTheme()" style="width: 60px; height: 50px; border: none; border-radius: 8px; cursor: pointer;">
+                                </div>
+                                <input type="text" id="bgColorText" value="#0d1b2a" onchange="updateTheme()" class="color-text-input" placeholder="#0d1b2a">
                             </div>
+                            <div style="background-color: #0d1b2a; height: 40px; border-radius: 8px; margin-top: 0.75rem; border: 1px solid var(--glass-border);"></div>
                         </div>
 
                         <div class="color-setting">
-                            <label for="accentColor">Accent Color (Orange):</label>
+                            <label for="accentColor">🔥 Accent Color (Highlight)</label>
+                            <small style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Buttons, links, highlights, and interactive elements</small>
                             <div class="color-input-group">
-                                <input type="color" id="accentColor" value="#ff6b35" onchange="updateTheme()">
-                                <input type="text" id="accentColorText" value="#ff6b35" onchange="updateTheme()" class="color-text-input">
+                                <div style="position: relative;">
+                                    <input type="color" id="accentColor" value="#ff6b35" onchange="updateTheme()" style="width: 60px; height: 50px; border: none; border-radius: 8px; cursor: pointer;">
+                                </div>
+                                <input type="text" id="accentColorText" value="#ff6b35" onchange="updateTheme()" class="color-text-input" placeholder="#ff6b35">
                             </div>
+                            <div style="background-color: #ff6b35; height: 40px; border-radius: 8px; margin-top: 0.75rem; border: 1px solid var(--glass-border);"></div>
                         </div>
 
                         <div class="color-setting">
-                            <label for="glassColor">Glass Color (Blue):</label>
+                            <label for="glassColor">❄️ Glass Color (Secondary)</label>
+                            <small style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Cards, modals, glass-effect elements, and overlays</small>
                             <div class="color-input-group">
-                                <input type="color" id="glassColor" value="#3b5998" onchange="updateTheme()">
-                                <input type="text" id="glassColorText" value="#3b5998" onchange="updateTheme()" class="color-text-input">
+                                <div style="position: relative;">
+                                    <input type="color" id="glassColor" value="#3b5998" onchange="updateTheme()" style="width: 60px; height: 50px; border: none; border-radius: 8px; cursor: pointer;">
+                                </div>
+                                <input type="text" id="glassColorText" value="#3b5998" onchange="updateTheme()" class="color-text-input" placeholder="#3b5998">
                             </div>
+                            <div style="background-color: #3b5998; height: 40px; border-radius: 8px; margin-top: 0.75rem; border: 1px solid var(--glass-border);"></div>
                         </div>
 
                         <h3>🖼️ Background Images</h3>
@@ -209,6 +221,7 @@
                                 <th>Email</th>
                                 <th>Subscription</th>
                                 <th>Joined</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

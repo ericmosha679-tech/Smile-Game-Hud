@@ -24,6 +24,9 @@ function initializeUI() {
     const theme = DataManager.getTheme();
     DataManager.applyTheme(theme);
 
+    // Apply background theme
+    applyBackgroundTheme();
+
     // Set up category buttons
     const categoryButtons = document.querySelectorAll('.category-btn');
     categoryButtons.forEach(btn => {
@@ -82,6 +85,45 @@ function checkUserSession() {
         dashboardBtn.style.display = 'none';
         logoutBtn.style.display = 'none';
     }
+}
+
+// ============ BACKGROUND THEME ============
+
+function applyBackgroundTheme() {
+    const backgroundImages = DataManager.getBackgroundImages();
+    if (!backgroundImages || backgroundImages.length === 0) return;
+
+    // Get the current background index (default to 0)
+    const currentBgIndex = 0;
+    const bgUrl = backgroundImages[currentBgIndex];
+
+    // Remove existing style if present
+    const styleTag = document.getElementById('bgShuffleStyle');
+    if (styleTag) {
+        styleTag.remove();
+    }
+
+    // Create a CSS rule for the body background
+    const newStyle = document.createElement('style');
+    newStyle.id = 'bgShuffleStyle';
+    newStyle.textContent = `
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('${bgUrl}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+    `;
+    document.head.appendChild(newStyle);
 }
 
 // ============ DEVICE DETECTION & OPTIMIZATION ============
@@ -278,7 +320,85 @@ function filterGamesByCategory(category) {
 
 function handleGameSearch(query) {
     currentSearchQuery = query.toLowerCase().trim();
+    
+    // If search box is empty, hide dropdown
+    if (!query.trim()) {
+        hideSearchDropdown();
+        return;
+    }
+    
+    // Show dropdown with filtered results
+    showSearchResults(query);
     applyAllFiltersAndSort();
+}
+
+function showSearchResults(query) {
+    const searchDropdown = document.getElementById('searchDropdown');
+    const searchResultsList = document.getElementById('searchResults');
+    const games = DataManager.getGames();
+    
+    const matchedGames = games.filter(g => 
+        g.title.toLowerCase().includes(query.toLowerCase()) ||
+        g.description.toLowerCase().includes(query.toLowerCase()) ||
+        g.category.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    searchResultsList.innerHTML = '';
+    
+    if (matchedGames.length === 0) {
+        searchResultsList.innerHTML = '<div class="search-no-results">❌ No games match your search</div>';
+    } else {
+        matchedGames.slice(0, 8).forEach(game => {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'search-result-item';
+            resultItem.innerHTML = `
+                <img src="${game.imageUrl}" alt="${game.title}" class="search-result-image">
+                <div class="search-result-info">
+                    <div class="search-result-title">${game.title}</div>
+                    <div class="search-result-meta">⭐ ${game.rating} • ${capitalizeFirst(game.category)}</div>
+                </div>
+            `;
+            resultItem.onclick = (e) => {
+                e.preventDefault();
+                selectSearchResult(game.id);
+            };
+            searchResultsList.appendChild(resultItem);
+        });
+    }
+    
+    searchDropdown.style.display = 'block';
+}
+
+function showSearchDropdown() {
+    const query = document.getElementById('gameSearch').value;
+    if (query.trim()) {
+        showSearchResults(query);
+    }
+}
+
+function hideSearchDropdown() {
+    const searchDropdown = document.getElementById('searchDropdown');
+    searchDropdown.style.display = 'none';
+}
+
+function selectSearchResult(gameId) {
+    const game = DataManager.getGameById(gameId);
+    if (!game) return;
+    
+    // Update search to show only this game
+    document.getElementById('gameSearch').value = game.title;
+    hideSearchDropdown();
+    
+    // Scroll to game and highlight it
+    applyAllFiltersAndSort();
+    const gameCard = document.getElementById(`game-card-${gameId}`);
+    if (gameCard) {
+        gameCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        gameCard.style.boxShadow = '0 0 30px rgba(255, 107, 53, 0.6)';
+        setTimeout(() => {
+            gameCard.style.boxShadow = '';
+        }, 2000);
+    }
 }
 
 function handleGameSort(sortOption) {

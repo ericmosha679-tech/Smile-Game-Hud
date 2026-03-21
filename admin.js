@@ -528,34 +528,12 @@ function loadActivityLog() {
         const item = document.createElement('div');
         item.className = 'activity-item';
         item.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <strong>${activity.message}</strong>
-                    <br>
-                    <small>${activity.timestamp}</small>
-                </div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="activity-action-btn" onclick="showActivityComment(${index})" title="Add/View Comments">💬 Comment</button>
-                    <button class="activity-action-btn" onclick="showActivityReply(${index})" title="Add/View Replies">↩️ Reply</button>
-                </div>
-            </div>
+            <strong>${activity.message}</strong>
+            <br>
+            <small>${activity.timestamp}</small>
         `;
         activityLog.appendChild(item);
     });
-}
-
-function showActivityComment(index) {
-    const comment = prompt('Enter your comment:');
-    if (comment) {
-        showToast('💬 Comment added successfully!', 'success');
-    }
-}
-
-function showActivityReply(index) {
-    const reply = prompt('Enter your reply:');
-    if (reply) {
-        showToast('↩️ Reply added successfully!', 'success');
-    }
 }
 
 // ============ USER MANAGEMENT ============
@@ -566,7 +544,7 @@ function loadAdminUsersTable() {
     tableBody.innerHTML = '';
 
     if (users.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5" class="empty-message">No users yet</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" class="empty-message">No users yet</td></tr>';
         return;
     }
 
@@ -578,13 +556,21 @@ function loadAdminUsersTable() {
 
     users.forEach(user => {
         const row = document.createElement('tr');
+        const isBlocked = user.blocked || false;
+        const blockButtonText = isBlocked ? '✅ Unblock' : '🚫 Block';
+        const blockButtonClass = isBlocked ? '' : 'delete';
+        
         row.innerHTML = `
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${subscriptionLabels[user.subscription]}</td>
             <td>${user.createdAt}</td>
+            <td style="color: ${isBlocked ? '#ff6b6b' : 'inherit'};">${isBlocked ? '(BLOCKED)' : 'Active'}</td>
             <td>
                 <button class="action-btn" onclick="viewUserDetails(${user.id})">👁️ View</button>
+                <button class="action-btn ${blockButtonClass}" onclick="toggleBlockUser(${user.id}, '${user.name}')">
+                    ${blockButtonText}
+                </button>
             </td>
         `;
         tableBody.appendChild(row);
@@ -613,6 +599,46 @@ Subscription: ${subscriptionLabels[user.subscription]}
 Member Since: ${user.createdAt}
 Downloads: ${(user.downloads || []).length}
     `);
+}
+
+function toggleBlockUser(userId, userName) {
+    const currentUser = DataManager.getCurrentUser();
+    const users = DataManager.getUsers();
+    const user = users.find(u => u.id === userId);
+    
+    if (!user) return;
+    
+    const isBlocked = user.blocked || false;
+    
+    if (isBlocked) {
+        if (!confirm(`Unblock user "${userName}"?`)) return;
+        user.blocked = false;
+        user.blockedReason = '';
+        showToast(`✅ User "${userName}" has been unblocked`, 'success');
+    } else {
+        const reason = prompt(`Block user "${userName}"?\\n\\nReason (Bad behavior, Inappropriate content, Spam, Other):`);
+        if (reason === null) return;
+        user.blocked = true;
+        user.blockedReason = reason;
+        showToast(`🚫 User "${userName}" has been blocked`, 'warning');
+    }
+    
+    // Update user in DataManager
+    const userIndex = users.findIndex(u => u.id === userId);
+    if (userIndex >= 0) {
+        users[userIndex] = user;
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+    
+    loadAdminUsersTable();
+}
+
+function refreshAdminData() {
+    loadAdminGamesTable();
+    loadAdminUsersTable();
+    loadAnalytics();
+    loadActivityLog();
+    showToast('🔄 Admin data refreshed', 'success');
 }
 
 // ============ TAB NAVIGATION ============

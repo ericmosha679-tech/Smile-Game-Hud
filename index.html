@@ -95,14 +95,21 @@
     <!-- Game Search & Filter Bar -->
     <section class="search-filter-section">
         <div class="search-container">
-            <input 
-                type="text" 
-                id="gameSearch" 
-                class="search-input" 
-                placeholder="🔍 Search games by title..." 
-                aria-label="Search games"
-                onkeyup="handleGameSearch(this.value)"
-            >
+            <div style="position: relative; flex: 1;">
+                <input 
+                    type="text" 
+                    id="gameSearch" 
+                    class="search-input" 
+                    placeholder="🔍 Search games by title..." 
+                    aria-label="Search games"
+                    onkeyup="handleGameSearch(this.value)"
+                    onfocus="showSearchDropdown()"
+                    onblur="hideSearchDropdown()"
+                >
+                <div id="searchDropdown" class="search-dropdown" style="display: none;">
+                    <div id="searchResults" class="search-results-list"></div>
+                </div>
+            </div>
             <div class="sort-controls">
                 <label for="sortBy" class="sort-label">Sort by:</label>
                 <select id="sortBy" class="sort-select" onchange="handleGameSort(this.value)" aria-label="Sort games">
@@ -139,6 +146,17 @@
         </div>
     </section>
 
+    <!-- Games Grid -->
+    <section class="games-section">
+        <div class="section-header">
+            <h2 class="section-title">All Games</h2>
+            <p>Choose from our amazing collection</p>
+        </div>
+        <div class="games-grid" id="gamesGrid">
+            <!-- Games populated by JavaScript -->
+        </div>
+    </section>
+
     <!-- Featured/Trending Games Table -->
     <section class="featured-games-section">
         <div class="section-header">
@@ -161,17 +179,6 @@
                     <!-- Populated by JavaScript -->
                 </tbody>
             </table>
-        </div>
-    </section>
-
-    <!-- Games Grid -->
-    <section class="games-section">
-        <div class="section-header">
-            <h2 class="section-title">All Games</h2>
-            <p>Choose from our amazing collection</p>
-        </div>
-        <div class="games-grid" id="gamesGrid">
-            <!-- Games populated by JavaScript -->
         </div>
     </section>
 
