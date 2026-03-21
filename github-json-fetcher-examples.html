@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub JSON Fetcher - Examples</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 16px;
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .example {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .example h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 20px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .example-content {
+      min-height: 200px;
+    }
+
+    /* GitHub JSON Fetcher Styles */
+    .github-json-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .github-json-item {
+      padding: 12px;
+      background: #f5f5f5;
+      margin: 8px 0;
+      border-radius: 6px;
+      border-left: 4px solid #667eea;
+    }
+
+    .github-json-field {
+      display: block;
+      margin: 8px 0;
+      padding: 8px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .github-json-field strong {
+      color: #667eea;
+    }
+
+    .github-json-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .github-json-table thead {
+      background: #667eea;
+      color: white;
+    }
+
+    .github-json-table th,
+    .github-json-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .github-json-table tbody tr:hover {
+      background: #f5f5f5;
+    }
+
+    .github-json-object {
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+
+    .github-json-object dt {
+      font-weight: bold;
+      color: #667eea;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    .github-json-object dd {
+      margin-left: 20px;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: white;
+      border-radius: 4px;
+      border-left: 3px solid #667eea;
+    }
+
+    .github-json-object pre {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+
+    .github-json-loading {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .github-json-error {
+      background: #fee;
+      color: #c33;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 4px solid #c33;
+    }
+
+    .github-json-error strong {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #764ba2;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .url-input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 200px;
+      font-size: 14px;
+    }
+
+    .code-section {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+    }
+
+    .code-section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+
+    pre {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      border-left: 4px solid #667eea;
+    }
+
+    code {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      color: #333;
+    }
+
+    .footer {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 40px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔗 GitHub JSON Fetcher Examples</h1>
+    <p class="subtitle">Fetch and display JSON from GitHub URLs with dynamic updates</p>
+
+    <div class="examples">
+      <!-- Example 1: Array as List -->
+      <div class="example">
+        <h2>📋 List Example</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+          Displays an array of items as an unordered list.
+        </p>
+        <div id="list-example" class="example-content"></div>
+        <div class="controls">
+          <button onclick="refreshList()">🔄 Refresh</button>
+          <button onclick="changeListURL()">⚙️ Change URL</button>
+        </div>
+      </div>
+
+      <!-- Example 2: Array as Table -->
+      <div class="example">
+        <h2>📊 Table Example</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+          Displays an array of objects as a formatted table.
+        </p>
+        <div id="table-example" class="example-content"></div>
+        <div class="controls">
+          <button onclick="refreshTable()">🔄 Refresh</button>
+          <button onclick="changeTableURL()">⚙️ Change URL</button>
+        </div>
+      </div>
+
+      <!-- Example 3: Object Display -->
+      <div class="example">
+        <h2>📝 Object Example</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+          Displays a JSON object as a definition list.
+        </p>
+        <div id="object-example" class="example-content"></div>
+        <div class="controls">
+          <button onclick="refreshObject()">🔄 Refresh</button>
+          <button onclick="changeObjectURL()">⚙️ Change URL</button>
+        </div>
+      </div>
+
+      <!-- Example 4: Auto-refresh -->
+      <div class="example">
+        <h2>⏱️ Auto-Refresh Example</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+          Automatically refreshes data every 10 seconds.
+        </p>
+        <div id="autorefresh-example" class="example-content"></div>
+        <div class="controls">
+          <button onclick="startAutoRefresh()">▶️ Start</button>
+          <button onclick="stopAutoRefresh()">⏹️ Stop</button>
+        </div>
+      </div>
+
+      <!-- Example 5: Custom Renderer -->
+      <div class="example">
+        <h2>🎨 Custom Renderer</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+          Uses custom rendering function for specific formatting.
+        </p>
+        <div id="custom-example" class="example-content"></div>
+        <div class="controls">
+          <button onclick="refreshCustom()">🔄 Refresh</button>
+        </div>
+      </div>
+
+      <!-- Example 6: Error Handling -->
+      <div class="example">
+        <h2>⚠️ Error Handling</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+          Demonstrates error handling with invalid URLs.
+        </p>
+        <div id="error-example" class="example-content"></div>
+        <div class="controls">
+          <button onclick="testError()">🧪 Test Error</button>
+          <button onclick="testValid()">✅ Test Valid</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Code Examples -->
+    <div class="code-section">
+      <h2>📖 Implementation Guides</h2>
+
+      <h3 style="color: #764ba2; margin-top: 20px; margin-bottom: 15px;">1. Basic List Example</h3>
+      <pre><code>// Create fetcher for list display
+const listFetcher = new GitHubJSONFetcher({
+  url: 'https://raw.githubusercontent.com/user/repo/main/data.json',
+  elementId: 'list-container',
+  dataType: 'list',
+  showLoadingState: true
+});
+
+// Manual refresh
+listFetcher.refresh();</code></pre>
+
+      <h3 style="color: #764ba2; margin-top: 20px; margin-bottom: 15px;">2. Table Example</h3>
+      <pre><code>// Create fetcher for table display
+const tableFetcher = new GitHubJSONFetcher({
+  url: 'https://raw.githubusercontent.com/user/repo/main/users.json',
+  elementId: 'table-container',
+  dataType: 'table'
+});
+
+// Update URL
+tableFetcher.updateConfig({
+  url: 'https://raw.githubusercontent.com/user/repo/main/new-data.json'
+});
+tableFetcher.refresh();</code></pre>
+
+      <h3 style="color: #764ba2; margin-top: 20px; margin-bottom: 15px;">3. Auto-Refresh Example</h3>
+      <pre><code>// Auto-refresh every 30 seconds
+const autoFetcher = new GitHubJSONFetcher({
+  url: 'https://raw.githubusercontent.com/user/repo/main/live.json',
+  elementId: 'live-container',
+  dataType: 'table',
+  refreshInterval: 30000 // milliseconds
+});
+
+// Stop auto-refresh
+autoFetcher.stopAutoRefresh();</code></pre>
+
+      <h3 style="color: #764ba2; margin-top: 20px; margin-bottom: 15px;">4. Custom Renderer</h3>
+      <pre><code>// Use custom rendering function
+const customFetcher = new GitHubJSONFetcher({
+  url: 'https://raw.githubusercontent.com/user/repo/main/custom.json',
+  elementId: 'custom-container',
+  dataType: 'custom',
+  customRenderer: (element, data) => {
+    // Your custom rendering logic
+    const html = data.map(item => `
+      &lt;div class="custom-card"&gt;
+        &lt;h3&gt;${item.name}&lt;/h3&gt;
+        &lt;p&gt;${item.description}&lt;/p&gt;
+      &lt;/div&gt;
+    `).join('');
+    element.innerHTML = html;
+  }
+});</code></pre>
+
+      <h3 style="color: #764ba2; margin-top: 20px; margin-bottom: 15px;">5. Error Handling</h3>
+      <pre><code>// Error handling happens automatically
+const fetcher = new GitHubJSONFetcher({
+  url: 'https://raw.githubusercontent.com/user/repo/main/data.json',
+  elementId: 'container',
+  showLoadingState: true // Shows loading indicator
+  // Errors are caught and displayed in the container
+});
+
+// You can also add try-catch if needed
+try {
+  await fetcher.fetch();
+} catch(error) {
+  console.error('Fetch failed:', error);
+}</code></pre>
+
+      <h3 style="color: #764ba2; margin-top: 20px; margin-bottom: 15px;">6. GitHub Raw URL Format</h3>
+      <pre><code>// Standard GitHub raw URL pattern:
+https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path/to/file.json}
+
+// Examples:
+https://raw.githubusercontent.com/octocat/Hello-World/main/data.json
+https://raw.githubusercontent.com/microsoft/vscode/main/package.json
+https://raw.githubusercontent.com/torvalds/linux/master/README
+
+// Pro tip: Use 'main' or 'master' as branch name
+// For user content repos: https://raw.githubusercontent.com/user/username.github.io/main/data.json</code></pre>
+    </div>
+
+    <div class="footer">
+      <p>GitHub JSON Fetcher • Dynamically load and display data from GitHub</p>
+    </div>
+  </div>
+
+  <!-- Include the fetcher library -->
+  <script src="github-json-fetcher.js"></script>
+
+  <script>
+    // Example data URLs (using placeholder URLs)
+    const GITHUB_USER_LIST = 'https://raw.githubusercontent.com/ericmosha679-tech/Smile-Game-Hud/main/sample-data.json';
+    const GITHUB_TABLE_DATA = 'https://raw.githubusercontent.com/ericmosha679-tech/Smile-Game-Hud/main/sample-table.json';
+    const GITHUB_OBJECT_DATA = 'https://raw.githubusercontent.com/ericmosha679-tech/Smile-Game-Hud/main/sample-object.json';
+
+    // Initialize fetchers
+    const listFetcher = new GitHubJSONFetcher({
+      url: GITHUB_USER_LIST,
+      elementId: 'list-example',
+      dataType: 'list'
+    });
+
+    const tableFetcher = new GitHubJSONFetcher({
+      url: GITHUB_TABLE_DATA,
+      elementId: 'table-example',
+      dataType: 'table'
+    });
+
+    const objectFetcher = new GitHubJSONFetcher({
+      url: GITHUB_OBJECT_DATA,
+      elementId: 'object-example',
+      dataType: 'custom',
+      customRenderer: (element, data) => {
+        const html = Object.entries(data).map(([key, val]) => `
+          <div style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 4px;">
+            <strong style="color: #667eea;">${key}:</strong> ${JSON.stringify(val)}
+          </div>
+        `).join('');
+        element.innerHTML = html;
+      }
+    });
+
+    let autoRefreshFetcher = null;
+
+    // Control Functions
+    function refreshList() { listFetcher.refresh(); }
+    function refreshTable() { tableFetcher.refresh(); }
+    function refreshObject() { objectFetcher.refresh(); }
+    function refreshCustom() { 
+      const customFetcher = new GitHubJSONFetcher({
+        url: GITHUB_USER_LIST,
+        elementId: 'custom-example',
+        dataType: 'list'
+      });
+    }
+
+    function changeListURL() {
+      const newURL = prompt('Enter GitHub raw URL:', GITHUB_USER_LIST);
+      if (newURL) {
+        listFetcher.updateConfig({ url: newURL });
+        listFetcher.refresh();
+      }
+    }
+
+    function changeTableURL() {
+      const newURL = prompt('Enter GitHub raw URL:', GITHUB_TABLE_DATA);
+      if (newURL) {
+        tableFetcher.updateConfig({ url: newURL });
+        tableFetcher.refresh();
+      }
+    }
+
+    function changeObjectURL() {
+      const newURL = prompt('Enter GitHub raw URL:', GITHUB_OBJECT_DATA);
+      if (newURL) {
+        objectFetcher.updateConfig({ url: newURL });
+        objectFetcher.refresh();
+      }
+    }
+
+    function startAutoRefresh() {
+      const element = document.getElementById('autorefresh-example');
+      element.innerHTML = '<p style="text-align: center;">⏱️ Auto-refresh will start...</p>';
+      autoRefreshFetcher = new GitHubJSONFetcher({
+        url: GITHUB_USER_LIST,
+        elementId: 'autorefresh-example',
+        dataType: 'list',
+        refreshInterval: 10000 // Every 10 seconds
+      });
+    }
+
+    function stopAutoRefresh() {
+      if (autoRefreshFetcher) {
+        autoRefreshFetcher.stopAutoRefresh();
+        autoRefreshFetcher = null;
+        const element = document.getElementById('autorefresh-example');
+        element.innerHTML = '<p style="text-align: center;">⏹️ Auto-refresh stopped</p>';
+      }
+    }
+
+    function testError() {
+      new GitHubJSONFetcher({
+        url: 'https://raw.githubusercontent.com/invalid/repo/main/nonexistent.json',
+        elementId: 'error-example',
+        dataType: 'list'
+      });
+    }
+
+    function testValid() {
+      new GitHubJSONFetcher({
+        url: GITHUB_USER_LIST,
+        elementId: 'error-example',
+        dataType: 'list'
+      });
+    }
+  </script>
+</body>
+</html>
