@@ -521,10 +521,15 @@ function showPaymentModal(game) {
     document.getElementById('phoneName').value = '';
     document.getElementById('phoneNumber').value = '';
     document.getElementById('mobileProvider').value = '';
+    document.getElementById('paymentMethodSelect').value = 'card';
     document.getElementById('paymentError').classList.remove('active');
 
+    // Reset card type icons
+    document.querySelectorAll('.card-icon').forEach(icon => icon.classList.remove('active'));
+    document.querySelector('.visa-icon').classList.add('active');
+
     currentPaymentMethod = 'card';
-    switchPaymentTab('card');
+    switchPaymentMethod('card');
     openModal('paymentModal');
 }
 
@@ -534,8 +539,58 @@ function switchPaymentTab(method) {
     document.querySelectorAll('.payment-tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
     
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
     document.getElementById(method === 'card' ? 'cardPayment' : 'mobilePayment').classList.add('active');
+}
+
+function switchPaymentMethod(method) {
+    currentPaymentMethod = method;
+    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+    document.getElementById(method === 'card' ? 'cardPayment' : 'mobilePayment').classList.add('active');
+}
+
+// ============ CARD PAYMENT FEATURES ============
+
+function detectCardType(cardNumber) {
+    const cleaned = cardNumber.replace(/\s/g, '');
+    const visaIcon = document.querySelector('.visa-icon');
+    const mastercardIcon = document.querySelector('.mastercard-icon');
+    const jcbIcon = document.querySelector('.jcb-icon');
+
+    // Reset all icons to inactive
+    [visaIcon, mastercardIcon, jcbIcon].forEach(icon => {
+        if (icon) icon.classList.remove('active');
+    });
+
+    // Detect card type by first digit
+    if (cleaned.startsWith('4')) {
+        // Visa
+        if (visaIcon) visaIcon.classList.add('active');
+    } else if (cleaned.startsWith('5')) {
+        // Mastercard
+        if (mastercardIcon) mastercardIcon.classList.add('active');
+    } else if (cleaned.startsWith('35')) {
+        // JCB
+        if (jcbIcon) jcbIcon.classList.add('active');
+    }
+}
+
+function formatExpiryDate(input) {
+    let value = input.value.replace(/\D/g, '');
+    
+    // Limit to 4 digits
+    if (value.length > 4) {
+        value = value.slice(0, 4);
+    }
+    
+    // Auto-format MM/YY
+    if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+    }
+    
+    input.value = value;
 }
 
 function processPayment() {
@@ -548,36 +603,74 @@ function processPayment() {
         const expiry = document.getElementById('cardExpiry').value.trim();
         const cvv = document.getElementById('cardCVV').value.trim();
 
+        // Validate all fields are filled
         if (!cardNumber || !cardholder || !expiry || !cvv) {
-            errorDiv.textContent = 'Please fill in all card details';
+            errorDiv.textContent = '❌ Please fill in all card details';
             errorDiv.classList.add('active');
             return;
         }
 
-        if (cardNumber.replace(/\s/g, '').length !== 16) {
-            errorDiv.textContent = 'Card number must be 16 digits';
+        // Validate cardholder name (not empty, at least 2 characters)
+        if (cardholder.length < 2) {
+            errorDiv.textContent = '❌ Cardholder name must be at least 2 characters';
             errorDiv.classList.add('active');
             return;
         }
 
-        if (cvv.length < 3 || cvv.length > 4) {
-            errorDiv.textContent = 'CVV must be 3 or 4 digits';
+        // Validate card number (16 digits)
+        const cleanCardNumber = cardNumber.replace(/\s/g, '');
+        if (cleanCardNumber.length !== 16 || !/^\d+$/.test(cleanCardNumber)) {
+            errorDiv.textContent = '❌ Card number must be 16 digits';
+            errorDiv.classList.add('active');
+            return;
+        }
+
+        // Validate expiry date format (MM/YY)
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+            errorDiv.textContent = '❌ Expiry date must be in MM/YY format';
+            errorDiv.classList.add('active');
+            return;
+        }
+
+        // Validate expiry date is not in the past
+        const [month, year] = expiry.split('/');
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear() % 100;
+        const currentMonth = currentDate.getMonth() + 1;
+        
+        if (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+            errorDiv.textContent = '❌ Card has expired';
+            errorDiv.classList.add('active');
+            return;
+        }
+
+        // Validate CVV (3 or 4 digits)
+        if (!/^\d{3,4}$/.test(cvv)) {
+            errorDiv.textContent = '❌ CVV must be 3 or 4 digits';
             errorDiv.classList.add('active');
             return;
         }
     } else {
+        // Mobile payment validation
         const name = document.getElementById('phoneName').value.trim();
         const phone = document.getElementById('phoneNumber').value.trim();
         const provider = document.getElementById('mobileProvider').value;
 
         if (!name || !phone || !provider) {
-            errorDiv.textContent = 'Please fill in all mobile money details';
+            errorDiv.textContent = '❌ Please fill in all mobile money details';
             errorDiv.classList.add('active');
             return;
         }
 
-        if (phone.replace(/\D/g, '').length < 10) {
-            errorDiv.textContent = 'Please enter a valid phone number';
+        if (name.length < 2) {
+            errorDiv.textContent = '❌ Name must be at least 2 characters';
+            errorDiv.classList.add('active');
+            return;
+        }
+
+        const cleanPhone = phone.replace(/\D/g, '');
+        if (cleanPhone.length < 10) {
+            errorDiv.textContent = '❌ Please enter a valid phone number';
             errorDiv.classList.add('active');
             return;
         }

@@ -231,6 +231,36 @@ body {
     font-size: 0.9rem;
 }
 
+.btn-complete-payment {
+    background: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+.btn-complete-payment:hover {
+    background: #e55a24;
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-complete-payment:active {
+    transform: translateY(0);
+}
+
+.btn-complete-payment:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 /* ============================================ */
 /* Subscription Section */
 /* ============================================ */
@@ -867,17 +897,18 @@ body {
 }
 
 .modal-content {
-    background: rgba(13, 27, 42, 0.9);
-    border: 1px solid var(--glass-border);
+    background: transparent;
+    border: none;
     border-radius: 20px;
     max-width: 600px;
     width: 100%;
     max-height: 85vh;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    backdrop-filter: none;
+    box-shadow: none;
     animation: slideUp 0.3s ease;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 @keyframes slideUp {
@@ -928,6 +959,35 @@ body {
 
 .payment-modal {
     max-width: 700px;
+    background: linear-gradient(180deg, #f5f5f5 0%, #f0f0f0 100%);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.payment-modal .modal-header {
+    background: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.payment-modal .modal-header h2 {
+    color: #222;
+    font-weight: 600;
+}
+
+.payment-modal .modal-header {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.payment-modal .modal-body {
+    background: white;
+    padding: 2rem;
+}
+
+.payment-modal .modal-footer {
+    background: white;
+    border-radius: 0 0 16px 16px;
+    border-top: 1px solid #e0e0e0;
+    padding: 1.5rem 2rem;
 }
 
 .comments-modal {
@@ -1039,34 +1099,67 @@ body {
 label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-primary);
-    font-weight: 500;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.payment-modal label {
+    color: #333;
+    font-weight: 600;
+}
+
+.payment-modal .sub-text {
+    color: #999;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    display: block;
 }
 
 .form-input,
 select {
     width: 100%;
     padding: 0.875rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
-    border-radius: 10px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 8px;
     font-size: 1rem;
     transition: all var(--animation-duration) ease;
-    backdrop-filter: blur(10px);
+    backdrop-filter: none;
+}
+
+.payment-modal .form-input,
+.payment-modal select,
+.form-input-select {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    color: #333;
 }
 
 .form-input::placeholder,
 select {
-    color: var(--text-secondary);
+    color: #999;
+}
+
+.payment-modal .form-input::placeholder {
+    color: #999;
 }
 
 .form-input:focus,
 select:focus {
     outline: none;
-    border-color: var(--accent-color);
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
+    border-color: #ff6b35;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.payment-modal .form-input:focus,
+.payment-modal select:focus {
+    border-color: #ff6b35;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 small {
@@ -1082,10 +1175,21 @@ textarea {
 }
 
 .error-message {
-    color: #ff6b6b;
+    color: #d32f2f;
     font-size: 0.9rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #ffebee;
+    border-left: 4px solid #d32f2f;
+    border-radius: 4px;
     display: none;
+}
+
+.payment-modal .error-message {
+    color: #d32f2f;
+    background: #ffebee;
+    border-left: 4px solid #d32f2f;
 }
 
 .error-message.active {
@@ -1097,25 +1201,25 @@ textarea {
 /* ============================================ */
 
 .payment-methods {
-    margin-top: 2rem;
+    margin-top: 0;
 }
 
 .payment-methods h3 {
     margin-bottom: 1.5rem;
-    color: var(--text-primary);
+    color: #333;
 }
 
 .payment-tabs {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
-    border-bottom: 2px solid var(--glass-border);
+    border-bottom: 2px solid #e0e0e0;
 }
 
 .payment-tab {
     background: none;
     border: none;
-    color: var(--text-secondary);
+    color: #999;
     padding: 1rem;
     cursor: pointer;
     font-size: 1rem;
@@ -1125,7 +1229,7 @@ textarea {
 }
 
 .payment-tab.active {
-    color: var(--accent-color);
+    color: #ff6b35;
 }
 
 .payment-tab.active::after {
@@ -1135,7 +1239,7 @@ textarea {
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--accent-color);
+    background: #ff6b35;
 }
 
 .payment-method {
@@ -1147,12 +1251,108 @@ textarea {
     animation: fadeIn 0.3s ease;
 }
 
+.payment-method-select {
+    position: relative;
+}
+
+.form-input-select {
+    width: 100%;
+    padding: 0.875rem;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+.form-input-select:focus {
+    outline: none;
+    border-color: #ff6b35;
+    background: #fff url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6b35' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.5em 1.5em;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+/* Card Input with Icons */
+.card-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.card-input {
+    flex: 1;
+}
+
+.card-type-icons {
+    position: absolute;
+    right: 12px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.card-icon {
+    width: 32px;
+    height: 20px;
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+    cursor: default;
+}
+
+.card-icon.active {
+    opacity: 1;
+}
+
+.card-icon.visa-icon {
+    width: 36px;
+}
+
+/* CVV Input with Security Icon */
+.cvv-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cvv-input-wrapper .form-input {
+    flex: 1;
+    padding-right: 36px;
+}
+
+.security-icon {
+    position: absolute;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    color: #999;
+}
+
+/* Payment Method Selector Styling for Payment Modal */
+.payment-modal .payment-method-select {
+    margin-bottom: 1.5rem;
+}
+
+.payment-modal .form-input-select {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
 .game-payment-info {
-    background: rgba(59, 89, 152, 0.2);
+    background: #f0f8ff;
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 2rem;
-    border-left: 4px solid var(--accent-color);
+    border-left: 4px solid #ff6b35;
 }
 
 .game-payment-info h3 {
