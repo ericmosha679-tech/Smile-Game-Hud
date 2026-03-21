@@ -246,13 +246,14 @@ function displayGames(games) {
         if (currentUser && currentUser.subscription) {
             const subInfo = DataManager.getUserSubscriptionInfo(currentUser.id);
             const subInfoElement = document.getElementById(`subInfo-${game.id}`);
-            if (subInfoElement) {
+            if (subInfoElement && subInfo.tier !== 'none') {
                 const tierEmoji = {
                     'free': '🎯',
                     'premium': '⭐',
                     'pro': '👑'
                 };
-                subInfoElement.innerHTML = `${tierEmoji[subInfo.tier] || ''} ${subInfo.tier.toUpperCase()}: ${subInfo.remaining} games remaining`;
+                const tierName = subInfo.tier ? subInfo.tier.toUpperCase() : 'UNKNOWN';
+                subInfoElement.innerHTML = `${tierEmoji[subInfo.tier] || ''} ${tierName}: ${subInfo.remaining} games remaining`;
                 subInfoElement.className = subInfo.remaining <= 1 ? 'remaining warning' : 'remaining';
             }
         }

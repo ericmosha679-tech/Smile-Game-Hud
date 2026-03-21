@@ -433,6 +433,23 @@ const DataManager = {
         }
 
         const subscription = user.subscription;
+        
+        // Handle both old format (string) and new format (object)
+        if (typeof subscription === 'string') {
+            // Old format - convert to new format
+            const maxGames = this.getMaxGamesForTier(subscription);
+            return {
+                tier: subscription,
+                maxGames: maxGames,
+                gamesAccessed: 0,
+                remaining: maxGames,
+                status: 'active',
+                expiryDate: null,
+                trialUsed: false
+            };
+        }
+        
+        // New format (object)
         const remaining = Math.max(0, subscription.maxGames - subscription.gamesAccessed);
         
         // Check if expired
@@ -445,9 +462,9 @@ const DataManager = {
         }
 
         return {
-            tier: subscription.tier,
-            maxGames: subscription.maxGames,
-            gamesAccessed: subscription.gamesAccessed,
+            tier: subscription.tier || 'none',
+            maxGames: subscription.maxGames || 0,
+            gamesAccessed: subscription.gamesAccessed || 0,
             remaining: remaining,
             status: status,
             expiryDate: subscription.expiryDate,
