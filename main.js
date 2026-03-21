@@ -5,6 +5,9 @@
 let currentRating = 0;
 let currentPaymentGameId = null;
 let currentPaymentMethod = 'card';
+let currentCategory = 'all';
+let currentSearchQuery = '';
+let currentSortOption = 'default';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -218,7 +221,7 @@ function createGameCard(game) {
     card.className = 'game-card';
     card.innerHTML = `
         <div class="game-image-container">
-            <img src="${game.imageUrl}" alt="${game.title}" class="game-image" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(game.title)}'">
+            <img src="${game.imageUrl}" alt="${game.title}" class="game-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(game.title)}'">
             <div class="download-badge">
                 <span class="download-icon">⬇️</span>
                 <span class="download-count">${game.downloads}</span>
@@ -235,7 +238,7 @@ function createGameCard(game) {
                 </div>
                 <div class="game-actions">
                     <button class="game-action-btn" onclick="initiateDownload(${game.id}, '${game.title}')">⬇️ Download</button>
-                    <button class="game-action-btn secondary" onclick="openCommentsModal(${game.id}, '${game.title}')">💬 Reviews</button>
+                    <button class="game-action-btn secondary" onclick="openGameDetails(${game.id})">ℹ️ Details</button>
                 </div>
             </div>
             <div class="subscription-info">
@@ -269,9 +272,69 @@ function displayFeaturedGames(games) {
 }
 
 function filterGamesByCategory(category) {
-    const games = DataManager.getGames();
-    const filtered = category === 'all' ? games : games.filter(g => g.category === category);
-    displayGames(filtered);
+    currentCategory = category;
+    applyAllFiltersAndSort();
+}
+
+function handleGameSearch(query) {
+    currentSearchQuery = query.toLowerCase().trim();
+    applyAllFiltersAndSort();
+}
+
+function handleGameSort(sortOption) {
+    currentSortOption = sortOption;
+    applyAllFiltersAndSort();
+}
+
+function applyAllFiltersAndSort() {
+    let games = DataManager.getGames();
+    
+    // Apply category filter
+    if (currentCategory !== 'all') {
+        games = games.filter(g => g.category === currentCategory);
+    }
+    
+    // Apply search filter
+    if (currentSearchQuery) {
+        games = games.filter(g => 
+            g.title.toLowerCase().includes(currentSearchQuery) ||
+            g.description.toLowerCase().includes(currentSearchQuery) ||
+            g.category.toLowerCase().includes(currentSearchQuery)
+        );
+    }
+    
+    // Apply sorting
+    games = sortGames(games, currentSortOption);
+    
+    // Display results
+    displayGames(games);
+    
+    // Update result count
+    const resultCount = games.length;
+    if (currentSearchQuery) {
+        showToast(`Found ${resultCount} game${resultCount === 1 ? '' : 's'}`, 'info');
+    }
+}
+
+function sortGames(games, sortOption) {
+    const sorted = [...games];
+    
+    switch(sortOption) {
+        case 'rating-high':
+            return sorted.sort((a, b) => b.rating - a.rating);
+        case 'rating-low':
+            return sorted.sort((a, b) => a.rating - b.rating);
+        case 'downloads-high':
+            return sorted.sort((a, b) => b.downloads - a.downloads);
+        case 'downloads-low':
+            return sorted.sort((a, b) => a.downloads - b.downloads);
+        case 'price-high':
+            return sorted.sort((a, b) => b.price - a.price);
+        case 'price-low':
+            return sorted.sort((a, b) => a.price - b.price);
+        default:
+            return sorted;
+    }
 }
 
 // ============ DOWNLOAD & PAYMENT ============
@@ -765,6 +828,71 @@ function verifyAdminPassword() {
         errorDiv.textContent = 'Incorrect password. Access denied.';
         showToast('❌ Invalid admin password', 'error');
     }
+}
+
+// ============ GAME DETAILS & WISHLIST ============
+
+let currentGameDetailsId = null;
+
+function openGameDetails(gameId) {
+    const game = DataManager.getGameById(gameId);
+    if (!game) return;
+    
+    currentGameDetailsId = gameId;
+    
+    // Populate modal
+    document.getElementById('gameDetailsTitle').textContent = game.title;
+    document.getElementById('gameDetailsImage').src = game.imageUrl;
+    document.getElementById('gameDetailsCategory').textContent = capitalizeFirst(game.category);
+    document.getElementById('gameDetailsRating').textContent = `⭐ ${game.rating}/5`;
+    document.getElementById('gameDetailsPrice').textContent = game.price === 0 ? 'FREE' : `$${game.price.toFixed(2)}`;
+    document.getElementById('gameDetailsDownloads').textContent = `${game.downloads.toLocaleString()} downloads`;
+    document.getElementById('gameDetailsDescription').textContent = game.description;
+    
+    // Update wishlist indicator
+    const currentUser = DataManager.getCurrentUser();
+    const wishlistIndicator = document.getElementById('wishlistIndicator');
+    if (currentUser) {
+        const isInWishlist = DataManager.isGameInWishlist(currentUser.id, gameId);
+        wishlistIndicator.classList.toggle('active', isInWishlist);
+        wishlistIndicator.innerHTML = isInWishlist ? '❤️ Added to Wishlist' : '';
+    } else {
+        wishlistIndicator.classList.remove('active');
+        wishlistIndicator.innerHTML = '';
+    }
+    
+    document.getElementById('gameDetailsDownloadBtn').textContent = `⬇️ Download`;
+    
+    openModal('gameDetailsModal');
+}
+
+function toggleWishlist() {
+    const currentUser = DataManager.getCurrentUser();
+    
+    if (!currentUser) {
+        showToast('Please log in to use wishlist', 'warning');
+        setTimeout(() => openModal('loginModal'), 500);
+        return;
+    }
+    
+    if (!currentGameDetailsId) return;
+    
+    const game = DataManager.getGameById(currentGameDetailsId);
+    const isInWishlist = DataManager.isGameInWishlist(currentUser.id, currentGameDetailsId);
+    
+    if (isInWishlist) {
+        DataManager.removeFromWishlist(currentUser.id, currentGameDetailsId);
+        showToast(`❌ Removed "${game.title}" from wishlist`, 'info');
+    } else {
+        DataManager.addToWishlist(currentUser.id, currentGameDetailsId);
+        showToast(`❤️ Added "${game.title}" to wishlist`, 'success');
+    }
+    
+    // Update indicator
+    const wishlistIndicator = document.getElementById('wishlistIndicator');
+    const newIsInWishlist = DataManager.isGameInWishlist(currentUser.id, currentGameDetailsId);
+    wishlistIndicator.classList.toggle('active', newIsInWishlist);
+    wishlistIndicator.innerHTML = newIsInWishlist ? '❤️ Added to Wishlist' : '';
 }
 
 // ============ MODALS ============

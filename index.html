@@ -92,6 +92,32 @@
         </div>
     </section>
 
+    <!-- Game Search & Filter Bar -->
+    <section class="search-filter-section">
+        <div class="search-container">
+            <input 
+                type="text" 
+                id="gameSearch" 
+                class="search-input" 
+                placeholder="🔍 Search games by title..." 
+                aria-label="Search games"
+                onkeyup="handleGameSearch(this.value)"
+            >
+            <div class="sort-controls">
+                <label for="sortBy" class="sort-label">Sort by:</label>
+                <select id="sortBy" class="sort-select" onchange="handleGameSort(this.value)" aria-label="Sort games">
+                    <option value="default">Default</option>
+                    <option value="rating-high">⭐ Highest Rating</option>
+                    <option value="rating-low">⭐ Lowest Rating</option>
+                    <option value="downloads-high">⬇️ Most Downloads</option>
+                    <option value="downloads-low">⬇️ Least Downloads</option>
+                    <option value="price-high">💰 Price: High to Low</option>
+                    <option value="price-low">💰 Price: Low to High</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
     <!-- Game Categories Bar -->
     <section class="categories-section">
         <div class="categories-header">
@@ -192,6 +218,47 @@
     </footer>
 
     <!-- MODALS -->
+
+    <!-- Game Details Modal -->
+    <div class="modal" id="gameDetailsModal">
+        <div class="modal-content game-details-modal">
+            <div class="modal-header">
+                <h2 id="gameDetailsTitle">Game Details</h2>
+                <button class="modal-close" onclick="closeModal('gameDetailsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="gameDetailsImage" src="" alt="Game" class="game-details-image">
+                <div class="game-details-info">
+                    <div class="detail-row">
+                        <span class="detail-label">Category:</span>
+                        <span id="gameDetailsCategory" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Rating:</span>
+                        <span id="gameDetailsRating" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Price:</span>
+                        <span id="gameDetailsPrice" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Downloads:</span>
+                        <span id="gameDetailsDownloads" class="detail-value"></span>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Description</h4>
+                        <p id="gameDetailsDescription"></p>
+                    </div>
+                    <div id="wishlistIndicator"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="toggleWishlist()">❤️ Wishlist</button>
+                <button class="btn btn-primary" id="gameDetailsDownloadBtn" onclick="initiateDownload(currentGameDetailsId, '')">⬇️ Download</button>
+                <button class="btn btn-secondary" onclick="closeModal('gameDetailsModal')">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Admin Password Modal -->
     <div class="modal" id="adminModal">
