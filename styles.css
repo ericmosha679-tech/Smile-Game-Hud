@@ -579,6 +579,18 @@ body {
     margin-top: 2rem;
 }
 
+.game-image {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+}
+
+.game-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
 .game-card {
     background: rgba(59, 89, 152, 0.25);
     border: 1px solid var(--glass-border);
@@ -2347,7 +2359,7 @@ body.device-mobile.landscape .subscription-cards {
     }
 
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
         padding: 0 1rem;
     }
@@ -2356,12 +2368,53 @@ body.device-mobile.landscape .subscription-cards {
         border-radius: 12px;
     }
 
-    .game-image {
-        height: 140px;
-    }
-
     .game-content {
         padding: 0.75rem;
+    }
+
+    .game-actions {
+        flex-direction: row;
+        gap: 0.3rem;
+    }
+
+    .game-action-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+        flex: 1;
+    }
+
+    /* Convert featured games table to cards on tablet */
+    .games-table {
+        display: block;
+        border: none;
+    }
+
+    .games-table thead {
+        display: none;
+    }
+
+    .games-table tbody tr {
+        display: block;
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: rgba(59, 89, 152, 0.15);
+    }
+
+    .games-table tbody tr:hover {
+        background: rgba(59, 89, 152, 0.25);
+    }
+
+    .games-table td {
+        display: block;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .games-table td:last-child {
+        border-bottom: none;
     }
 
     .game-title {
@@ -2439,6 +2492,70 @@ body.device-mobile.landscape .subscription-cards {
     }
 }
 
+/* ============================================ */
+/* Small Phones - Medium (481px - 600px) */
+/* ============================================ */
+@media (max-width: 600px) and (min-width: 481px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        padding: 0 0.5rem;
+    }
+
+    .game-card {
+        border-radius: 8px;
+    }
+
+    .game-actions {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .game-action-btn {
+        padding: 0.4rem;
+        font-size: 0.65rem;
+        width: 100%;
+    }
+
+    /* Convert featured games table to cards */
+    .games-table {
+        display: block;
+        border: none;
+    }
+
+    .games-table thead {
+        display: none;
+    }
+
+    .games-table tbody tr {
+        display: block;
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: rgba(59, 89, 152, 0.15);
+    }
+
+    .games-table tbody tr:hover {
+        background: rgba(59, 89, 152, 0.25);
+    }
+
+    .games-table td {
+        display: block;
+        padding: 0.4rem 0;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.8rem;
+    }
+
+    .games-table td:last-child {
+        border-bottom: none;
+    }
+}
+
+/* ============================================ */
+/* Extra Small Phones (480px and below) */
+/* ============================================ */
 @media (max-width: 480px) {
     body {
         font-size: 14px;
