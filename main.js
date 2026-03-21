@@ -956,7 +956,13 @@ function loadProfileInfo() {
 
     document.getElementById('userNameDisplay').textContent = currentUser.name;
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
-    document.getElementById('userSubscriptionDisplay').textContent = subscriptionMap[currentUser.subscription];
+    
+    // Handle both old format (string) and new format (object with tier property)
+    const subscriptionTier = typeof currentUser.subscription === 'object' && currentUser.subscription.tier 
+        ? currentUser.subscription.tier 
+        : currentUser.subscription;
+    
+    document.getElementById('userSubscriptionDisplay').textContent = subscriptionMap[subscriptionTier] || 'No Subscription';
     document.getElementById('userDateDisplay').textContent = currentUser.createdAt;
 }
 
