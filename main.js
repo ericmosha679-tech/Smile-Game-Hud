@@ -262,22 +262,35 @@ function displayGames(games) {
 function createGameCard(game) {
     const card = document.createElement('div');
     card.className = 'game-card';
-    const releaseDate = new Date(game.releaseDate).toLocaleDateString();
-    const isLatest = game.rating >= 4.7 && new Date(game.releaseDate) > new Date('2024-01-01'); // Example criteria for 'Latest'
+    
+    // Parse date safely - handle both YYYY-MM-DD and other formats
+    let releaseDate = 'N/A';
+    if (game.releaseDate) {
+        const dateParts = game.releaseDate.split('-');
+        if (dateParts.length === 3) {
+            const date = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+            if (!isNaN(date.getTime())) {
+                releaseDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+        }
+    }
+    
+    const isLatest = game.rating >= 4.7 && game.releaseDate && game.releaseDate > '2024-01-01';
+    
     card.innerHTML = `
-        <div class="game-thumbnail">
-            <img src="${game.imageUrl}" alt="${game.title}" class="game-image" loading="lazy" onerror="this.src='https://via.placeholder.com/80x80?text=${encodeURIComponent(game.title)}'">
+        <div class="game-card-image">
+            <img src="${game.imageUrl}" alt="${game.title}" class="game-image" loading="lazy" onerror="this.src='https://via.placeholder.com/150x150?text=${encodeURIComponent(game.title)}'">
         </div>
-        <div class="game-info">
+        <div class="game-card-footer">
             <h3 class="game-title">${game.title}</h3>
             <div class="game-meta">
                 <span class="game-release">${releaseDate}</span>
                 ${isLatest ? '<span class="latest-tag">Latest</span>' : ''}
             </div>
-        </div>
-        <div class="game-actions">
-            <button class="game-action-btn" onclick="initiateDownload(${game.id}, '${game.title}')">⬇️ Download</button>
-            <button class="game-action-btn secondary" onclick="openGameDetails(${game.id})">ℹ️ Details</button>
+            <div class="game-actions">
+                <button class="game-action-btn" onclick="initiateDownload(${game.id}, '${game.title}')" title="Download">⬇️</button>
+                <button class="game-action-btn secondary" onclick="openGameDetails(${game.id})" title="Details">ℹ️</button>
+            </div>
         </div>
     `;
     card.id = `game-card-${game.id}`;
