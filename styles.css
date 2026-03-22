@@ -1575,109 +1575,140 @@ textarea {
 /* ============================================ */
 
 .footer {
-    background: rgba(13, 27, 42, 0.8);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--glass-border);
-    margin-top: 4rem;
+    background: #050821;
+    color: white;
+    padding: 3rem 2rem 1rem;
+    font-family: sans-serif;
 }
 
 .footer-content {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 3rem 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 2rem;
+    margin-bottom: 2rem;
 }
 
-.footer-section h4 {
+.footer-column {
+    border: none;
+}
+
+.footer-column summary {
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
     margin-bottom: 1rem;
-    color: var(--text-primary);
-}
-
-.footer-section p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-.footer-section ul {
     list-style: none;
+    color: white;
 }
 
-.footer-section ul li {
-    margin-bottom: 0.75rem;
+.footer-column summary::-webkit-details-marker {
+    display: none;
 }
 
-.footer-section a {
-    color: var(--text-secondary);
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-column li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-column a {
+    color: white;
     text-decoration: none;
-    transition: color var(--animation-duration) ease;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
 }
 
-.footer-section a:hover {
-    color: var(--accent-color);
+.footer-column a:hover {
+    color: #ccc;
+}
+
+.contact-sales {
+    color: #ff6b35 !important;
+    font-weight: bold;
+}
+
+.footer-social {
+    border-top: 1px solid #333;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .social-links {
     display: flex;
-    flex-direction: row;
-    gap: 1rem;
     justify-content: center;
+    gap: 1rem;
 }
 
 .social-icon-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.3), rgba(59, 89, 152, 0.3));
-    border: 2px solid var(--glass-border);
-    transition: all 0.3s ease;
-    color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
 }
 
 .social-icon-link:hover {
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.6), rgba(59, 89, 152, 0.6));
-    border-color: var(--accent-color);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+    color: #ff6b35;
 }
 
 .social-icon-link svg {
-    width: 28px;
-    height: 28px;
-    color: var(--accent-color);
+    width: 24px;
+    height: 24px;
 }
 
-.social-icon-link:hover svg {
-    color: white;
-}
-
-.social-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    background: rgba(59, 89, 152, 0.3);
-    border: 1px solid var(--glass-border);
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all var(--animation-duration) ease;
-}
-
-.social-link:hover {
-    border-color: var(--accent-color);
-    background: rgba(255, 107, 53, 0.2);
-}
-
-.footer-bottom {
+.footer-legal {
     text-align: center;
-    padding: 1.5rem 2rem;
-    border-top: 1px solid var(--glass-border);
-    color: var(--text-secondary);
+    padding-top: 1rem;
+    border-top: 1px solid #333;
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.footer-legal a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-legal a:hover {
+    color: #ff6b35;
+}
+
+/* Mobile accordion */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .footer-column ul {
+        display: none;
+    }
+
+    .footer-column[open] ul {
+        display: block;
+        margin-top: 1rem;
+    }
+
+    .footer-column summary {
+        padding: 1rem 0;
+        border-bottom: 1px solid #333;
+    }
+
+    .footer-column summary::after {
+        content: '+';
+        float: right;
+        font-size: 1.2rem;
+    }
+
+    .footer-column[open] summary::after {
+        content: '-';
+    }
 }
 
 /* ============================================ */
@@ -2394,7 +2425,7 @@ body.admin-device-desktop .admin-main {
     }
 
     .footer-content {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 3rem;
         padding: 4rem 3rem;
     }
