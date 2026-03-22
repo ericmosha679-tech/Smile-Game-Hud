@@ -223,9 +223,8 @@ window.addEventListener('resize', () => {
 // ============ GAMES DISPLAY & FILTERING ============
 
 function loadGamesGrid() {
-    const games = DataManager.getGames();
-    displayGames(games);
-    displayFeaturedGames(games);
+    applyAllFiltersAndSort();
+    displayFeaturedGames(DataManager.getGames());
 }
 
 function displayGames(games) {
@@ -233,7 +232,7 @@ function displayGames(games) {
     gamesGrid.innerHTML = '';
 
     if (games.length === 0) {
-        gamesGrid.innerHTML = '<p class="empty-message">No games found in this category.</p>';
+        gamesGrid.innerHTML = '<div class="no-results">No games found matching your criteria.</div>';
         return;
     }
 
@@ -263,31 +262,22 @@ function displayGames(games) {
 function createGameCard(game) {
     const card = document.createElement('div');
     card.className = 'game-card';
+    const releaseDate = new Date(game.releaseDate).toLocaleDateString();
+    const isLatest = game.rating >= 4.7 && new Date(game.releaseDate) > new Date('2024-01-01'); // Example criteria for 'Latest'
     card.innerHTML = `
-        <div class="game-image-container">
-            <img src="${game.imageUrl}" alt="${game.title}" class="game-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(game.title)}'">
-            <div class="download-badge">
-                <span class="download-icon">⬇️</span>
-                <span class="download-count">${game.downloads}</span>
+        <div class="game-thumbnail">
+            <img src="${game.imageUrl}" alt="${game.title}" class="game-image" loading="lazy" onerror="this.src='https://via.placeholder.com/80x80?text=${encodeURIComponent(game.title)}'">
+        </div>
+        <div class="game-info">
+            <h3 class="game-title">${game.title}</h3>
+            <div class="game-meta">
+                <span class="game-release">${releaseDate}</span>
+                ${isLatest ? '<span class="latest-tag">Latest</span>' : ''}
             </div>
         </div>
-        <div class="game-content">
-            <h3 class="game-title">${game.title}</h3>
-            <span class="game-category">${capitalizeFirst(game.category)}</span>
-            <p class="game-description">${game.description.substring(0, 100)}...</p>
-            <div class="game-rating">⭐ ${game.rating}</div>
-            <div class="game-footer">
-                <div class="game-price">
-                    ${game.price === 0 ? 'FREE' : '$' + game.price.toFixed(2)}
-                </div>
-                <div class="game-actions">
-                    <button class="game-action-btn" onclick="initiateDownload(${game.id}, '${game.title}')">⬇️ Download</button>
-                    <button class="game-action-btn secondary" onclick="openGameDetails(${game.id})">ℹ️ Details</button>
-                </div>
-            </div>
-            <div class="subscription-info">
-                <small id="subInfo-${game.id}"></small>
-            </div>
+        <div class="game-actions">
+            <button class="game-action-btn" onclick="initiateDownload(${game.id}, '${game.title}')">⬇️ Download</button>
+            <button class="game-action-btn secondary" onclick="openGameDetails(${game.id})">ℹ️ Details</button>
         </div>
     `;
     card.id = `game-card-${game.id}`;
@@ -434,6 +424,9 @@ function applyAllFiltersAndSort() {
     // Apply sorting
     games = sortGames(games, currentSortOption);
     
+    // Update All Games count
+    updateAllGamesCount(games.length);
+    
     // Display results
     displayGames(games);
     
@@ -462,6 +455,13 @@ function sortGames(games, sortOption) {
             return sorted.sort((a, b) => a.price - b.price);
         default:
             return sorted;
+    }
+}
+
+function updateAllGamesCount(count) {
+    const countElement = document.getElementById('allGamesCount');
+    if (countElement) {
+        countElement.textContent = count;
     }
 }
 

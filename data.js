@@ -32,6 +32,7 @@ const DataManager = {
                 price: 4.99,
                 rating: 4.8,
                 downloads: 15420,
+                releaseDate: '2024-01-15',
                 description: 'An intense action game with fast-paced combat and stunning graphics. Fight through waves of enemies in this adrenaline-pumping adventure.',
                 imageUrl: 'https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&h=300&fit=crop'
             },
@@ -42,6 +43,7 @@ const DataManager = {
                 price: 7.99,
                 rating: 4.6,
                 downloads: 12350,
+                releaseDate: '2023-11-20',
                 description: 'An epic RPG with a massive world, deep character customization, and an engaging story. Create your legend in this immersive fantasy world.',
                 imageUrl: 'https://images.unsplash.com/photo-1538481143235-25879b10029f?w=400&h=300&fit=crop'
             },
@@ -52,6 +54,7 @@ const DataManager = {
                 price: 2.99,
                 rating: 4.4,
                 downloads: 28900,
+                releaseDate: '2024-02-10',
                 description: 'Challenging puzzles that will test your brain. Over 500 levels of mind-bending gameplay with beautiful minimalist design.',
                 imageUrl: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=300&fit=crop'
             },
@@ -62,6 +65,7 @@ const DataManager = {
                 price: 5.99,
                 rating: 4.7,
                 downloads: 9870,
+                releaseDate: '2023-09-05',
                 description: 'Build your empire and lead your troops to victory. Strategic gameplay with complex mechanics and engaging AI opponents.',
                 imageUrl: 'https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&h=300&fit=crop'
             },
@@ -72,6 +76,7 @@ const DataManager = {
                 price: 3.99,
                 rating: 4.5,
                 downloads: 18760,
+                releaseDate: '2024-03-01',
                 description: 'Experience the thrill of competitive sports. Play as your favorite teams and compete against players worldwide.',
                 imageUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=400&h=300&fit=crop'
             },
@@ -82,6 +87,7 @@ const DataManager = {
                 price: 6.99,
                 rating: 4.7,
                 downloads: 14560,
+                releaseDate: '2023-12-18',
                 description: 'Embark on an epic adventure across mysterious lands. Discover secrets, solve puzzles, and uncover the truth about reality.',
                 imageUrl: 'https://images.unsplash.com/photo-1538481143235-25879b10029f?w=400&h=300&fit=crop'
             },
@@ -92,6 +98,7 @@ const DataManager = {
                 price: 8.99,
                 rating: 4.9,
                 downloads: 7234,
+                releaseDate: '2023-08-22',
                 description: 'The most realistic flight simulator. Master various aircraft and fly across the world with stunning visuals and accurate physics.',
                 imageUrl: 'https://images.unsplash.com/photo-1579373903362-469c39944d96?w=400&h=300&fit=crop'
             },
@@ -102,6 +109,7 @@ const DataManager = {
                 price: 1.99,
                 rating: 4.6,
                 downloads: 35620,
+                releaseDate: '2024-02-28',
                 description: 'A relaxing casual game perfect for unwinding. Beautiful graphics and soothing music create the perfect gaming experience.',
                 imageUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=400&h=300&fit=crop'
             },
@@ -112,6 +120,7 @@ const DataManager = {
                 price: 2.99,
                 rating: 4.8,
                 downloads: 22100,
+                releaseDate: '2024-01-08',
                 description: 'An indie masterpiece with unique gameplay and charming pixel art. A heartwarming story wrapped in engaging mechanics.',
                 imageUrl: 'https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&h=300&fit=crop'
             },
@@ -122,6 +131,7 @@ const DataManager = {
                 price: 0.00,
                 rating: 4.7,
                 downloads: 45230,
+                releaseDate: '2024-03-15',
                 description: 'Team up with friends in this multiplayer action game. Fast-paced matches with competitive rankings and seasonal rewards.',
                 imageUrl: 'https://images.unsplash.com/photo-1538481143235-25879b10029f?w=400&h=300&fit=crop'
             },
@@ -132,6 +142,7 @@ const DataManager = {
                 price: 4.99,
                 rating: 4.4,
                 downloads: 11230,
+                releaseDate: '2023-10-31',
                 description: 'A terrifying horror experience. Unravel dark mysteries in an atmospheric haunted mansion with immersive sound design.',
                 imageUrl: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=300&fit=crop'
             },
@@ -142,6 +153,7 @@ const DataManager = {
                 price: 3.99,
                 rating: 4.5,
                 downloads: 19876,
+                releaseDate: '2024-03-10',
                 description: 'Climb to the top in this competitive action platformer. Challenging levels, smooth controls, and endless fun await.',
                 imageUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=400&h=300&fit=crop'
             }
