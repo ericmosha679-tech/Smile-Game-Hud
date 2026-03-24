@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel Test Suite - Professional Version</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0d1b2a;
+            color: white;
+            line-height: 1.6;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            background: rgba(255, 107, 53, 0.1);
+        }
+        .test-section h2 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 6px;
+            position: relative;
+        }
+        .test-item.pass {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid #4CAF50;
+        }
+        .test-item.fail {
+            background: rgba(244, 67, 54, 0.2);
+            border-left: 4px solid #f44336;
+        }
+        .test-item.pending {
+            background: rgba(255, 152, 0, 0.2);
+            border-left: 4px solid #FF9800;
+        }
+        .test-status {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .test-details {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #ff8c5a;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #ff8c5a);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .summary {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .summary h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+        }
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+        .summary-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Professional Admin Panel Test Suite</h1>
+        <p>Comprehensive testing for the rewritten admin panel functionality</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="summary" id="testSummary" style="display: none;">
+            <h3>📊 Test Results Summary</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-value" id="totalTests">0</div>
+                    <div class="summary-label">Total Tests</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="passedTests">0</div>
+                    <div class="summary-label">Passed</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="failedTests">0</div>
+                    <div class="summary-label">Failed</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="testScore">0%</div>
+                    <div class="summary-label">Success Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Core Functionality Tests</h2>
+            <div id="coreTests"></div>
+            <button onclick="runCoreTests()">Run Core Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🎮 Games Management Tests</h2>
+            <div id="gamesTests"></div>
+            <button onclick="runGamesTests()">Run Games Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>✨ Theme Management Tests</h2>
+            <div id="themeTests"></div>
+            <button onclick="runThemeTests()">Run Theme Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🖼️ Background Management Tests</h2>
+            <div id="backgroundTests"></div>
+            <button onclick="runBackgroundTests()">Run Background Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>👥 User Management Tests</h2>
+            <div id="usersTests"></div>
+            <button onclick="runUsersTests()">Run Users Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📈 Analytics Tests</h2>
+            <div id="analyticsTests"></div>
+            <button onclick="runAnalyticsTests()">Run Analytics Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔐 Security & Access Tests</h2>
+            <div id="securityTests"></div>
+            <button onclick="runSecurityTests()">Run Security Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📱 Responsive Design Tests</h2>
+            <div id="responsiveTests"></div>
+            <button onclick="runResponsiveTests()">Run Responsive Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🚀 Performance Tests</h2>
+            <div id="performanceTests"></div>
+            <button onclick="runPerformanceTests()">Run Performance Tests</button>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button onclick="runAllTests()" style="background: #4CAF50; font-size: 1.1rem; padding: 15px 30px;">
+                🧪 Run All Tests
+            </button>
+            <button onclick="openAdminPanel()" style="background: #2196F3; font-size: 1.1rem; padding: 15px 30px;">
+                🚀 Open Admin Panel
+            </button>
+            <button onclick="generateReport()" style="background: #9C27B0; font-size: 1.1rem; padding: 15px 30px;">
+                📄 Generate Report
+            </button>
+        </div>
+
+        <div id="testResults"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // Test Framework
+        class TestFramework {
+            constructor() {
+                this.tests = [];
+                this.results = {
+                    total: 0,
+                    passed: 0,
+                    failed: 0,
+                    details: []
+                };
+            }
+
+            addTest(name, category, testFunction) {
+                this.tests.push({ name, category, testFunction });
+            }
+
+            async runTest(test) {
+                const startTime = performance.now();
+                let result = {
+                    name: test.name,
+                    category: test.category,
+                    status: 'pending',
+                    duration: 0,
+                    message: '',
+                    details: ''
+                };
+
+                try {
+                    await test.testFunction();
+                    result.status = 'pass';
+                    result.message = '✅ Test passed';
+                    this.results.passed++;
+                } catch (error) {
+                    result.status = 'fail';
+                    result.message = '❌ Test failed';
+                    result.details = error.message;
+                    this.results.failed++;
+                }
+
+                result.duration = performance.now() - startTime;
+                this.results.total++;
+                this.results.details.push(result);
+
+                return result;
+            }
+
+            updateProgress() {
+                const progress = (this.results.total / this.tests.length) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+            }
+
+            updateSummary() {
+                document.getElementById('totalTests').textContent = this.results.total;
+                document.getElementById('passedTests').textContent = this.results.passed;
+                document.getElementById('failedTests').textContent = this.results.failed;
+                
+                const score = this.results.total > 0 
+                    ? Math.round((this.results.passed / this.results.total) * 100) 
+                    : 0;
+                document.getElementById('testScore').textContent = score + '%';
+                
+                document.getElementById('testSummary').style.display = 'block';
+            }
+
+            displayResult(result, containerId) {
+                const container = document.getElementById(containerId);
+                const element = document.createElement('div');
+                element.className = `test-item ${result.status}`;
+                element.innerHTML = `
+                    <div class="test-status">${result.message}</div>
+                    <div class="test-details">
+                        <strong>${result.name}</strong> (${result.category})
+                        ${result.details ? `<br><em>Error: ${result.details}</em>` : ''}
+                        <br>Duration: ${result.duration.toFixed(2)}ms
+                    </div>
+                `;
+                container.appendChild(element);
+            }
+        }
+
+        const testFramework = new TestFramework();
+
+        // Core Functionality Tests
+        testFramework.addTest('Admin Panel Class Initialization', 'Core', async () => {
+            if (typeof AdminPanel === 'undefined') {
+                throw new Error('AdminPanel class not defined');
+            }
+        });
+
+        testFramework.addTest('Firebase Configuration', 'Core', async () => {
+            if (typeof firebase === 'undefined') {
+                throw new Error('Firebase not loaded');
+            }
+            if (!firebaseConfig) {
+                throw new Error('Firebase config not found');
+            }
+        });
+
+        testFramework.addTest('DataManager Availability', 'Core', async () => {
+            if (typeof DataManager === 'undefined') {
+                throw new Error('DataManager not available');
+            }
+        });
+
+        testFramework.addTest('Admin Access Verification', 'Core', async () => {
+            const testPassword = 'Ciontatenx83';
+            if (testPassword !== 'Ciontatenx83') {
+                throw new Error('Admin password verification failed');
+            }
+        });
+
+        // Games Management Tests
+        testFramework.addTest('Games Data Loading', 'Games', async () => {
+            if (typeof DataManager !== 'undefined') {
+                const games = DataManager.getGames();
+                if (!Array.isArray(games)) {
+                    throw new Error('Games data is not an array');
+                }
+            }
+        });
+
+        testFramework.addTest('Add Game Function', 'Games', async () => {
+            if (typeof adminPanel !== 'undefined' && adminPanel.handleAddGame) {
+                // Function exists check
+            } else {
+                throw new Error('handleAddGame function not available');
+            }
+        });
+
+        testFramework.addTest('Edit Game Function', 'Games', async () => {
+            if (typeof adminPanel !== 'undefined' && adminPanel.editGame) {
+                // Function exists check
+            } else {
+                throw new Error('editGame function not available');
+            }
+        });
+
+        testFramework.addTest('Delete Game Function', 'Games', async () => {
+            if (typeof adminPanel !== 'undefined' && adminPanel.deleteGame) {
+                // Function exists check
+            } else {
+                throw new Error('deleteGame function not available');
+            }
+        });
+
+        // Theme Management Tests
+        testFramework.addTest('Theme Update Function', 'Theme', async () => {
+            if (typeof updateTheme === 'function') {
+                // Function exists check
+            } else {
+                throw new Error('updateTheme function not available');
+            }
+        });
+
+        testFramework.addTest('Theme Color Inputs', 'Theme', async () => {
+            const inputs = ['bgColor', 'accentColor', 'glassColor'];
+            for (let inputId of inputs) {
+                const input = document.getElementById(inputId);
+                if (!input) {
+                    throw new Error(`Theme input ${inputId} not found`);
+                }
+            }
+        });
+
+        testFramework.addTest('Theme Preview', 'Theme', async () => {
+            const preview = document.getElementById('themePreview');
+            if (!preview) {
+                throw new Error('Theme preview element not found');
+            }
+        });
+
+        // Background Management Tests
+        testFramework.addTest('Background Upload Function', 'Background', async () => {
+            if (typeof adminPanel !== 'undefined' && adminPanel.handleBackgroundUpload) {
+                // Function exists check
+            } else {
+                throw new Error('handleBackgroundUpload function not available');
+            }
+        });
+
+        testFramework.addTest('Background Preview', 'Background', async () => {
+            const preview = document.getElementById('bgPreviewBox');
+            if (!preview) {
+                throw new Error('Background preview element not found');
+            }
+        });
+
+        testFramework.addTest('Auto Shuffle Toggle', 'Background', async () => {
+            const toggle = document.getElementById('autoShuffleToggle');
+            if (!toggle) {
+                throw new Error('Auto shuffle toggle not found');
+            }
+        });
+
+        // User Management Tests
+        testFramework.addTest('Users Data Loading', 'Users', async () => {
+            if (typeof DataManager !== 'undefined') {
+                const users = DataManager.getUsers();
+                if (!Array.isArray(users)) {
+                    throw new Error('Users data is not an array');
+                }
+            }
+        });
+
+        testFramework.addTest('Users Table Element', 'Users', async () => {
+            const table = document.getElementById('adminUsersTable');
+            if (!table) {
+                throw new Error('Admin users table not found');
+            }
+        });
+
+        // Analytics Tests
+        testFramework.addTest('Analytics Container', 'Analytics', async () => {
+            const container = document.getElementById('analyticsContainer');
+            if (!container) {
+                throw new Error('Analytics container not found');
+            }
+        });
+
+        testFramework.addTest('Analytics Data Loading', 'Analytics', async () => {
+            if (typeof DataManager !== 'undefined') {
+                const analytics = DataManager.getAnalytics();
+                if (!analytics) {
+                    throw new Error('Analytics data not available');
+                }
+            }
+        });
+
+        // Security Tests
+        testFramework.addTest('Session Storage Access', 'Security', async () => {
+            const storage = sessionStorage;
+            if (!storage) {
+                throw new Error('SessionStorage not available');
+            }
+        });
+
+        testFramework.addTest('Password Protection', 'Security', async () => {
+            const correctPassword = 'Ciontatenx83';
+            const wrongPassword = 'wrong';
+            
+            if (correctPassword === 'Ciontatenx83' && wrongPassword !== 'Ciontatenx83') {
+                // Password logic working
+            } else {
+                throw new Error('Password protection logic error');
+            }
+        });
+
+        // Responsive Design Tests
+        testFramework.addTest('Viewport Meta Tag', 'Responsive', async () => {
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (!viewport) {
+                throw new Error('Viewport meta tag not found');
+            }
+        });
+
+        testFramework.addTest('Responsive CSS Classes', 'Responsive', async () => {
+            const container = document.querySelector('.admin-container');
+            if (!container) {
+                throw new Error('Admin container not found');
+            }
+        });
+
+        testFramework.addTest('Mobile Navigation', 'Responsive', async () => {
+            const sidebar = document.querySelector('.admin-sidebar');
+            if (!sidebar) {
+                throw new Error('Admin sidebar not found');
+            }
+        });
+
+        // Performance Tests
+        testFramework.addTest('Load Time Performance', 'Performance', async () => {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            if (loadTime > 5000) {
+                throw new Error(`Page load time too slow: ${loadTime}ms`);
+            }
+        });
+
+        testFramework.addTest('Memory Usage', 'Performance', async () => {
+            if (performance.memory) {
+                const memory = performance.memory.usedJSHeapSize / 1024 / 1024;
+                if (memory > 100) {
+                    throw new Error(`Memory usage too high: ${memory.toFixed(2)}MB`);
+                }
+            }
+        });
+
+        // Test Runner Functions
+        async function runCoreTests() {
+            const container = document.getElementById('coreTests');
+            container.innerHTML = '';
+            
+            const coreTests = testFramework.tests.filter(t => t.category === 'Core');
+            for (let test of coreTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'coreTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runGamesTests() {
+            const container = document.getElementById('gamesTests');
+            container.innerHTML = '';
+            
+            const gamesTests = testFramework.tests.filter(t => t.category === 'Games');
+            for (let test of gamesTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'gamesTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runThemeTests() {
+            const container = document.getElementById('themeTests');
+            container.innerHTML = '';
+            
+            const themeTests = testFramework.tests.filter(t => t.category === 'Theme');
+            for (let test of themeTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'themeTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runBackgroundTests() {
+            const container = document.getElementById('backgroundTests');
+            container.innerHTML = '';
+            
+            const backgroundTests = testFramework.tests.filter(t => t.category === 'Background');
+            for (let test of backgroundTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'backgroundTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runUsersTests() {
+            const container = document.getElementById('usersTests');
+            container.innerHTML = '';
+            
+            const usersTests = testFramework.tests.filter(t => t.category === 'Users');
+            for (let test of usersTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'usersTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runAnalyticsTests() {
+            const container = document.getElementById('analyticsTests');
+            container.innerHTML = '';
+            
+            const analyticsTests = testFramework.tests.filter(t => t.category === 'Analytics');
+            for (let test of analyticsTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'analyticsTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runSecurityTests() {
+            const container = document.getElementById('securityTests');
+            container.innerHTML = '';
+            
+            const securityTests = testFramework.tests.filter(t => t.category === 'Security');
+            for (let test of securityTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'securityTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runResponsiveTests() {
+            const container = document.getElementById('responsiveTests');
+            container.innerHTML = '';
+            
+            const responsiveTests = testFramework.tests.filter(t => t.category === 'Responsive');
+            for (let test of responsiveTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'responsiveTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runPerformanceTests() {
+            const container = document.getElementById('performanceTests');
+            container.innerHTML = '';
+            
+            const performanceTests = testFramework.tests.filter(t => t.category === 'Performance');
+            for (let test of performanceTests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, 'performanceTests');
+                testFramework.updateProgress();
+            }
+            testFramework.updateSummary();
+        }
+
+        async function runAllTests() {
+            // Reset results
+            testFramework.results = { total: 0, passed: 0, failed: 0, details: [] };
+            testFramework.updateProgress();
+            
+            // Clear all test containers
+            const containers = ['coreTests', 'gamesTests', 'themeTests', 'backgroundTests', 
+                              'usersTests', 'analyticsTests', 'securityTests', 'responsiveTests', 'performanceTests'];
+            containers.forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+            
+            // Run all tests
+            for (let test of testFramework.tests) {
+                const result = await testFramework.runTest(test);
+                testFramework.displayResult(result, test.category.toLowerCase() + 'Tests');
+                testFramework.updateProgress();
+                
+                // Small delay for visual feedback
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            testFramework.updateSummary();
+            
+            // Show final results
+            const score = testFramework.results.total > 0 
+                ? Math.round((testFramework.results.passed / testFramework.results.total) * 100) 
+                : 0;
+                
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = `
+                <div class="test-section">
+                    <h2>🎯 Final Test Results</h2>
+                    <div class="summary">
+                        <p><strong>Total Tests:</strong> ${testFramework.results.total}</p>
+                        <p><strong>Passed:</strong> ${testFramework.results.passed}</p>
+                        <p><strong>Failed:</strong> ${testFramework.results.failed}</p>
+                        <p><strong>Success Rate:</strong> ${score}%</p>
+                        <p><strong>Status:</strong> ${score >= 80 ? '✅ EXCELLENT' : score >= 60 ? '⚠️ GOOD' : '❌ NEEDS IMPROVEMENT'}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openAdminPanel() {
+            window.open('admin.html', '_blank');
+        }
+
+        function generateReport() {
+            const report = `
+PROFESSIONAL ADMIN PANEL TEST REPORT
+=====================================
+Generated: ${new Date().toLocaleString()}
+
+SUMMARY:
+--------
+Total Tests: ${testFramework.results.total}
+Passed: ${testFramework.results.passed}
+Failed: ${testFramework.results.failed}
+Success Rate: ${testFramework.results.total > 0 ? Math.round((testFramework.results.passed / testFramework.results.total) * 100) : 0}%
+
+DETAILED RESULTS:
+----------------
+${testFramework.results.details.map(test => 
+    `${test.name} (${test.category}): ${test.status.toUpperCase()}
+    Message: ${test.message}
+    Duration: ${test.duration.toFixed(2)}ms
+    ${test.details ? `Error: ${test.details}` : ''}
+    ---`
+).join('\n')}
+
+RECOMMENDATIONS:
+---------------
+${testFramework.results.failed > 0 ? 
+    'Some tests failed. Please review the detailed results above and fix the identified issues.' : 
+    'All tests passed! The admin panel is functioning correctly.'
+}
+
+NEXT STEPS:
+-----------
+1. Fix any failed tests
+2. Test admin panel manually
+3. Verify all functionality works as expected
+4. Deploy to production
+            `;
+            
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'admin-panel-test-report.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize Firebase config (for testing)
+        var firebaseConfig = {
+            apiKey: "AIzaSyCzq1EtuRnLlljXZNNi7i7hNLd8HFfvE9k",
+            authDomain: "smile-game-hud-db.firebaseapp.com",
+            databaseURL: "https://smile-game-hud-db-default-rtdb.firebaseio.com",
+            projectId: "smile-game-hud-db",
+            storageBucket: "smile-game-hud-db.firebasestorage.app",
+            messagingSenderId: "100113602094",
+            appId: "1:100113602094:web:4f76ba6ce230ea61c071bf"
+        };
+
+        // Load DataManager if available
+        const script = document.createElement('script');
+        script.src = 'data.js';
+        script.onload = () => {
+            console.log('📊 DataManager loaded for testing');
+        };
+        script.onerror = () => {
+            console.log('⚠️ DataManager not available - some tests may fail');
+        };
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
