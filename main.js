@@ -12,6 +12,7 @@ let currentSortOption = 'default';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    applySavedThemeMode();
     initializeUI();
     setupRealtimeGameListener();
     loadGamesGrid();
@@ -82,6 +83,7 @@ function setupEventListeners() {
     document.getElementById('dashboardBtn').addEventListener('click', () => openModal('dashboardModal'));
     document.getElementById('logoutBtn').addEventListener('click', logoutUser);
     document.getElementById('adminAccessBtn').addEventListener('click', () => openModal('adminModal'));
+    document.getElementById('themeToggleBtn').addEventListener('click', toggleThemeMode);
     document.getElementById('exploreBtn').addEventListener('click', scrollToCategories);
 
     // Modal close buttons
@@ -120,6 +122,25 @@ function checkUserSession() {
         dashboardBtn.style.display = 'none';
         logoutBtn.style.display = 'none';
     }
+}
+
+// ============ THEME MODE TOGGLE ============
+
+function applySavedThemeMode() {
+    const theme = localStorage.getItem('siteThemeMode') || 'dark';
+    if (theme === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeToggleBtn').textContent = '🌙';
+    } else {
+        document.body.classList.remove('light-mode');
+        document.getElementById('themeToggleBtn').textContent = '☀️';
+    }
+}
+
+function toggleThemeMode() {
+    const isLight = document.body.classList.toggle('light-mode');
+    localStorage.setItem('siteThemeMode', isLight ? 'light' : 'dark');
+    document.getElementById('themeToggleBtn').textContent = isLight ? '🌙' : '☀️';
 }
 
 // ============ BACKGROUND THEME ============

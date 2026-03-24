@@ -20,6 +20,7 @@
                 <span class="logo-text">Smile Gaming Hub</span>
             </div>
             <nav class="nav-links">
+                <button id="themeToggleBtn" class="nav-btn" title="Toggle light/dark mode">🌙</button>
                 <button id="subscriptionBtn" class="nav-btn subscription-btn">💎 Subscription</button>
                 <button id="loginBtn" class="nav-btn login-btn">Login</button>
                 <button id="signupBtn" class="nav-btn signup-btn">Sign Up</button>
@@ -36,7 +37,7 @@
             <p class="hero-subtitle">Discover, Download & Play Amazing Games</p>
             <div class="hero-buttons">
                 <button id="exploreBtn" class="btn btn-primary">Start Exploring</button>
-                <button id="adminAccessBtn" class="btn btn-secondary">Admin Access</button>
+                <button id="adminAccessBtn" class="btn btn-secondary" onclick="openModal('adminModal')">Admin Access</button>
             </div>
         </div>
         <div class="hero-background"></div>
@@ -204,6 +205,13 @@
                 <ul>
                     <li><a href="#">Contact</a></li>
                     <li><a href="#">Help Center</a></li>
+                </ul>
+            </details>
+            <details class="footer-column">
+                <summary>Contact Info</summary>
+                <ul>
+                    <li><a href="mailto:ericmosha679@gmail.com">ericmosha679@gmail.com</a></li>
+                    <li><a href="tel:+255762679099">+255 762 679 099</a></li>
                 </ul>
             </details>
         </div>
