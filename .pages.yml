@@ -1,0 +1,219 @@
+# Pages CMS Configuration
+# This file configures Pages CMS to work with your GitHub data files
+
+# Build settings
+build:
+  # Use the static site generator
+  command: "echo 'Static site ready'"
+  # Output directory
+  publish: "."
+  # Environment variables
+  environment:
+    NODE_VERSION: "18"
+
+# CMS Configuration
+cms:
+  # Local backend for development
+  local_backend:
+    url: "http://localhost:8081/api/v1"
+  
+  # Media and file settings
+  media_folder: "assets/images"
+  public_folder: "/assets/images"
+  
+  # Collections configuration
+  collections:
+    # Games collection
+    - name: "games"
+      label: "Games"
+      label_singular: "Game"
+      description: "Manage game entries"
+      folder: "data"
+      create: true
+      slug: "{{slug}}"
+      fields:
+        - { label: "Game ID", name: "id", widget: "number", required: true }
+        - { label: "Title", name: "title", widget: "string", required: true }
+        - { label: "Category", name: "category", widget: "select", options: ["action", "rpg", "puzzle", "strategy", "sports", "adventure", "simulation", "casual", "indie", "multiplayer", "horror"], required: true }
+        - { label: "Price", name: "price", widget: "number", value_type: "float", required: true }
+        - { label: "Rating", name: "rating", widget: "number", value_type: "float", min: 0, max: 5, step: 0.1, required: true }
+        - { label: "Downloads", name: "downloads", widget: "number", required: false, default: 0 }
+        - { label: "Release Date", name: "releaseDate", widget: "date", format: "YYYY-MM-DD", required: true }
+        - { label: "Description", name: "description", widget: "text", required: true }
+        - { label: "Image URL", name: "imageUrl", widget: "string", required: true }
+      # File to save to
+      file: "data/games.json"
+      # Format for the JSON file
+      format: "json"
+      # Extension for the file
+      extension: "json"
+
+    # Users collection
+    - name: "users"
+      label: "Users"
+      label_singular: "User"
+      description: "Manage user accounts"
+      folder: "data"
+      create: true
+      slug: "{{slug}}"
+      fields:
+        - { label: "User ID", name: "id", widget: "number", required: true }
+        - { label: "Name", name: "name", widget: "string", required: true }
+        - { label: "Email", name: "email", widget: "string", required: true, pattern: ["^[^@]+@[^@]+\.[^@]+$", "Must be a valid email address"] }
+        - { label: "Subscription", name: "subscription", widget: "select", options: ["free", "premium", "pro"], required: true, default: "free" }
+        - { label: "Created Date", name: "createdAt", widget: "date", format: "YYYY-MM-DD", required: true }
+        - { label: "Downloads", name: "downloads", widget: "list", field: { widget: "number" }, required: false }
+        - { label: "Wishlist", name: "wishlist", widget: "list", field: { widget: "number" }, required: false }
+        - { label: "Trial Used", name: "trialUsed", widget: "boolean", required: false, default: false }
+        - { label: "Blocked", name: "blocked", widget: "boolean", required: false, default: false }
+        - { label: "Blocked Reason", name: "blockedReason", widget: "text", required: false }
+      # File to save to
+      file: "data/users.json"
+      # Format for the JSON file
+      format: "json"
+      # Extension for the file
+      extension: "json"
+
+    # Comments collection
+    - name: "comments"
+      label: "Comments"
+      label_singular: "Comment"
+      description: "Manage user comments"
+      folder: "data"
+      create: true
+      slug: "{{slug}}"
+      fields:
+        - { label: "Comment ID", name: "id", widget: "number", required: true }
+        - { label: "Game ID", name: "gameId", widget: "number", required: true }
+        - { label: "User ID", name: "userId", widget: "number", required: true }
+        - { label: "Content", name: "content", widget: "text", required: true }
+        - { label: "Rating", name: "rating", widget: "number", value_type: "float", min: 0, max: 5, step: 0.1, required: false }
+        - { label: "Created At", name: "createdAt", widget: "datetime", format: "YYYY-MM-DD HH:mm:ss", required: true }
+      # File to save to
+      file: "data/comments.json"
+      # Format for the JSON file
+      format: "json"
+      # Extension for the file
+      extension: "json"
+
+    # Theme settings collection
+    - name: "theme"
+      label: "Theme Settings"
+      description: "Manage theme configuration"
+      folder: "data"
+      create: false
+      slug: "theme"
+      fields:
+        - { label: "Background Color", name: "bgColor", widget: "color", required: true, default: "#0d1b2a" }
+        - { label: "Accent Color", name: "accentColor", widget: "color", required: true, default: "#ff6b35" }
+        - { label: "Glass Color", name: "glassColor", widget: "color", required: true, default: "#3b5998" }
+      # File to save to
+      file: "data/theme.json"
+      # Format for the JSON file
+      format: "json"
+      # Extension for the file
+      extension: "json"
+
+# GitHub integration settings
+github:
+  # Your GitHub repository
+  repo: "ericmosha679-tech/Smile-Game-Hud"
+  # Branch to use
+  branch: "main"
+  # Path to your data files
+  data_path: "data"
+  # Auto-commit changes
+  auto_commit: true
+  # Commit message format
+  commit_message: "CMS: {{collection}} {{action}} by {{author}}"
+
+# Site settings
+site:
+  title: "Smile Gaming Hub"
+  description: "A gaming platform for discovering and playing amazing games"
+  author: "Smile Gaming Hub Team"
+  url: "https://ericmosha679-tech.github.io/Smile-Game-Hud/"
+  
+# Editorial workflow
+editorial_workflow:
+  enabled: true
+  # Workflow stages
+  stages:
+    - name: "draft"
+      label: "Draft"
+      description: "Content is in draft status"
+    - name: "review"
+      label: "Review"
+      description: "Content is ready for review"
+    - name: "published"
+      label: "Published"
+      description: "Content is published"
+
+# Media settings
+media:
+  # Supported file types
+  allowed_file_types:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".gif"
+    - ".webp"
+    - ".svg"
+  # Maximum file size (in MB)
+  max_file_size: 10
+  # Image resizing
+  image_resizing:
+    enabled: true
+    sizes:
+      - name: "thumbnail"
+        width: 150
+        height: 150
+        crop: true
+      - name: "medium"
+        width: 600
+        height: 400
+        crop: false
+      - name: "large"
+        width: 1200
+        height: 800
+        crop: false
+
+# Search settings
+search:
+  enabled: true
+  # Fields to search in
+  fields:
+    - "title"
+    - "description"
+    - "name"
+    - "content"
+  # Minimum search query length
+  min_query_length: 2
+  # Maximum results per page
+  max_results: 20
+
+# Localization
+i18n:
+  enabled: true
+  # Default language
+  default_language: "en"
+  # Supported languages
+  languages:
+    - code: "en"
+      label: "English"
+      file: "data/en.json"
+    - code: "es"
+      label: "Spanish"
+      file: "data/es.json"
+    - code: "fr"
+      label: "French"
+      file: "data/fr.json"
+
+# Development settings
+development:
+  # Enable hot reload
+  hot_reload: true
+  # Show draft content
+  show_drafts: true
+  # Debug mode
+  debug: true

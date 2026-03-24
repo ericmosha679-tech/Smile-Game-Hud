@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "gameId": 1,
+    "userId": 2,
+    "content": "Amazing action game! The combat system is so smooth and the graphics are stunning. Love the variety of enemies!",
+    "rating": 5.0,
+    "createdAt": "2024-03-15 14:30:00"
+  },
+  {
+    "id": 2,
+    "gameId": 1,
+    "userId": 3,
+    "content": "Great game but quite challenging. The boss fights are intense but rewarding. Worth every penny!",
+    "rating": 4.5,
+    "createdAt": "2024-03-18 16:45:00"
+  },
+  {
+    "id": 3,
+    "gameId": 3,
+    "userId": 2,
+    "content": "Perfect puzzle game for relaxing. The minimalist design is beautiful and the puzzles are clever.",
+    "rating": 4.8,
+    "createdAt": "2024-03-20 10:15:00"
+  },
+  {
+    "id": 4,
+    "gameId": 7,
+    "userId": 2,
+    "content": "This adventure game is incredible! The story is engaging and the world is vast. Highly recommended!",
+    "rating": 5.0,
+    "createdAt": "2024-03-22 09:30:00"
+  }
+]
