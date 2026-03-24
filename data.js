@@ -2,6 +2,9 @@
 // DATA MANAGEMENT WITH LOCALSTORAGE
 // ============================================
 
+// Firebase database reference
+const database = firebase.database();
+
 const DataManager = {
     // Initialize localStorage with default data
     init() {
@@ -189,6 +192,10 @@ const DataManager = {
         game.downloads = 0;
         games.push(game);
         localStorage.setItem('gamesData', JSON.stringify(games));
+        // Also save to Firebase
+        database.ref('games/' + game.id).set(game).catch(error => {
+            console.error('Error saving to Firebase:', error);
+        });
         this.addActivity(`Added new game: ${game.title}`);
         return game;
     },
@@ -199,6 +206,10 @@ const DataManager = {
         if (index !== -1) {
             games[index] = { ...games[index], ...updatedGame, id: parseInt(id) };
             localStorage.setItem('gamesData', JSON.stringify(games));
+            // Save to Firebase
+            database.ref('games/' + id).set(games[index]).catch(error => {
+                console.error('Error updating Firebase:', error);
+            });
             this.addActivity(`Updated game: ${updatedGame.title}`);
             return games[index];
         }
@@ -210,6 +221,10 @@ const DataManager = {
         const gameTitle = games.find(g => g.id === parseInt(id))?.title;
         const filtered = games.filter(g => g.id !== parseInt(id));
         localStorage.setItem('gamesData', JSON.stringify(filtered));
+        // Delete from Firebase
+        database.ref('games/' + id).remove().catch(error => {
+            console.error('Error deleting from Firebase:', error);
+        });
         this.addActivity(`Deleted game: ${gameTitle}`);
     },
 
@@ -238,6 +253,10 @@ const DataManager = {
         user.trialUsed = false;
         users.push(user);
         localStorage.setItem('usersData', JSON.stringify(users));
+        // Save to Firebase
+        database.ref('users/' + user.id).set(user).catch(error => {
+            console.error('Error saving user to Firebase:', error);
+        });
         this.addActivity(`New user registered: ${user.name}`);
         return user;
     },
@@ -262,6 +281,10 @@ const DataManager = {
         if (index !== -1) {
             users[index] = { ...users[index], ...updates };
             localStorage.setItem('usersData', JSON.stringify(users));
+            // Save to Firebase
+            database.ref('users/' + userId).set(users[index]).catch(error => {
+                console.error('Error updating user in Firebase:', error);
+            });
             return users[index];
         }
         return null;
@@ -298,6 +321,10 @@ const DataManager = {
         comment.createdAt = new Date().toLocaleString();
         comments.push(comment);
         localStorage.setItem('commentsData', JSON.stringify(comments));
+        // Save to Firebase
+        database.ref('comments/' + comment.id).set(comment).catch(error => {
+            console.error('Error saving comment to Firebase:', error);
+        });
         this.addActivity(`New comment on game ID ${comment.gameId}`);
         return comment;
     },
@@ -306,6 +333,10 @@ const DataManager = {
         const comments = this.getComments();
         const filtered = comments.filter(c => c.id !== parseInt(commentId));
         localStorage.setItem('commentsData', JSON.stringify(filtered));
+        // Delete from Firebase
+        database.ref('comments/' + commentId).remove().catch(error => {
+            console.error('Error deleting comment from Firebase:', error);
+        });
     },
 
     getUserComments(userId) {
@@ -347,6 +378,10 @@ const DataManager = {
 
     setTheme(theme) {
         localStorage.setItem('themeData', JSON.stringify(theme));
+        // Save to Firebase
+        database.ref('theme').set(theme).catch(error => {
+            console.error('Error saving theme to Firebase:', error);
+        });
         this.applyTheme(theme);
         this.addActivity('Theme updated');
     },
@@ -530,6 +565,10 @@ const DataManager = {
 
     saveBackgroundImages(images) {
         localStorage.setItem('backgroundImages', JSON.stringify(images));
+        // Save to Firebase
+        database.ref('backgroundImages').set(images).catch(error => {
+            console.error('Error saving background images to Firebase:', error);
+        });
         this.addActivity('Background images updated');
     },
 
@@ -540,6 +579,10 @@ const DataManager = {
 
     setAutoShuffle(enabled) {
         localStorage.setItem('autoShuffle', JSON.stringify(enabled));
+        // Save to Firebase
+        database.ref('autoShuffle').set(enabled).catch(error => {
+            console.error('Error saving autoShuffle to Firebase:', error);
+        });
     },
 
     // ============ ANALYTICS OPERATIONS ============

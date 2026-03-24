@@ -162,24 +162,6 @@ function saveGame() {
 
     errorDiv.classList.remove('active');
 
-    if (!name || !category || isNaN(price) || isNaN(rating) || !description || !imageFile) {
-        errorDiv.textContent = 'Please fill in all fields including image';
-        errorDiv.classList.add('active');
-        return;
-    }
-
-    if (price < 0) {
-        errorDiv.textContent = 'Price cannot be negative';
-        errorDiv.classList.add('active');
-        return;
-    }
-
-    if (rating < 0 || rating > 5) {
-        errorDiv.textContent = 'Rating must be between 0 and 5';
-        errorDiv.classList.add('active');
-        return;
-    }
-
     // Read image file as base64
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -408,11 +390,6 @@ function setCurrentBg(index) {
 }
 
 function saveBackgroundImages() {
-    if (backgroundImages.length === 0) {
-        showToast('⚠️ Please upload at least one background image', 'warning');
-        return;
-    }
-    
     DataManager.saveBackgroundImages(backgroundImages);
     currentBgIndex = 0;
     updateBgPreview();

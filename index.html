@@ -540,5 +540,22 @@
 
     <script src="data.js"></script>
     <script src="main.js"></script>
-</body>
-</html>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+      // Your specific Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyCzq1EtuRnLlljXZNNi7i7hNLd8HFfvE9k",
+        authDomain: "smile-game-hud-db.firebaseapp.com",
+        databaseURL: "https://smile-game-hud-db-default-rtdb.firebaseio.com",
+        projectId: "smile-game-hud-db",
+        storageBucket: "smile-game-hud-db.firebasestorage.app",
+        messagingSenderId: "100113602094",
+        appId: "1:100113602094:web:4f76ba6ce230ea61c071bf"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="admin.js"></script>
