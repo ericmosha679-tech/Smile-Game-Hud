@@ -13,10 +13,44 @@ let currentSortOption = 'default';
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     initializeUI();
+    setupRealtimeGameListener();
     loadGamesGrid();
     setupEventListeners();
     checkUserSession();
 });
+
+// ============ REAL-TIME FIREBASE LISTENER ============
+
+function setupRealtimeGameListener() {
+    if (typeof firebase === 'undefined' || !firebase.database) {
+        console.warn('Firebase not initialized. Skipping real-time game listener.');
+        return;
+    }
+
+    firebase.database().ref('games/').on('value', (snapshot) => {
+        const data = snapshot.val();
+        updateUI(data);
+    });
+}
+
+function updateUI(data) {
+    if (!data) {
+        displayGames([]);
+        displayFeaturedGames([]);
+        return;
+    }
+
+    const gamesArray = Array.isArray(data)
+        ? data.filter(Boolean) // handle sparse arrays
+        : Object.keys(data).map(key => ({ id: Number(key), ...data[key] }));
+
+    // Optional local cache sync
+    localStorage.setItem('gamesData', JSON.stringify(gamesArray));
+
+    // Refresh current UI (filtered/sorted view)
+    applyAllFiltersAndSort();
+    displayFeaturedGames(gamesArray);
+}
 
 // ============ INITIALIZATION ============
 
