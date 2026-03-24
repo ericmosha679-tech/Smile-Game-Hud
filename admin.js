@@ -284,75 +284,112 @@ function deleteGame(gameId) {
 // ============ THEME MANAGEMENT ============
 
 function setupThemeControls() {
-    const theme = DataManager.getTheme();
-    
-    // Set color inputs
-    document.getElementById('bgColor').value = theme.bgColor;
-    document.getElementById('bgColorText').value = theme.bgColor;
-    
-    document.getElementById('accentColor').value = theme.accentColor;
-    document.getElementById('accentColorText').value = theme.accentColor;
-    
-    document.getElementById('glassColor').value = theme.glassColor;
-    document.getElementById('glassColorText').value = theme.glassColor;
-
-    // Set up color input sync
-    document.getElementById('bgColor').addEventListener('input', () => {
-        const value = document.getElementById('bgColor').value;
-        document.getElementById('bgColorText').value = value;
-        updateTheme();
-    });
-    document.getElementById('bgColorText').addEventListener('input', () => {
-        const value = document.getElementById('bgColorText').value;
-        if (/^#[0-9A-F]{6}$/i.test(value)) {
-            document.getElementById('bgColor').value = value;
-            updateTheme();
+    try {
+        console.log('Setting up theme controls...');
+        
+        if (typeof DataManager === 'undefined') {
+            console.error('DataManager not available for theme controls');
+            return;
         }
-    });
-
-    document.getElementById('accentColor').addEventListener('input', () => {
-        const value = document.getElementById('accentColor').value;
-        document.getElementById('accentColorText').value = value;
-        updateTheme();
-    });
-    document.getElementById('accentColorText').addEventListener('input', () => {
-        const value = document.getElementById('accentColorText').value;
-        if (/^#[0-9A-F]{6}$/i.test(value)) {
-            document.getElementById('accentColor').value = value;
-            updateTheme();
+        
+        const theme = DataManager.getTheme();
+        
+        // Check if theme elements exist
+        const bgColor = document.getElementById('bgColor');
+        const bgColorText = document.getElementById('bgColorText');
+        const accentColor = document.getElementById('accentColor');
+        const accentColorText = document.getElementById('accentColorText');
+        const glassColor = document.getElementById('glassColor');
+        const glassColorText = document.getElementById('glassColorText');
+        
+        if (!bgColor || !bgColorText || !accentColor || !accentColorText || !glassColor || !glassColorText) {
+            console.warn('Theme control elements not found - skipping theme setup');
+            return;
         }
-    });
+        
+        // Set color inputs
+        bgColor.value = theme.bgColor;
+        bgColorText.value = theme.bgColor;
+        
+        accentColor.value = theme.accentColor;
+        accentColorText.value = theme.accentColor;
+        
+        glassColor.value = theme.glassColor;
+        glassColorText.value = theme.glassColor;
 
-    document.getElementById('glassColor').addEventListener('input', () => {
-        const value = document.getElementById('glassColor').value;
-        document.getElementById('glassColorText').value = value;
-        updateTheme();
-    });
-    document.getElementById('glassColorText').addEventListener('input', () => {
-        const value = document.getElementById('glassColorText').value;
-        if (/^#[0-9A-F]{6}$/i.test(value)) {
-            document.getElementById('glassColor').value = value;
+        // Set up color input sync
+        bgColor.addEventListener('input', () => {
+            const value = bgColor.value;
+            bgColorText.value = value;
             updateTheme();
-        }
-    });
+        });
+        bgColorText.addEventListener('input', () => {
+            const value = bgColorText.value;
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
+                bgColor.value = value;
+                updateTheme();
+            }
+        });
 
-    updateTheme();
+        accentColor.addEventListener('input', () => {
+            const value = accentColor.value;
+            accentColorText.value = value;
+            updateTheme();
+        });
+        accentColorText.addEventListener('input', () => {
+            const value = accentColorText.value;
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
+                accentColor.value = value;
+                updateTheme();
+            }
+        });
+
+        glassColor.addEventListener('input', () => {
+            const value = glassColor.value;
+            glassColorText.value = value;
+            updateTheme();
+        });
+        glassColorText.addEventListener('input', () => {
+            const value = glassColorText.value;
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
+                glassColor.value = value;
+                updateTheme();
+            }
+        });
+
+        updateTheme();
+        console.log('Theme controls set up successfully');
+    } catch (error) {
+        console.error('Error setting up theme controls:', error);
+        showToast('❌ Error setting up theme controls', 'error');
+    }
 }
 
 function updateTheme() {
-    const bgColor = document.getElementById('bgColor').value;
-    const accentColor = document.getElementById('accentColor').value;
-    const glassColor = document.getElementById('glassColor').value;
+    try {
+        const bgColor = document.getElementById('bgColor');
+        const accentColor = document.getElementById('accentColor');
+        const glassColor = document.getElementById('glassColor');
+        
+        if (!bgColor || !accentColor || !glassColor) {
+            console.warn('Theme color inputs not found');
+            return;
+        }
+        
+        // Update preview
+        const preview = document.querySelector('.preview-hero');
+        if (preview) {
+            preview.style.background = `linear-gradient(135deg, ${bgColor.value} 0%, ${glassColor.value} 100%)`;
+        }
 
-    // Update preview
-    const preview = document.querySelector('.preview-hero');
-    preview.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${glassColor} 100%)`;
-
-    // Update live page
-    const root = document.documentElement;
-    root.style.setProperty('--primary-bg', bgColor);
-    root.style.setProperty('--accent-color', accentColor);
-    root.style.setProperty('--glass-color', glassColor);
+        // Update live page
+        const root = document.documentElement;
+        root.style.setProperty('--primary-bg', bgColor.value);
+        root.style.setProperty('--accent-color', accentColor.value);
+        root.style.setProperty('--glass-color', glassColor.value);
+    } catch (error) {
+        console.error('Error updating theme:', error);
+    }
 }
 
 function saveTheme() {
@@ -385,25 +422,36 @@ let currentBgIndex = 0;
 let backgroundImages = [];
 
 function setupBackgroundControls() {
-    const bgImages = DataManager.getBackgroundImages();
-    console.log('Background images from manager:', bgImages);
-    
-    if (bgImages && bgImages.length > 0) {
-        backgroundImages = bgImages;
-        updateBgPreview();
-        displayUploadedImages();
+    try {
+        console.log('Setting up background controls...');
         
-        const autoShuffle = DataManager.getAutoShuffle();
-        const autoShuffleToggle = document.getElementById('autoShuffleToggle');
-        if (autoShuffleToggle) {
-            autoShuffleToggle.checked = autoShuffle !== false;
+        if (typeof DataManager === 'undefined') {
+            console.error('DataManager not available for background controls');
+            return;
         }
         
-        if (autoShuffle !== false) {
-            startBackgroundShuffle();
+        const bgImages = DataManager.getBackgroundImages();
+        console.log('Background images from manager:', bgImages);
+        
+        if (bgImages && bgImages.length > 0) {
+            backgroundImages = bgImages;
+            currentBgIndex = 0;
+            updateBgPreview();
+            applyBackgroundToSite();
+            
+            // Start auto-shuffle if enabled
+            const autoShuffle = DataManager.getAutoShuffle();
+            if (autoShuffle && backgroundImages.length > 1) {
+                startBackgroundShuffle();
+            }
+        } else {
+            console.log('No background images to load');
         }
-    } else {
-        console.log('No background images to load');
+        
+        console.log('Background controls set up successfully');
+    } catch (error) {
+        console.error('Error setting up background controls:', error);
+        showToast('❌ Error setting up background controls', 'error');
     }
 }
 
@@ -608,26 +656,45 @@ function loadAnalytics() {
 }
 
 function loadActivityLog() {
-    const activities = DataManager.getActivities();
-    const activityLog = document.getElementById('activityLog');
-    
-    activityLog.innerHTML = '';
-    
-    if (activities.length === 0) {
-        activityLog.innerHTML = '<p class="empty-message">No recent activity</p>';
-        return;
-    }
+    try {
+        console.log('Loading activity log...');
+        
+        if (typeof DataManager === 'undefined') {
+            console.error('DataManager not available for activity log');
+            return;
+        }
+        
+        const activities = DataManager.getActivities();
+        const activityLog = document.getElementById('activityLog');
+        
+        if (!activityLog) {
+            console.error('activityLog element not found');
+            return;
+        }
+        
+        activityLog.innerHTML = '';
+        
+        if (activities.length === 0) {
+            activityLog.innerHTML = '<p class="empty-message">No recent activity</p>';
+            return;
+        }
 
-    activities.forEach((activity, index) => {
-        const item = document.createElement('div');
-        item.className = 'activity-item';
-        item.innerHTML = `
-            <strong>${activity.message}</strong>
-            <br>
-            <small>${activity.timestamp}</small>
-        `;
-        activityLog.appendChild(item);
-    });
+        activities.forEach((activity, index) => {
+            const item = document.createElement('div');
+            item.className = 'activity-item';
+            item.innerHTML = `
+                <strong>${activity.message}</strong>
+                <br>
+                <small>${activity.timestamp}</small>
+            `;
+            activityLog.appendChild(item);
+        });
+        
+        console.log('Activity log loaded successfully');
+    } catch (error) {
+        console.error('Error loading activity log:', error);
+        showToast('❌ Error loading activity log', 'error');
+    }
 }
 
 // ============ USER MANAGEMENT ============

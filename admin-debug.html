@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Debug - Smile Gaming Hub</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #0d1b2a; 
+            color: white; 
+        }
+        .debug-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ff6b35; 
+            border-radius: 8px; 
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            background: #ff6b35; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        .log { 
+            background: #000; 
+            color: #00ff00; 
+            padding: 10px; 
+            border-radius: 4px; 
+            font-family: monospace; 
+            max-height: 200px; 
+            overflow-y: auto; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Debug Console</h1>
+    
+    <div class="debug-section">
+        <h3>System Check</h3>
+        <div id="system-status">Checking...</div>
+        <button onclick="runSystemCheck()">Run System Check</button>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Admin Functions Test</h3>
+        <div id="admin-functions-status">Ready to test...</div>
+        <button onclick="testAdminFunctions()">Test Admin Functions</button>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Console Log</h3>
+        <div id="console-log" class="log">Console output will appear here...</div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCzq1EtuRnLlljXZNNi7i7hNLd8HFfvE9k",
+            authDomain: "smile-game-hud-db.firebaseapp.com",
+            databaseURL: "https://smile-game-hud-db-default-rtdb.firebaseio.com",
+            projectId: "smile-game-hud-db",
+            storageBucket: "smile-game-hud-db.firebasestorage.app",
+            messagingSenderId: "100113602094",
+            appId: "1:100113602094:web:4f76ba6ce230ea61c071bf"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="data.js"></script>
+    <script>
+        // Override console.log to capture output
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addToLog(message, type = 'log') {
+            const logDiv = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'warn' ? '#ffa726' : '#00ff00';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToLog(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToLog(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToLog(args.join(' '), 'warn');
+        };
+        
+        function clearLog() {
+            document.getElementById('console-log').innerHTML = '';
+        }
+        
+        function runSystemCheck() {
+            const status = document.getElementById('system-status');
+            let html = '';
+            
+            try {
+                // Check Firebase
+                if (typeof firebase !== 'undefined') {
+                    html += '<span class="success">✅ Firebase loaded</span><br>';
+                    if (firebase.database) {
+                        html += '<span class="success">✅ Firebase Database available</span><br>';
+                        const database = firebase.database();
+                        html += '<span class="success">✅ Database initialized</span><br>';
+                    } else {
+                        html += '<span class="error">❌ Firebase Database not available</span><br>';
+                    }
+                } else {
+                    html += '<span class="error">❌ Firebase not loaded</span><br>';
+                }
+                
+                // Check DataManager
+                if (typeof DataManager !== 'undefined') {
+                    html += '<span class="success">✅ DataManager loaded</span><br>';
+                    
+                    // Test basic operations
+                    const games = DataManager.getGames();
+                    html += `<span class="success">✅ Games: ${games.length}</span><br>`;
+                    
+                    const users = DataManager.getUsers();
+                    html += `<span class="success">✅ Users: ${users.length}</span><br>`;
+                    
+                    const theme = DataManager.getTheme();
+                    html += `<span class="success">✅ Theme loaded</span><br>`;
+                } else {
+                    html += '<span class="error">❌ DataManager not loaded</span><br>';
+                }
+                
+                // Check Session Storage
+                try {
+                    sessionStorage.setItem('test', 'test');
+                    sessionStorage.removeItem('test');
+                    html += '<span class="success">✅ Session Storage works</span><br>';
+                } catch (e) {
+                    html += '<span class="error">❌ Session Storage failed</span><br>';
+                }
+                
+            } catch (error) {
+                html += `<span class="error">❌ System check error: ${error.message}</span>`;
+            }
+            
+            status.innerHTML = html;
+        }
+        
+        function testAdminFunctions() {
+            const status = document.getElementById('admin-functions-status');
+            let html = '';
+            
+            try {
+                console.log('Testing admin functions...');
+                
+                // Test admin access
+                sessionStorage.setItem('adminAccessGranted', 'true');
+                const isAdminGranted = sessionStorage.getItem('adminAccessGranted') === 'true';
+                html += isAdminGranted ? 
+                    '<span class="success">✅ Admin access granted</span><br>' : 
+                    '<span class="error">❌ Admin access failed</span><br>';
+                
+                // Test data loading
+                if (typeof DataManager !== 'undefined') {
+                    const games = DataManager.getGames();
+                    const users = DataManager.getUsers();
+                    const analytics = DataManager.getAnalytics();
+                    
+                    html += `<span class="success">✅ Data loaded - Games: ${games.length}, Users: ${users.length}</span><br>`;
+                    
+                    // Test theme functions
+                    const theme = DataManager.getTheme();
+                    html += `<span class="success">✅ Theme: ${JSON.stringify(theme)}</span><br>`;
+                }
+                
+                html += '<span class="success">✅ Admin functions test completed</span>';
+                
+            } catch (error) {
+                html += `<span class="error">❌ Admin functions error: ${error.message}</span>`;
+                console.error('Admin functions test error:', error);
+            }
+            
+            status.innerHTML = html;
+        }
+        
+        // Run system check automatically
+        window.addEventListener('load', () => {
+            console.log('Admin debug page loaded');
+            runSystemCheck();
+        });
+    </script>
+</body>
+</html>
