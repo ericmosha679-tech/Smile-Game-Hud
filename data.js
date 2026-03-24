@@ -2,12 +2,18 @@
 // DATA MANAGEMENT WITH LOCALSTORAGE
 // ============================================
 
-// Firebase database reference
-const database = firebase.database();
+let database = null;
+
+function initFirebaseDatabase() {
+    if (window.firebase && firebase.database) {
+        database = firebase.database();
+    }
+}
 
 const DataManager = {
     // Initialize localStorage with default data
     init() {
+        initFirebaseDatabase();
         if (!localStorage.getItem('gamesData')) {
             this.initializeDefaultGames();
         }
@@ -193,9 +199,11 @@ const DataManager = {
         games.push(game);
         localStorage.setItem('gamesData', JSON.stringify(games));
         // Also save to Firebase
-        database.ref('games/' + game.id).set(game).catch(error => {
-            console.error('Error saving to Firebase:', error);
-        });
+        if (database) {
+            database.ref('games/' + game.id).set(game).catch(error => {
+                console.error('Error saving to Firebase:', error);
+            });
+        }
         this.addActivity(`Added new game: ${game.title}`);
         return game;
     },
@@ -207,9 +215,11 @@ const DataManager = {
             games[index] = { ...games[index], ...updatedGame, id: parseInt(id) };
             localStorage.setItem('gamesData', JSON.stringify(games));
             // Save to Firebase
-            database.ref('games/' + id).set(games[index]).catch(error => {
-                console.error('Error updating Firebase:', error);
-            });
+            if (database) {
+                database.ref('games/' + id).set(games[index]).catch(error => {
+                    console.error('Error updating Firebase:', error);
+                });
+            }
             this.addActivity(`Updated game: ${updatedGame.title}`);
             return games[index];
         }
@@ -222,9 +232,11 @@ const DataManager = {
         const filtered = games.filter(g => g.id !== parseInt(id));
         localStorage.setItem('gamesData', JSON.stringify(filtered));
         // Delete from Firebase
-        database.ref('games/' + id).remove().catch(error => {
-            console.error('Error deleting from Firebase:', error);
-        });
+        if (database) {
+            database.ref('games/' + id).remove().catch(error => {
+                console.error('Error deleting from Firebase:', error);
+            });
+        }
         this.addActivity(`Deleted game: ${gameTitle}`);
     },
 
@@ -379,9 +391,11 @@ const DataManager = {
     setTheme(theme) {
         localStorage.setItem('themeData', JSON.stringify(theme));
         // Save to Firebase
-        database.ref('theme').set(theme).catch(error => {
-            console.error('Error saving theme to Firebase:', error);
-        });
+        if (database) {
+            database.ref('theme').set(theme).catch(error => {
+                console.error('Error saving theme to Firebase:', error);
+            });
+        }
         this.applyTheme(theme);
         this.addActivity('Theme updated');
     },
@@ -566,9 +580,11 @@ const DataManager = {
     saveBackgroundImages(images) {
         localStorage.setItem('backgroundImages', JSON.stringify(images));
         // Save to Firebase
-        database.ref('backgroundImages').set(images).catch(error => {
-            console.error('Error saving background images to Firebase:', error);
-        });
+        if (database) {
+            database.ref('backgroundImages').set(images).catch(error => {
+                console.error('Error saving background images to Firebase:', error);
+            });
+        }
         this.addActivity('Background images updated');
     },
 
@@ -580,9 +596,11 @@ const DataManager = {
     setAutoShuffle(enabled) {
         localStorage.setItem('autoShuffle', JSON.stringify(enabled));
         // Save to Firebase
-        database.ref('autoShuffle').set(enabled).catch(error => {
-            console.error('Error saving autoShuffle to Firebase:', error);
-        });
+        if (database) {
+            database.ref('autoShuffle').set(enabled).catch(error => {
+                console.error('Error saving autoShuffle to Firebase:', error);
+            });
+        }
     },
 
     // ============ ANALYTICS OPERATIONS ============

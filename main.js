@@ -13,6 +13,7 @@ let currentSortOption = 'default';
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     applySavedThemeMode();
+    checkFirebaseStatus();
     initializeUI();
     setupRealtimeGameListener();
     loadGamesGrid();
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupRealtimeGameListener() {
     if (typeof firebase === 'undefined' || !firebase.database) {
+        showToast('⚠️ Firebase not available - using local cache only', 'warning');
         console.warn('Firebase not initialized. Skipping real-time game listener.');
         return;
     }
@@ -32,6 +34,14 @@ function setupRealtimeGameListener() {
         const data = snapshot.val();
         updateUI(data);
     });
+}
+
+function checkFirebaseStatus() {
+    if (typeof firebase === 'undefined' || !firebase.database) {
+        showToast('⚠️ Operating in offline mode - data may not sync to server', 'warning');
+        return false;
+    }
+    return true;
 }
 
 function updateUI(data) {
