@@ -116,7 +116,7 @@ body.light-mode .navbar-logo {
 }
 
 .nav-btn:hover {
-    background: rgba(59, 89, 152, 0.6);
+    background: rgba(63, 96, 168, 0.6);
     border-color: var(--accent-color);
     transform: translateY(-2px);
 }
@@ -155,24 +155,6 @@ body.light-mode .navbar-logo {
     justify-content: center;
 }
 
-.hero-left-text {
-    position: absolute;
-    left: 2rem;
-    top: 50%;
-    transform: translateY(-50%) rotate(-90deg);
-    transform-origin: center;
-    z-index: 2;
-}
-
-.swahili-text {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--accent-color);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    letter-spacing: 0.1em;
-    opacity: 0.8;
-    white-space: nowrap;
-}
 
 .hero-background {
     position: absolute;
@@ -3087,10 +3069,7 @@ body.device-mobile.landscape .subscription-cards {
         font-size: 1.5rem;
     }
 
-    .hero-left-text {
-        display: none;
-    }
-
+    
     .logo-text {
         display: none;
     }

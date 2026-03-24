@@ -8,12 +8,19 @@ let currentEditingGameId = null;
 
 // Initialize database reference
 let database = null;
-if (typeof firebase !== 'undefined' && firebase.database) {
-    database = firebase.database();
+
+function initializeDatabase() {
+    if (typeof firebase !== 'undefined' && firebase.database) {
+        database = firebase.database();
+        console.log('Firebase database initialized successfully');
+    } else {
+        console.warn('Firebase database not available');
+    }
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    initializeDatabase();
     verifyAdminAccess();
     loadAdminData();
     setupAdminEventListeners();
@@ -41,22 +48,31 @@ function applyAdminDeviceOptimizations() {
 // ============ ADMIN ACCESS VERIFICATION ============
 
 function verifyAdminAccess() {
-    // Check if admin access was already granted in this session
-    const isAdminGranted = sessionStorage.getItem('adminAccessGranted') === 'true';
-    
-    if (!isAdminGranted) {
-        // No admin access in this session, show password prompt
-        const password = prompt('🔐 Enter Admin Password:', '');
+    try {
+        // Check if admin access was already granted in this session
+        const isAdminGranted = sessionStorage.getItem('adminAccessGranted') === 'true';
         
-        // Verify password (Admin password: Ciontatenx83)
-        if (password === 'Ciontatenx83') {
-            sessionStorage.setItem('adminAccessGranted', 'true');
+        if (!isAdminGranted) {
+            // No admin access in this session, show password prompt
+            const password = prompt('🔐 Enter Admin Password:', '');
+            
+            // Verify password (Admin password: Ciontatenx83)
+            if (password === 'Ciontatenx83') {
+                sessionStorage.setItem('adminAccessGranted', 'true');
+                console.log('Admin access granted');
+            } else {
+                // Password incorrect or cancelled
+                alert('❌ Invalid password or access denied!');
+                window.location.href = 'index.html';
+                return;
+            }
         } else {
-            // Password incorrect or cancelled
-            alert('❌ Invalid password or access denied!');
-            window.location.href = 'index.html';
-            return;
+            console.log('Admin access already granted');
         }
+    } catch (error) {
+        console.error('Error verifying admin access:', error);
+        alert('❌ Error verifying admin access!');
+        window.location.href = 'index.html';
     }
 }
 
@@ -71,40 +87,68 @@ function logoutAdmin() {
 // ============ ADMIN DATA LOADING ============
 
 function loadAdminData() {
-    loadAdminGamesTable();
-    loadAdminUsersTable();
-    loadAnalytics();
-    loadActivityLog();
-    setupThemeControls();
-    setupBackgroundControls();
+    try {
+        console.log('Loading admin data...');
+        loadAdminGamesTable();
+        loadAdminUsersTable();
+        loadAnalytics();
+        loadActivityLog();
+        setupThemeControls();
+        setupBackgroundControls();
+        console.log('Admin data loaded successfully');
+    } catch (error) {
+        console.error('Error loading admin data:', error);
+        showToast('❌ Error loading admin data', 'error');
+    }
 }
 
 // ============ GAMES MANAGEMENT ============
 
 function loadAdminGamesTable() {
-    const games = DataManager.getGames();
-    const tableBody = document.getElementById('adminGamesTable');
-    tableBody.innerHTML = '';
+    try {
+        console.log('Loading admin games table...');
+        
+        // Check if DataManager is available
+        if (typeof DataManager === 'undefined') {
+            console.error('DataManager not available');
+            return;
+        }
+        
+        const games = DataManager.getGames();
+        const tableBody = document.getElementById('adminGamesTable');
+        
+        if (!tableBody) {
+            console.error('adminGamesTable element not found');
+            return;
+        }
+        
+        tableBody.innerHTML = '';
 
-    if (games.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5" class="empty-message">No games yet</td></tr>';
-        return;
+        if (games.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="empty-message">No games yet</td></tr>';
+            return;
+        }
+
+        games.forEach(game => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${game.title}</td>
+                <td>${capitalizeFirst(game.category)}</td>
+                <td>$${game.price.toFixed(2)}</td>
+                <td>${game.downloads || 0}</td>
+                <td>
+                    <button class="action-btn" onclick="editGame(${game.id})">✏️ Edit</button>
+                    <button class="action-btn delete" onclick="deleteGame(${game.id})">🗑️ Delete</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+        
+        console.log(`Loaded ${games.length} games in admin table`);
+    } catch (error) {
+        console.error('Error loading admin games table:', error);
+        showToast('❌ Error loading games table', 'error');
     }
-
-    games.forEach(game => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${game.title}</td>
-            <td>${capitalizeFirst(game.category)}</td>
-            <td>$${game.price.toFixed(2)}</td>
-            <td>${game.downloads || 0}</td>
-            <td>
-                <button class="action-btn" onclick="editGame(${game.id})">✏️ Edit</button>
-                <button class="action-btn delete" onclick="deleteGame(${game.id})">🗑️ Delete</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
 }
 
 function openAddGameModal() {
@@ -536,12 +580,31 @@ function applyBackgroundToSite() {
 // ============ ANALYTICS ============
 
 function loadAnalytics() {
-    const analytics = DataManager.getAnalytics();
-    
-    document.getElementById('totalGames').textContent = analytics.totalGames;
-    document.getElementById('totalUsers').textContent = analytics.totalUsers;
-    document.getElementById('totalDownloads').textContent = analytics.totalDownloads;
-    document.getElementById('totalComments').textContent = analytics.totalComments;
+    try {
+        console.log('Loading analytics...');
+        
+        if (typeof DataManager === 'undefined') {
+            console.error('DataManager not available for analytics');
+            return;
+        }
+        
+        const analytics = DataManager.getAnalytics();
+        
+        const totalGamesEl = document.getElementById('totalGames');
+        const totalUsersEl = document.getElementById('totalUsers');
+        const totalDownloadsEl = document.getElementById('totalDownloads');
+        const totalCommentsEl = document.getElementById('totalComments');
+        
+        if (totalGamesEl) totalGamesEl.textContent = analytics.totalGames;
+        if (totalUsersEl) totalUsersEl.textContent = analytics.totalUsers;
+        if (totalDownloadsEl) totalDownloadsEl.textContent = analytics.totalDownloads;
+        if (totalCommentsEl) totalCommentsEl.textContent = analytics.totalComments;
+        
+        console.log('Analytics loaded successfully');
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+        showToast('❌ Error loading analytics', 'error');
+    }
 }
 
 function loadActivityLog() {
@@ -570,42 +633,62 @@ function loadActivityLog() {
 // ============ USER MANAGEMENT ============
 
 function loadAdminUsersTable() {
-    const users = DataManager.getUsers();
-    const tableBody = document.getElementById('adminUsersTable');
-    tableBody.innerHTML = '';
-
-    if (users.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="empty-message">No users yet</td></tr>';
-        return;
-    }
-
-    const subscriptionLabels = {
-        'free': 'Free Trial',
-        'premium': 'Premium',
-        'pro': 'Pro Premium'
-    };
-
-    users.forEach(user => {
-        const row = document.createElement('tr');
-        const isBlocked = user.blocked || false;
-        const blockButtonText = isBlocked ? '✅ Unblock' : '🚫 Block';
-        const blockButtonClass = isBlocked ? '' : 'delete';
+    try {
+        console.log('Loading admin users table...');
         
-        row.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${subscriptionLabels[user.subscription]}</td>
-            <td>${user.createdAt}</td>
-            <td style="color: ${isBlocked ? '#ff6b6b' : 'inherit'};">${isBlocked ? '(BLOCKED)' : 'Active'}</td>
-            <td>
-                <button class="action-btn" onclick="viewUserDetails(${user.id})">👁️ View</button>
-                <button class="action-btn ${blockButtonClass}" onclick="toggleBlockUser(${user.id}, '${user.name}')">
-                    ${blockButtonText}
-                </button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
+        if (typeof DataManager === 'undefined') {
+            console.error('DataManager not available for users table');
+            return;
+        }
+        
+        const users = DataManager.getUsers();
+        const tableBody = document.getElementById('adminUsersTable');
+        
+        if (!tableBody) {
+            console.error('adminUsersTable element not found');
+            return;
+        }
+        
+        tableBody.innerHTML = '';
+
+        if (users.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6" class="empty-message">No users yet</td></tr>';
+            return;
+        }
+
+        const subscriptionLabels = {
+            'free': 'Free Trial',
+            'premium': 'Premium',
+            'pro': 'Pro Premium'
+        };
+
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            const isBlocked = user.blocked || false;
+            const blockButtonText = isBlocked ? '✅ Unblock' : '🚫 Block';
+            const blockButtonClass = isBlocked ? '' : 'delete';
+            
+            row.innerHTML = `
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${subscriptionLabels[user.subscription] || 'Unknown'}</td>
+                <td>${user.createdAt || 'N/A'}</td>
+                <td style="color: ${isBlocked ? '#ff6b6b' : 'inherit'};">${isBlocked ? '(BLOCKED)' : 'Active'}</td>
+                <td>
+                    <button class="action-btn" onclick="viewUserDetails(${user.id})">👁️ View</button>
+                    <button class="action-btn ${blockButtonClass}" onclick="toggleBlockUser(${user.id}, '${user.name}')">
+                        ${blockButtonText}
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+        
+        console.log(`Loaded ${users.length} users in admin table`);
+    } catch (error) {
+        console.error('Error loading admin users table:', error);
+        showToast('❌ Error loading users table', 'error');
+    }
 }
 
 function viewUserDetails(userId) {
@@ -689,7 +772,12 @@ function switchAdminTab(tab) {
 
     // Activate selected tab
     document.getElementById(tab + 'Tab').classList.add('active');
-    event.target.classList.add('active');
+    
+    // Find and activate the corresponding menu item
+    const menuItem = document.querySelector(`.admin-menu-item[onclick*="${tab}"]`);
+    if (menuItem) {
+        menuItem.classList.add('active');
+    }
 
     // Reload data for specific tabs
     if (tab === 'analytics') {
