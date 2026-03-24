@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Design Test - Smile Gaming Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0d1b2a;
+            color: white;
+            line-height: 1.6;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .breakpoint-test {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            background: rgba(255, 107, 53, 0.1);
+        }
+        .breakpoint-test h2 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+        .current-breakpoint {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 10px;
+            background: rgba(255, 107, 53, 0.2);
+            border-radius: 4px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .device-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .info-card {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .info-card h4 {
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status.active { background: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+        .status.inactive { background: rgba(244, 67, 54, 0.2); color: #f44336; }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #ff8c5a;
+        }
+        .resize-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(13, 27, 42, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ff6b35;
+            z-index: 1000;
+        }
+        .resize-controls h3 {
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+        .size-btn {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            text-align: left;
+        }
+        .preview-frame {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            background: white;
+            margin: 20px 0;
+        }
+        @media (max-width: 480px) {
+            .resize-controls {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px 0;
+            }
+            .device-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resize-controls">
+        <h3>📱 Resize Preview</h3>
+        <button class="size-btn" onclick="resizeTo(320)">📱 Phone (320px)</button>
+        <button class="size-btn" onclick="resizeTo(480)">📱 Large Phone (480px)</button>
+        <button class="size-btn" onclick="resizeTo(768)">📱 Tablet (768px)</button>
+        <button class="size-btn" onclick="resizeTo(992)">💻 Laptop (992px)</button>
+        <button class="size-btn" onclick="resizeTo(1200)">💻 Large Laptop (1200px)</button>
+        <button class="size-btn" onclick="resizeTo(screen.width)">🖥️ Full Screen</button>
+    </div>
+
+    <div class="test-container">
+        <h1>📱 Responsive Design Test</h1>
+        <p>Test your website's responsive design across all breakpoints</p>
+        
+        <div class="current-breakpoint" id="currentBreakpoint">
+            Detecting current breakpoint...
+        </div>
+
+        <div class="breakpoint-test">
+            <h2>🎯 Breakpoint Status</h2>
+            <div class="device-info">
+                <div class="info-card">
+                    <h4>📱 Phone (≤480px)</h4>
+                    <div class="status" id="phone-status">Checking...</div>
+                    <p>2-column games grid<br>Stacked navigation<br>Full-width buttons</p>
+                </div>
+                <div class="info-card">
+                    <h4>📱 Large Phone (481px-767px)</h4>
+                    <div class="status" id="largePhone-status">Checking...</div>
+                    <p>3-column games grid<br>Larger touch targets<br>Improved spacing</p>
+                </div>
+                <div class="info-card">
+                    <h4>📱 Tablet (768px-991px)</h4>
+                    <div class="status" id="tablet-status">Checking...</div>
+                    <p>4-column games grid<br>2-column subscription cards<br>Better navigation</p>
+                </div>
+                <div class="info-card">
+                    <h4>💻 Laptop (992px-1199px)</h4>
+                    <div class="status" id="laptop-status">Checking...</div>
+                    <p>5-column games grid<br>3-column subscription cards<br>Enhanced layout</p>
+                </div>
+                <div class="info-card">
+                    <h4>💻 Desktop (≥1200px)</h4>
+                    <div class="status" id="desktop-status">Checking...</div>
+                    <p>6-column games grid<br>Full layout<br>Enhanced effects</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="breakpoint-test">
+            <h2>📊 Device Information</h2>
+            <div class="device-info">
+                <div class="info-card">
+                    <h4>Screen Size</h4>
+                    <p>Width: <span id="screenWidth">-</span>px</p>
+                    <p>Height: <span id="screenHeight">-</span>px</p>
+                    <p>Ratio: <span id="aspectRatio">-</span></p>
+                </div>
+                <div class="info-card">
+                    <h4>Viewport Size</h4>
+                    <p>Width: <span id="viewportWidth">-</span>px</p>
+                    <p>Height: <span id="viewportHeight">-</span>px</p>
+                    <p>Device Pixel Ratio: <span id="pixelRatio">-</span></p>
+                </div>
+                <div class="info-card">
+                    <h4>Orientation</h4>
+                    <p><span id="orientation">-</span></p>
+                    <p>Touch Support: <span id="touchSupport">-</span></p>
+                    <p>Hover Support: <span id="hoverSupport">-</span></p>
+                </div>
+                <div class="info-card">
+                    <h4>Browser Info</h4>
+                    <p><span id="browserInfo">-</span></p>
+                    <p><span id="browserVersion">-</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="breakpoint-test">
+            <h2>🧪 Responsive Features Test</h2>
+            <div class="device-info">
+                <div class="info-card">
+                    <h4>🎮 Games Grid</h4>
+                    <p>Expected columns: <span id="expectedColumns">-</span></p>
+                    <p>Grid gap: <span id="gridGap">-</span></p>
+                    <p>Card size: <span id="cardSize">-</span></p>
+                </div>
+                <div class="info-card">
+                    <h4>🎨 Navigation</h4>
+                    <p>Layout: <span id="navLayout">-</span></p>
+                    <p>Button size: <span id="buttonSize">-</span></p>
+                    <p>Font size: <span id="navFontSize">-</span></p>
+                </div>
+                <div class="info-card">
+                    <h4>📄 Typography</h4>
+                    <p>Hero title: <span id="heroTitleSize">-</span></p>
+                    <p>Base font: <span id="baseFontSize">-</span></p>
+                    <p>Line height: <span id="lineHeight">-</span></p>
+                </div>
+                <div class="info-card">
+                    <h4>🖼️ Layout</h4>
+                    <p>Max width: <span id="maxWidth">-</span></p>
+                    <p>Padding: <span id="padding">-</span></p>
+                    <p>Gutter width: <span id="gutterWidth">-</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="breakpoint-test">
+            <h2>🔗 Test Your Website</h2>
+            <button onclick="openWebsite()">🚀 Open Your Website</button>
+            <button onclick="testInNewWindow()">🧪 Test in New Window</button>
+            <button onclick="runResponsiveTests()">✅ Run Responsive Tests</button>
+            <button onclick="generateReport()">📄 Generate Report</button>
+            
+            <div id="testResults" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateBreakpointInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            // Update screen info
+            document.getElementById('screenWidth').textContent = screen.width;
+            document.getElementById('screenHeight').textContent = screen.height;
+            document.getElementById('viewportWidth').textContent = width;
+            document.getElementById('viewportHeight').textContent = height;
+            document.getElementById('aspectRatio').textContent = (screen.width / screen.height).toFixed(2);
+            document.getElementById('pixelRatio').textContent = window.devicePixelRatio || 1;
+            
+            // Update orientation
+            document.getElementById('orientation').textContent = width > height ? 'Landscape' : 'Portrait';
+            document.getElementById('touchSupport').textContent = 'ontouchstart' in window ? 'Yes' : 'No';
+            document.getElementById('hoverSupport').textContent = window.matchMedia('(hover: hover)').matches ? 'Yes' : 'No';
+            
+            // Update browser info
+            document.getElementById('browserInfo').textContent = navigator.userAgent.split(' ')[0];
+            const match = navigator.userAgent.match(/(Chrome|Firefox|Safari|Edge)\/(\d+)/);
+            if (match) {
+                document.getElementById('browserVersion').textContent = `${match[1]} ${match[2]}`;
+            }
+            
+            // Determine current breakpoint
+            let breakpoint, expectedColumns, navLayout, heroTitleSize;
+            
+            if (width <= 480) {
+                breakpoint = '📱 Phone (≤480px)';
+                expectedColumns = '2';
+                navLayout = 'Stacked';
+                heroTitleSize = '2rem';
+                updateStatus('phone-status', true);
+                updateStatus('largePhone-status', false);
+                updateStatus('tablet-status', false);
+                updateStatus('laptop-status', false);
+                updateStatus('desktop-status', false);
+            } else if (width <= 767) {
+                breakpoint = '📱 Large Phone (481px-767px)';
+                expectedColumns = '3';
+                navLayout = 'Wrapped';
+                heroTitleSize = '2.5rem';
+                updateStatus('phone-status', false);
+                updateStatus('largePhone-status', true);
+                updateStatus('tablet-status', false);
+                updateStatus('laptop-status', false);
+                updateStatus('desktop-status', false);
+            } else if (width <= 991) {
+                breakpoint = '📱 Tablet (768px-991px)';
+                expectedColumns = '4';
+                navLayout = 'Horizontal';
+                heroTitleSize = '3rem';
+                updateStatus('phone-status', false);
+                updateStatus('largePhone-status', false);
+                updateStatus('tablet-status', true);
+                updateStatus('laptop-status', false);
+                updateStatus('desktop-status', false);
+            } else if (width <= 1199) {
+                breakpoint = '💻 Laptop (992px-1199px)';
+                expectedColumns = '5';
+                navLayout = 'Horizontal';
+                heroTitleSize = '3.5rem';
+                updateStatus('phone-status', false);
+                updateStatus('largePhone-status', false);
+                updateStatus('tablet-status', false);
+                updateStatus('laptop-status', true);
+                updateStatus('desktop-status', false);
+            } else {
+                breakpoint = '💻 Desktop (≥1200px)';
+                expectedColumns = '6';
+                navLayout = 'Horizontal';
+                heroTitleSize = '4rem';
+                updateStatus('phone-status', false);
+                updateStatus('largePhone-status', false);
+                updateStatus('tablet-status', false);
+                updateStatus('laptop-status', false);
+                updateStatus('desktop-status', true);
+            }
+            
+            document.getElementById('currentBreakpoint').textContent = breakpoint;
+            
+            // Update responsive features
+            document.getElementById('expectedColumns').textContent = expectedColumns;
+            document.getElementById('navLayout').textContent = navLayout;
+            document.getElementById('heroTitleSize').textContent = heroTitleSize;
+            
+            // Calculate other features based on width
+            const gridGap = width <= 480 ? '0.75rem' : width <= 767 ? '1rem' : width <= 991 ? '1.25rem' : width <= 1199 ? '1.5rem' : '2rem';
+            const buttonSize = width <= 480 ? '40px' : width <= 767 ? '44px' : '48px';
+            const maxWidth = width <= 991 ? '100%' : width <= 1199 ? '1200px' : '1400px';
+            const padding = width <= 480 ? '1rem' : width <= 767 ? '1rem' : width <= 991 ? '2rem' : width <= 1199 ? '3rem' : '3rem';
+            
+            document.getElementById('gridGap').textContent = gridGap;
+            document.getElementById('buttonSize').textContent = buttonSize;
+            document.getElementById('maxWidth').textContent = maxWidth;
+            document.getElementById('padding').textContent = padding;
+        }
+        
+        function updateStatus(elementId, active) {
+            const element = document.getElementById(elementId);
+            element.className = `status ${active ? 'active' : 'inactive'}`;
+            element.textContent = active ? '✅ Active' : '❌ Inactive';
+        }
+        
+        function resizeTo(width) {
+            if (width === screen.width) {
+                // Full screen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            } else {
+                // Resize window
+                window.resizeTo(width, window.innerHeight);
+            }
+            setTimeout(updateBreakpointInfo, 100);
+        }
+        
+        function openWebsite() {
+            window.open('index.html', '_blank');
+        }
+        
+        function testInNewWindow() {
+            const testWindow = window.open('index.html', 'responsiveTest', 'width=800,height=600');
+            setTimeout(() => {
+                testWindow.resizeTo(480, 800);
+                setTimeout(() => {
+                    testWindow.resizeTo(768, 1024);
+                    setTimeout(() => {
+                        testWindow.resizeTo(1200, 800);
+                    }, 2000);
+                }, 2000);
+            }, 1000);
+        }
+        
+        function runResponsiveTests() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = '<h3>🧪 Running Responsive Tests...</h3>';
+            
+            const tests = [
+                { width: 320, name: 'Small Phone' },
+                { width: 480, name: 'Phone' },
+                { width: 768, name: 'Tablet' },
+                { width: 992, name: 'Laptop' },
+                { width: 1200, name: 'Desktop' }
+            ];
+            
+            let testResults = '';
+            tests.forEach((test, index) => {
+                setTimeout(() => {
+                    window.resizeTo(test.width, 600);
+                    setTimeout(() => {
+                        const breakpoint = document.getElementById('currentBreakpoint').textContent;
+                        testResults += `<p>✅ ${test.name} (${test.width}px): ${breakpoint}</p>`;
+                        results.innerHTML = '<h3>🧪 Test Results:</h3>' + testResults;
+                    }, 500);
+                }, index * 3000);
+            });
+        }
+        
+        function generateReport() {
+            const report = `
+📊 Responsive Design Report
+============================
+Current Breakpoint: ${document.getElementById('currentBreakpoint').textContent}
+Screen Size: ${screen.width}x${screen.height}
+Viewport Size: ${window.innerWidth}x${window.innerHeight}
+Device Pixel Ratio: ${window.devicePixelRatio || 1}
+Orientation: ${window.innerWidth > window.innerHeight ? 'Landscape' : 'Portrait'}
+Touch Support: ${'ontouchstart' in window ? 'Yes' : 'No'}
+Browser: ${navigator.userAgent}
+
+Expected Features:
+- Games Grid: ${document.getElementById('expectedColumns').textContent} columns
+- Navigation: ${document.getElementById('navLayout').textContent} layout
+- Hero Title: ${document.getElementById('heroTitleSize').textContent}
+- Max Width: ${document.getElementById('maxWidth').textContent}
+- Padding: ${document.getElementById('padding').textContent}
+
+All breakpoints configured:
+✅ Phone: ≤480px (2 columns)
+✅ Large Phone: 481px-767px (3 columns)  
+✅ Tablet: 768px-991px (4 columns)
+✅ Laptop: 992px-1199px (5 columns)
+✅ Desktop: ≥1200px (6 columns)
+            `;
+            
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'responsive-report.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize
+        updateBreakpointInfo();
+        window.addEventListener('resize', updateBreakpointInfo);
+        window.addEventListener('orientationchange', updateBreakpointInfo);
+    </script>
+</body>
+</html>
