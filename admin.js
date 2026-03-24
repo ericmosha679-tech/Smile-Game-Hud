@@ -4,18 +4,7 @@
 
 let currentEditingGameId = null;
 
-// Firebase initialization (Step 2 config)
-const firebaseConfig = {
-    apiKey: "AIzaSyCzq1EtuRnLlljXZNNi7i7hNLd8HFfvE9k",
-    authDomain: "smile-game-hud-db.firebaseapp.com",
-    databaseURL: "https://smile-game-hud-db-default-rtdb.firebaseio.com",
-    projectId: "smile-game-hud-db",
-    storageBucket: "smile-game-hud-db.firebasestorage.app",
-    messagingSenderId: "100113602094",
-    appId: "1:100113602094:web:4f76ba6ce230ea61c071bf"
-};
-
-firebase.initializeApp(firebaseConfig);
+// Firebase is initialized in admin.html
 
 // Initialize database reference
 let database = null;
