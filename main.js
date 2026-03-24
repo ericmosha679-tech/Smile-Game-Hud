@@ -1353,6 +1353,20 @@ function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    
+    // Optional: Update button text or styling
+    const button = input.closest('.password-input-wrapper')?.querySelector('.password-toggle');
+    if (button) {
+        button.textContent = isPassword ? '🙈' : '👁️';
+    }
+}
+
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
     if (!toast) {
