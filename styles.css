@@ -1015,8 +1015,50 @@ body.light-mode .navbar-logo {
 }
 
 .admin-modal {
+    background: rgba(13, 27, 42, 0.95);
+    backdrop-filter: blur(10px);
     border: 2px solid var(--accent-color);
     box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+    border-radius: 16px;
+    max-width: 500px;
+}
+
+.admin-modal .modal-header {
+    border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.admin-modal .modal-body {
+    padding: 2rem;
+}
+
+.admin-modal .modal-footer {
+    border-top: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.admin-modal label {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.admin-modal .form-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 107, 53, 0.3);
+    color: var(--text-primary);
+}
+
+.admin-modal .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-modal .form-input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+.admin-modal .error-message {
+    color: #ff6b5a;
+    margin-top: 0.5rem;
 }
 
 .game-details-modal {
