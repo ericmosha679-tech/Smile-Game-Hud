@@ -12,14 +12,125 @@ let currentSortOption = 'default';
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    applySavedThemeMode();
-    checkFirebaseStatus();
-    initializeUI();
-    setupRealtimeGameListener();
-    loadGamesGrid();
-    setupEventListeners();
-    checkUserSession();
+    try {
+        console.log('🚀 Initializing Smile Gaming Hub...');
+        
+        // Initialize core functionality
+        applySavedThemeMode();
+        checkFirebaseStatus();
+        initializeUI();
+        setupRealtimeGameListener();
+        loadGamesGrid();
+        setupEventListeners();
+        checkUserSession();
+        
+        // Initialize professional features
+        initializeProfessionalFeatures();
+        
+        console.log('✅ Smile Gaming Hub initialized successfully');
+    } catch (error) {
+        console.error('❌ Error initializing application:', error);
+        showToast('❌ Error loading application. Please refresh the page.', 'error');
+    }
 });
+
+// ============ PROFESSIONAL FEATURES ============
+
+function initializeProfessionalFeatures() {
+    try {
+        console.log('🔧 Initializing professional features...');
+        
+        // Initialize loading states
+        initializeLoadingStates();
+        
+        // Initialize error handling
+        initializeErrorHandling();
+        
+        // Initialize performance monitoring
+        initializePerformanceMonitoring();
+        
+        // Initialize accessibility features
+        initializeAccessibilityFeatures();
+        
+        // Initialize analytics tracking
+        initializeAnalyticsTracking();
+        
+        console.log('✅ Professional features initialized');
+    } catch (error) {
+        console.error('❌ Error initializing professional features:', error);
+    }
+}
+
+function initializeLoadingStates() {
+    // Add loading indicators for better UX
+    const gamesGrid = document.getElementById('gamesGrid');
+    if (gamesGrid) {
+        gamesGrid.innerHTML = '<div class="loading-spinner">Loading games...</div>';
+    }
+}
+
+function initializeErrorHandling() {
+    // Global error handler
+    window.addEventListener('error', (event) => {
+        console.error('Global error:', event.error);
+        showToast('❌ An unexpected error occurred. Please try again.', 'error');
+    });
+    
+    // Unhandled promise rejection handler
+    window.addEventListener('unhandledrejection', (event) => {
+        console.error('Unhandled promise rejection:', event.reason);
+        showToast('❌ A network error occurred. Please check your connection.', 'error');
+    });
+}
+
+function initializePerformanceMonitoring() {
+    // Monitor page load performance
+    if ('performance' in window) {
+        window.addEventListener('load', () => {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            console.log(`📊 Page load time: ${loadTime}ms`);
+            
+            if (loadTime > 3000) {
+                console.warn('⚠️ Slow page load detected');
+            }
+        });
+    }
+}
+
+function initializeAccessibilityFeatures() {
+    // Add keyboard navigation support
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            // Close any open modal on Escape
+            const openModal = document.querySelector('.modal.active');
+            if (openModal) {
+                closeModal(openModal.id);
+            }
+        }
+    });
+    
+    // Add ARIA labels dynamically
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        if (!button.getAttribute('aria-label')) {
+            button.setAttribute('aria-label', button.textContent || 'Button');
+        }
+    });
+}
+
+function initializeAnalyticsTracking() {
+    // Track user interactions
+    let interactionCount = 0;
+    
+    document.addEventListener('click', () => {
+        interactionCount++;
+        
+        // Log interaction data (in real implementation, send to analytics service)
+        if (interactionCount % 10 === 0) {
+            console.log(`📈 User interactions: ${interactionCount}`);
+        }
+    });
+}
 
 // ============ REAL-TIME FIREBASE LISTENER ============
 
@@ -45,39 +156,79 @@ function checkFirebaseStatus() {
 }
 
 function updateUI(data) {
-    if (!data) {
-        displayGames([]);
-        displayFeaturedGames([]);
-        return;
-    }
+    try {
+        console.log('🔄 Updating UI with new data...');
+        
+        if (!data) {
+            console.warn('⚠️ No data received, showing empty state');
+            displayGames([]);
+            displayFeaturedGames([]);
+            return;
+        }
 
-    let gamesArray = [];
-    if (Array.isArray(data)) {
-        gamesArray = data.filter(Boolean);
-    } else if (typeof data === 'object') {
-        gamesArray = Object.keys(data).map(key => {
-            const game = data[key];
-            return {
-                id: parseInt(key) || Math.random(),
-                title: game.title || 'Untitled',
-                category: game.category || 'other',
-                price: parseFloat(game.price) || 0,
-                rating: parseFloat(game.rating) || 0,
-                downloads: parseInt(game.downloads) || 0,
-                description: game.description || '',
-                imageUrl: game.imageUrl || 'https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&h=300&fit=crop'
-            };
+        let gamesArray = [];
+        if (Array.isArray(data)) {
+            gamesArray = data.filter(Boolean);
+        } else if (typeof data === 'object') {
+            gamesArray = Object.keys(data).map(key => {
+                const game = data[key];
+                return {
+                    id: parseInt(key) || Math.random(),
+                    title: game.title || 'Untitled',
+                    category: game.category || 'other',
+                    price: parseFloat(game.price) || 0,
+                    rating: parseFloat(game.rating) || 0,
+                    downloads: parseInt(game.downloads) || 0,
+                    description: game.description || '',
+                    imageUrl: game.imageUrl || 'https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&h=300&fit=crop'
+                };
+            });
+        }
+
+        // Validate game data
+        gamesArray = gamesArray.filter(game => {
+            return game && game.title && game.category;
         });
-    }
 
-    // Optional local cache sync
-    if (gamesArray.length > 0) {
-        localStorage.setItem('gamesData', JSON.stringify(gamesArray));
-    }
+        console.log(`📊 Processed ${gamesArray.length} valid games`);
 
-    // Refresh current UI (filtered/sorted view)
-    applyAllFiltersAndSort();
-    displayFeaturedGames(gamesArray);
+        // Optional local cache sync
+        if (gamesArray.length > 0) {
+            try {
+                localStorage.setItem('gamesData', JSON.stringify(gamesArray));
+                console.log('💾 Games cached locally');
+            } catch (error) {
+                console.warn('⚠️ Failed to cache games locally:', error);
+            }
+        }
+
+        // Refresh current UI (filtered/sorted view)
+        applyAllFiltersAndSort();
+        displayFeaturedGames(gamesArray);
+        
+        // Remove loading state
+        const gamesGrid = document.getElementById('gamesGrid');
+        if (gamesGrid && gamesGrid.querySelector('.loading-spinner')) {
+            gamesGrid.innerHTML = '';
+        }
+        
+        console.log('✅ UI updated successfully');
+    } catch (error) {
+        console.error('❌ Error updating UI:', error);
+        showToast('❌ Error loading games. Please refresh the page.', 'error');
+        
+        // Show error state
+        const gamesGrid = document.getElementById('gamesGrid');
+        if (gamesGrid) {
+            gamesGrid.innerHTML = `
+                <div class="error-boundary">
+                    <h3>❌ Unable to Load Games</h3>
+                    <p>We're having trouble loading our game catalog. Please check your internet connection and try again.</p>
+                    <button class="btn btn-primary" onclick="location.reload()">Refresh Page</button>
+                </div>
+            `;
+        }
+    }
 }
 
 // ============ INITIALIZATION ============
@@ -323,35 +474,84 @@ function loadGamesGrid() {
 }
 
 function displayGames(games) {
-    const gamesGrid = document.getElementById('gamesGrid');
-    gamesGrid.innerHTML = '';
-
-    if (games.length === 0) {
-        gamesGrid.innerHTML = '<div class="no-results">No games found matching your criteria.</div>';
-        return;
-    }
-
-    const currentUser = DataManager.getCurrentUser();
-    games.forEach(game => {
-        const gameCard = createGameCard(game);
-        gamesGrid.appendChild(gameCard);
+    try {
+        console.log(`🎮 Displaying ${games.length} games`);
         
-        // Add subscription info if user is logged in
-        if (currentUser && currentUser.subscription) {
-            const subInfo = DataManager.getUserSubscriptionInfo(currentUser.id);
-            const subInfoElement = document.getElementById(`subInfo-${game.id}`);
-            if (subInfoElement && subInfo.tier !== 'none') {
-                const tierEmoji = {
-                    'free': '🎯',
-                    'premium': '⭐',
-                    'pro': '👑'
-                };
-                const tierName = subInfo.tier ? subInfo.tier.toUpperCase() : 'UNKNOWN';
-                subInfoElement.innerHTML = `${tierEmoji[subInfo.tier] || ''} ${tierName}: ${subInfo.remaining} games remaining`;
-                subInfoElement.className = subInfo.remaining <= 1 ? 'remaining warning' : 'remaining';
-            }
+        const gamesGrid = document.getElementById('gamesGrid');
+        if (!gamesGrid) {
+            console.error('❌ Games grid element not found');
+            return;
         }
-    });
+        
+        gamesGrid.innerHTML = '';
+
+        if (!games || games.length === 0) {
+            gamesGrid.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">🎮</div>
+                    <h3>No Games Found</h3>
+                    <p>Try adjusting your filters or search terms to find games.</p>
+                    <button class="btn btn-secondary" onclick="clearAllFilters()">Clear Filters</button>
+                </div>
+            `;
+            return;
+        }
+
+        const currentUser = DataManager.getCurrentUser();
+        let validGamesCount = 0;
+        
+        games.forEach((game, index) => {
+            try {
+                // Validate game data
+                if (!game || !game.id || !game.title) {
+                    console.warn('⚠️ Invalid game data:', game);
+                    return;
+                }
+                
+                const gameCard = createGameCard(game);
+                if (gameCard) {
+                    gamesGrid.appendChild(gameCard);
+                    validGamesCount++;
+                    
+                    // Add subscription info if user is logged in
+                    if (currentUser && currentUser.subscription) {
+                        const subInfo = DataManager.getUserSubscriptionInfo(currentUser.id);
+                        const subInfoElement = document.getElementById(`subInfo-${game.id}`);
+                        if (subInfoElement && subInfo.tier !== 'none') {
+                            const tierEmoji = {
+                                'free': '🎯',
+                                'premium': '⭐',
+                                'pro': '👑'
+                            };
+                            const tierName = subInfo.tier ? subInfo.tier.toUpperCase() : 'UNKNOWN';
+                            subInfoElement.innerHTML = `${tierEmoji[subInfo.tier] || ''} ${tierName}: ${subInfo.remaining} games remaining`;
+                            subInfoElement.className = subInfo.remaining <= 1 ? 'remaining warning' : 'remaining';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error(`❌ Error creating game card for game ${game.id}:`, error);
+            }
+        });
+        
+        console.log(`✅ Successfully displayed ${validGamesCount} games`);
+        
+        // Update category counts
+        updateCategoryCounts(games);
+        
+    } catch (error) {
+        console.error('❌ Error displaying games:', error);
+        const gamesGrid = document.getElementById('gamesGrid');
+        if (gamesGrid) {
+            gamesGrid.innerHTML = `
+                <div class="error-boundary">
+                    <h3>❌ Error Displaying Games</h3>
+                    <p>We encountered an error while loading games. Please try again.</p>
+                    <button class="btn btn-primary" onclick="loadGamesGrid()">Retry</button>
+                </div>
+            `;
+        }
+    }
 }
 
 function createGameCard(game) {
@@ -413,66 +613,78 @@ function displayFeaturedGames(games) {
     });
 }
 
+function updateCategoryCounts(games) {
+    try {
+        // Count games by category
+        const categoryCounts = {
+            all: games.length,
+            action: 0,
+            rpg: 0,
+            puzzle: 0,
+            strategy: 0,
+            sports: 0,
+            adventure: 0,
+            simulation: 0,
+            casual: 0,
+            indie: 0,
+            multiplayer: 0,
+            horror: 0
+        };
+
+        games.forEach(game => {
+            if (categoryCounts.hasOwnProperty(game.category)) {
+                categoryCounts[game.category]++;
+            }
+        });
+
+        // Update UI with counts
+        const allGamesCount = document.getElementById('allGamesCount');
+        if (allGamesCount) {
+            allGamesCount.textContent = categoryCounts.all;
+        }
+
+        // Update category button counts
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        categoryButtons.forEach(button => {
+            const category = button.dataset.category;
+            if (category && categoryCounts[category] !== undefined) {
+                const countSpan = button.querySelector('span');
+                if (countSpan) {
+                    countSpan.textContent = categoryCounts[category];
+                }
+            }
+        });
+
+        console.log('📊 Category counts updated:', categoryCounts);
+    } catch (error) {
+        console.error('❌ Error updating category counts:', error);
+    }
+}
+
 function filterGamesByCategory(category) {
     currentCategory = category;
     applyAllFiltersAndSort();
 }
 
 function handleGameSearch(query) {
-    currentSearchQuery = query.toLowerCase().trim();
-    
-    // If search box is empty, hide dropdown
-    if (!query.trim()) {
-        hideSearchDropdown();
-        return;
+    try {
+        currentSearchQuery = query.toLowerCase().trim();
+        
+        // If search box is empty, hide dropdown
+        if (!query.trim()) {
+            hideSearchDropdown();
+            return;
+        }
+        
+        // Show dropdown with filtered results
+        showSearchResults(query);
+        applyAllFiltersAndSort();
+        
+        console.log(`🔍 Searching for: "${query}"`);
+    } catch (error) {
+        console.error('❌ Error handling search:', error);
+        showToast('❌ Search error. Please try again.', 'error');
     }
-    
-    // Show dropdown with filtered results
-    showSearchResults(query);
-    applyAllFiltersAndSort();
-}
-
-function showSearchResults(query) {
-    const searchDropdown = document.getElementById('searchDropdown');
-    const searchResultsList = document.getElementById('searchResults');
-    const games = DataManager.getGames();
-    
-    const matchedGames = games.filter(g => 
-        g.title.toLowerCase().includes(query.toLowerCase()) ||
-        g.description.toLowerCase().includes(query.toLowerCase()) ||
-        g.category.toLowerCase().includes(query.toLowerCase())
-    );
-    
-    searchResultsList.innerHTML = '';
-    
-    if (matchedGames.length === 0) {
-        searchResultsList.innerHTML = '<div class="search-no-results">❌ No games match your search</div>';
-    } else {
-        matchedGames.slice(0, 8).forEach(game => {
-            const resultItem = document.createElement('div');
-            resultItem.className = 'search-result-item';
-            resultItem.innerHTML = `
-                <img src="${game.imageUrl}" alt="${game.title}" class="search-result-image">
-                <div class="search-result-info">
-                    <div class="search-result-title">${game.title}</div>
-                    <div class="search-result-meta">⭐ ${game.rating} • ${capitalizeFirst(game.category)}</div>
-                </div>
-            `;
-            // Use mousedown instead of click to ensure it fires before blur event on input
-            resultItem.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                selectSearchResult(game.id);
-            });
-            // Also support keyboard selection
-            resultItem.addEventListener('click', (e) => {
-                e.preventDefault();
-                selectSearchResult(game.id);
-            });
-            searchResultsList.appendChild(resultItem);
-        });
-    }
-    
-    searchDropdown.style.display = 'block';
 }
 
 function showSearchDropdown() {

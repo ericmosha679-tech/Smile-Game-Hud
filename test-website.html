@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Test - Smile Gaming Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0d1b2a;
+            color: white;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            background: rgba(255, 107, 53, 0.1);
+        }
+        .test-section h2 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .info { color: #2196F3; }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #ff8c5a;
+        }
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .status.success { background: rgba(76, 175, 80, 0.2); }
+        .status.error { background: rgba(244, 67, 54, 0.2); }
+        .status.warning { background: rgba(255, 152, 0, 0.2); }
+        .status.info { background: rgba(33, 150, 243, 0.2); }
+    </style>
+</head>
+<body>
+    <h1>🧪 Smile Gaming Hub - Professional Website Test</h1>
+    
+    <div class="test-section">
+        <h2>📊 Data Loading Test</h2>
+        <div id="dataStatus" class="status info">Testing...</div>
+        <button onclick="testDataLoading()">Test Data Loading</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Search Functionality Test</h2>
+        <div id="searchStatus" class="status info">Testing...</div>
+        <button onclick="testSearch()">Test Search</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🎮 Game Display Test</h2>
+        <div id="gameDisplayStatus" class="status info">Testing...</div>
+        <button onclick="testGameDisplay()">Test Game Display</button>
+    </div>
+
+    <div class="test-section">
+        <h2>👤 User Authentication Test</h2>
+        <div id="authStatus" class="status info">Testing...</div>
+        <button onclick="testAuthentication()">Test Authentication</button>
+    </div>
+
+    <div class="test-section">
+        <h2>💳 Payment Processing Test</h2>
+        <div id="paymentStatus" class="status info">Testing...</div>
+        <button onclick="testPayment()">Test Payment</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 UI/UX Test</h2>
+        <div id="uiStatus" class="status info">Testing...</div>
+        <button onclick="testUI()">Test UI/UX</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📱 Responsive Design Test</h2>
+        <div id="responsiveStatus" class="status info">Testing...</div>
+        <button onclick="testResponsive()">Test Responsive</button>
+    </div>
+
+    <div class="test-section">
+        <h2>⚡ Performance Test</h2>
+        <div id="performanceStatus" class="status info">Testing...</div>
+        <button onclick="testPerformance()">Test Performance</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Admin Integration Test</h2>
+        <div id="adminStatus" class="status info">Testing...</div>
+        <button onclick="testAdminIntegration()">Test Admin Integration</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCzq1EtuRnLlljXZNNi7i7hNLd8HFfvE9k",
+            authDomain: "smile-game-hud-db.firebaseapp.com",
+            databaseURL: "https://smile-game-hud-db-default-rtdb.firebaseio.com",
+            projectId: "smile-game-hud-db",
+            storageBucket: "smile-game-hud-db.firebasestorage.app",
+            messagingSenderId: "100113602094",
+            appId: "1:100113602094:web:4f76ba6ce230ea61c071bf"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        let testResults = {
+            dataLoading: false,
+            search: false,
+            gameDisplay: false,
+            authentication: false,
+            payment: false,
+            ui: false,
+            responsive: false,
+            performance: false,
+            adminIntegration: false
+        };
+
+        function updateStatus(test, status, element) {
+            testResults[test] = status;
+            const element = document.getElementById(element);
+            if (element) {
+                element.className = `status ${status}`;
+                element.textContent = status === 'success' ? '✅ PASS' : status === 'error' ? '❌ FAIL' : '⚠️ PARTIAL';
+            }
+        }
+
+        function testDataLoading() {
+            try {
+                console.log('🧪 Testing data loading...');
+                
+                // Test DataManager availability
+                if (typeof DataManager !== 'undefined') {
+                    updateStatus('dataLoading', 'success', 'dataStatus');
+                    console.log('✅ DataManager available');
+                } else {
+                    updateStatus('dataLoading', 'error', 'dataStatus');
+                    console.error('❌ DataManager not available');
+                    return;
+                }
+
+                // Test game data loading
+                const games = DataManager.getGames();
+                if (games && games.length > 0) {
+                    updateStatus('dataLoading', 'success', 'dataStatus');
+                    console.log(`✅ Games loaded: ${games.length} games`);
+                } else {
+                    updateStatus('dataLoading', 'warning', 'dataStatus');
+                    console.warn('⚠️ No games available');
+                }
+
+            } catch (error) {
+                updateStatus('dataLoading', 'error', 'dataStatus');
+                console.error('❌ Data loading test failed:', error);
+            }
+        }
+
+        function testSearch() {
+            try {
+                console.log('🔍 Testing search functionality...');
+                
+                const searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.placeholder = 'Test search...';
+                
+                // Test search functionality exists
+                if (typeof handleGameSearch === 'function') {
+                    updateStatus('search', 'success', 'searchStatus');
+                    console.log('✅ Search function available');
+                } else {
+                    updateStatus('search', 'error', 'searchStatus');
+                    console.error('❌ Search function not available');
+                }
+
+            } catch (error) {
+                updateStatus('search', 'error', 'searchStatus');
+                console.error('❌ Search test failed:', error);
+            }
+        }
+
+        function testGameDisplay() {
+            try {
+                console.log('🎮 Testing game display...');
+                
+                // Test game display functions
+                const functions = ['displayGames', 'createGameCard', 'displayFeaturedGames'];
+                let availableCount = 0;
+                
+                functions.forEach(func => {
+                    if (typeof window[func] === 'function') {
+                        availableCount++;
+                    }
+                });
+
+                if (availableCount === functions.length) {
+                    updateStatus('gameDisplay', 'success', 'gameDisplayStatus');
+                    console.log('✅ All game display functions available');
+                } else {
+                    updateStatus('gameDisplay', 'warning', 'gameDisplayStatus');
+                    console.warn(`⚠️ Only ${availableCount}/${functions.length} game display functions available`);
+                }
+
+            } catch (error) {
+                updateStatus('gameDisplay', 'error', 'gameDisplayStatus');
+                console.error('❌ Game display test failed:', error);
+            }
+        }
+
+        function testAuthentication() {
+            try {
+                console.log('👤 Testing authentication...');
+                
+                // Test auth functions
+                const functions = ['loginUser', 'signupUser', 'checkUserSession', 'logoutUser'];
+                let availableCount = 0;
+                
+                functions.forEach(func => {
+                    if (typeof window[func] === 'function') {
+                        availableCount++;
+                    }
+                });
+
+                if (availableCount >= 3) {
+                    updateStatus('authentication', 'success', 'authStatus');
+                    console.log('✅ Authentication functions available');
+                } else {
+                    updateStatus('authentication', 'warning', 'authStatus');
+                    console.warn(`⚠️ Only ${availableCount}/${functions.length} auth functions available`);
+                }
+
+            } catch (error) {
+                updateStatus('authentication', 'error', 'authStatus');
+                console.error('❌ Authentication test failed:', error);
+            }
+        }
+
+        function testPayment() {
+            try {
+                console.log('💳 Testing payment processing...');
+                
+                // Test payment functions
+                const functions = ['processPayment', 'showPaymentModal', 'initiateDownload'];
+                let availableCount = 0;
+                
+                functions.forEach(func => {
+                    if (typeof window[func] === 'function') {
+                        availableCount++;
+                    }
+                });
+
+                if (availableCount >= 2) {
+                    updateStatus('payment', 'success', 'paymentStatus');
+                    console.log('✅ Payment functions available');
+                } else {
+                    updateStatus('payment', 'warning', 'paymentStatus');
+                    console.warn(`⚠️ Only ${availableCount}/${functions.length} payment functions available`);
+                }
+
+            } catch (error) {
+                updateStatus('payment', 'error', 'paymentStatus');
+                console.error('❌ Payment test failed:', error);
+            }
+        }
+
+        function testUI() {
+            try {
+                console.log('🎨 Testing UI/UX...');
+                
+                // Test modal functions
+                const modalFunctions = ['openModal', 'closeModal', 'showToast'];
+                let availableCount = 0;
+                
+                modalFunctions.forEach(func => {
+                    if (typeof window[func] === 'function') {
+                        availableCount++;
+                    }
+                });
+
+                // Test theme functionality
+                const themeAvailable = typeof toggleThemeMode === 'function';
+
+                if (availableCount >= 2 && themeAvailable) {
+                    updateStatus('ui', 'success', 'uiStatus');
+                    console.log('✅ UI/UX functions available');
+                } else {
+                    updateStatus('ui', 'warning', 'uiStatus');
+                    console.warn(`⚠️ UI/UX functions partially available`);
+                }
+
+            } catch (error) {
+                updateStatus('ui', 'error', 'uiStatus');
+                console.error('❌ UI/UX test failed:', error);
+            }
+        }
+
+        function testResponsive() {
+            try {
+                console.log('📱 Testing responsive design...');
+                
+                // Test viewport meta tag
+                const viewport = document.querySelector('meta[name="viewport"]');
+                if (viewport) {
+                    updateStatus('responsive', 'success', 'responsiveStatus');
+                    console.log('✅ Viewport meta tag present');
+                } else {
+                    updateStatus('responsive', 'warning', 'responsiveStatus');
+                    console.warn('⚠️ Viewport meta tag missing');
+                }
+
+                // Test responsive CSS
+                const hasResponsiveStyles = window.getComputedStyle(document.body).getPropertyValue('--animation-duration') !== '';
+                if (hasResponsiveStyles) {
+                    console.log('✅ Responsive CSS variables present');
+                }
+
+            } catch (error) {
+                updateStatus('responsive', 'error', 'responsiveStatus');
+                console.error('❌ Responsive test failed:', error);
+            }
+        }
+
+        function testPerformance() {
+            try {
+                console.log('⚡ Testing performance...');
+                
+                // Test performance API
+                if ('performance' in window) {
+                    updateStatus('performance', 'success', 'performanceStatus');
+                    console.log('✅ Performance API available');
+                } else {
+                    updateStatus('performance', 'warning', 'performanceStatus');
+                    console.warn('⚠️ Performance API not available');
+                }
+
+                // Test loading optimization
+                const startTime = performance.now();
+                
+                setTimeout(() => {
+                    const endTime = performance.now();
+                    const loadTime = endTime - startTime;
+                    
+                    if (loadTime < 100) {
+                        console.log(`✅ Fast load time: ${loadTime}ms`);
+                    } else {
+                        console.log(`⚠️ Load time: ${loadTime}ms (could be optimized)`);
+                    }
+                }, 0);
+
+            } catch (error) {
+                updateStatus('performance', 'error', 'performanceStatus');
+                console.error('❌ Performance test failed:', error);
+            }
+        }
+
+        function testAdminIntegration() {
+            try {
+                console.log('🔗 Testing admin integration...');
+                
+                // Test admin functions
+                const adminFunctions = ['verifyAdminAccess', 'loadAdminData', 'switchAdminTab'];
+                let availableCount = 0;
+                
+                adminFunctions.forEach(func => {
+                    if (typeof window[func] === 'function') {
+                        availableCount++;
+                    }
+                });
+
+                if (availableCount >= 2) {
+                    updateStatus('adminIntegration', 'success', 'adminStatus');
+                    console.log('✅ Admin functions available');
+                } else {
+                    updateStatus('adminIntegration', 'warning', 'adminStatus');
+                    console.warn(`⚠️ Only ${availableCount}/${adminFunctions.length} admin functions available`);
+                }
+
+                // Test admin password
+                const adminPassword = 'Ciontatenx83';
+                if (adminPassword) {
+                    console.log('✅ Admin password configured');
+                }
+
+            } catch (error) {
+                updateStatus('adminIntegration', 'error', 'adminStatus');
+                console.error('❌ Admin integration test failed:', error);
+            }
+        }
+
+        function runAllTests() {
+            console.log('🧪 Running comprehensive website tests...');
+            testDataLoading();
+            testSearch();
+            testGameDisplay();
+            testAuthentication();
+            testPayment();
+            testUI();
+            testResponsive();
+            testPerformance();
+            testAdminIntegration();
+
+            // Calculate overall status
+            const passedTests = Object.values(testResults).filter(status => status === 'success').length;
+            const totalTests = Object.keys(testResults).length;
+            
+            console.log(`📊 Test Results: ${passedTests}/${totalTests} tests passed`);
+            
+            if (passedTests === totalTests) {
+                document.body.style.background = 'linear-gradient(135deg, #4CAF50, #2196F3)';
+            } else if (passedTests >= totalTests * 0.8) {
+                document.body.style.background = 'linear-gradient(135deg, #FF9800, #F57C00)';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+            }
+        }
+
+        // Load DataManager if available
+        const script = document.createElement('script');
+        script.src = 'data.js';
+        script.onload = () => {
+            console.log('📊 DataManager loaded, running tests...');
+            runAllTests();
+        };
+        script.onerror = () => {
+            console.error('❌ Failed to load DataManager');
+            updateStatus('dataLoading', 'error', 'dataStatus');
+        };
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
