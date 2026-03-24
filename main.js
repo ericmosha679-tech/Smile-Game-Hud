@@ -51,12 +51,29 @@ function updateUI(data) {
         return;
     }
 
-    const gamesArray = Array.isArray(data)
-        ? data.filter(Boolean) // handle sparse arrays
-        : Object.keys(data).map(key => ({ id: Number(key), ...data[key] }));
+    let gamesArray = [];
+    if (Array.isArray(data)) {
+        gamesArray = data.filter(Boolean);
+    } else if (typeof data === 'object') {
+        gamesArray = Object.keys(data).map(key => {
+            const game = data[key];
+            return {
+                id: parseInt(key) || Math.random(),
+                title: game.title || 'Untitled',
+                category: game.category || 'other',
+                price: parseFloat(game.price) || 0,
+                rating: parseFloat(game.rating) || 0,
+                downloads: parseInt(game.downloads) || 0,
+                description: game.description || '',
+                imageUrl: game.imageUrl || 'https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&h=300&fit=crop'
+            };
+        });
+    }
 
     // Optional local cache sync
-    localStorage.setItem('gamesData', JSON.stringify(gamesArray));
+    if (gamesArray.length > 0) {
+        localStorage.setItem('gamesData', JSON.stringify(gamesArray));
+    }
 
     // Refresh current UI (filtered/sorted view)
     applyAllFiltersAndSort();
@@ -157,11 +174,19 @@ function toggleThemeMode() {
 
 function applyBackgroundTheme() {
     const backgroundImages = DataManager.getBackgroundImages();
-    if (!backgroundImages || backgroundImages.length === 0) return;
+    if (!backgroundImages || backgroundImages.length === 0) {
+        console.log('No background images found');
+        return;
+    }
 
     // Get the current background index (default to 0)
     const currentBgIndex = 0;
     const bgUrl = backgroundImages[currentBgIndex];
+
+    if (!bgUrl) {
+        console.warn('Background URL is empty');
+        return;
+    }
 
     // Remove existing style if present
     const styleTag = document.getElementById('bgShuffleStyle');
@@ -172,6 +197,11 @@ function applyBackgroundTheme() {
     // Create a CSS rule for the body background
     const newStyle = document.createElement('style');
     newStyle.id = 'bgShuffleStyle';
+    // Handle both base64 data URLs and regular URLs
+    const bgImageUrl = bgUrl.startsWith('data:') || bgUrl.startsWith('http')
+        ? bgUrl
+        : `url('${bgUrl}')`;
+    
     newStyle.textContent = `
         body::before {
             content: '';
@@ -180,7 +210,7 @@ function applyBackgroundTheme() {
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url('${bgUrl}');
+            background-image: ${bgUrl.startsWith('data:') || bgUrl.startsWith('http') ? `url('${bgUrl}')` : `url('${bgUrl}')`};
             background-size: cover;
             background-position: center;
             background-attachment: fixed;

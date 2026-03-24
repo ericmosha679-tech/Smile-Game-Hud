@@ -17,6 +17,12 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+// Initialize database reference
+let database = null;
+if (typeof firebase !== 'undefined' && firebase.database) {
+    database = firebase.database();
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     verifyAdminAccess();
@@ -175,6 +181,31 @@ function saveGame() {
 
     errorDiv.classList.remove('active');
 
+    // If no image, use placeholder
+    if (!imageFile) {
+        const placeholderGameData = {
+            title: name,
+            category: category,
+            price: parseFloat(price.toFixed(2)),
+            rating: parseFloat(rating.toFixed(1)),
+            description: description,
+            imageUrl: 'https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&h=300&fit=crop' // Default placeholder
+        };
+
+        if (currentEditingGameId) {
+            DataManager.updateGame(currentEditingGameId, placeholderGameData);
+            if (database) firebase.database().ref('games/' + currentEditingGameId).set(placeholderGameData).catch(err => console.error(err));
+            showToast(`✅ Game "${name}" updated successfully!`, 'success');
+        } else {
+            const newGame = DataManager.addGame(placeholderGameData);
+            if (database) firebase.database().ref('games/' + newGame.id).set(newGame).catch(err => console.error(err));
+            showToast(`✅ Game "${name}" added successfully!`, 'success');
+        }
+        closeModal('gameModal');
+        loadAdminGamesTable();
+        return;
+    }
+
     // Read image file as base64
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -190,18 +221,21 @@ function saveGame() {
         // Save locally via DataManager
         if (currentEditingGameId) {
             DataManager.updateGame(currentEditingGameId, gameData);
-            firebase.database().ref('games/' + currentEditingGameId).set(gameData).catch(err => console.error(err));
+            if (database) firebase.database().ref('games/' + currentEditingGameId).set(gameData).catch(err => console.error(err));
             showToast(`✅ Game "${name}" updated successfully!`, 'success');
         } else {
-            DataManager.addGame(gameData);
-            firebase.database().ref('games/').push(gameData).catch(err => console.error(err));
+            const newGame = DataManager.addGame(gameData);
+            if (database) firebase.database().ref('games/' + newGame.id).set(newGame).catch(err => console.error(err));
             showToast(`✅ Game "${name}" added successfully!`, 'success');
         }
 
         closeModal('gameModal');
         loadAdminGamesTable();
     };
-    
+    reader.onerror = function() {
+        errorDiv.textContent = 'Error reading image file';
+        errorDiv.classList.add('active');
+    };
     reader.readAsDataURL(imageFile);
 }
 
@@ -319,17 +353,24 @@ let backgroundImages = [];
 
 function setupBackgroundControls() {
     const bgImages = DataManager.getBackgroundImages();
+    console.log('Background images from manager:', bgImages);
+    
     if (bgImages && bgImages.length > 0) {
         backgroundImages = bgImages;
         updateBgPreview();
         displayUploadedImages();
         
         const autoShuffle = DataManager.getAutoShuffle();
-        document.getElementById('autoShuffleToggle').checked = autoShuffle !== false;
+        const autoShuffleToggle = document.getElementById('autoShuffleToggle');
+        if (autoShuffleToggle) {
+            autoShuffleToggle.checked = autoShuffle !== false;
+        }
         
         if (autoShuffle !== false) {
             startBackgroundShuffle();
         }
+    } else {
+        console.log('No background images to load');
     }
 }
 
