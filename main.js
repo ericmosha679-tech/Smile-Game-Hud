@@ -1483,7 +1483,7 @@ function selectSubscription(tier) {
     toggleSubscription();
 }
 
-// ============ PROFESSIONAL ENHANCEMENTS ============
+// ============ PREMIUM ENHANCEMENTS ============
 
 // Professional Navbar Scroll Effect
 window.addEventListener('scroll', function() {
@@ -1496,6 +1496,345 @@ window.addEventListener('scroll', function() {
         }
     }
 });
+
+// Hamburger Menu Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const navRightContainer = document.querySelector('.nav-right-container');
+    
+    if (hamburgerMenu && navRightContainer) {
+        hamburgerMenu.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navRightContainer.classList.toggle('mobile-open');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburgerMenu.contains(e.target) && !navRightContainer.contains(e.target)) {
+                hamburgerMenu.classList.remove('active');
+                navRightContainer.classList.remove('mobile-open');
+            }
+        });
+    }
+});
+
+// Enhanced Admin CRUD Operations
+class AdminGameManager {
+    constructor() {
+        this.games = [];
+        this.init();
+    }
+    
+    init() {
+        this.loadGames();
+        this.setupEventListeners();
+    }
+    
+    loadGames() {
+        // Load games from localStorage or API
+        const savedGames = localStorage.getItem('adminGames');
+        if (savedGames) {
+            this.games = JSON.parse(savedGames);
+        } else {
+            // Initialize with sample games
+            this.games = [
+                {
+                    id: 1,
+                    title: "Cyberpunk Adventures",
+                    category: "action",
+                    rating: 4.8,
+                    poster: "https://picsum.photos/seed/game1/400/200.jpg",
+                    downloads: 15234,
+                    description: "A thrilling cyberpunk adventure in a dystopian future."
+                },
+                {
+                    id: 2,
+                    title: "Racing Champions",
+                    category: "racing",
+                    rating: 4.5,
+                    poster: "https://picsum.photos/seed/game2/400/200.jpg",
+                    downloads: 12456,
+                    description: "High-speed racing with realistic physics."
+                },
+                {
+                    id: 3,
+                    title: "Fantasy Quest",
+                    category: "rpg",
+                    rating: 4.9,
+                    poster: "https://picsum.photos/seed/game3/400/200.jpg",
+                    downloads: 18923,
+                    description: "Epic fantasy RPG with deep character customization."
+                },
+                {
+                    id: 4,
+                    title: "Battle Arena",
+                    category: "action",
+                    rating: 4.3,
+                    poster: "https://picsum.photos/seed/game4/400/200.jpg",
+                    downloads: 9876,
+                    description: "Intense multiplayer battle arena combat."
+                },
+                {
+                    id: 5,
+                    title: "Puzzle Master",
+                    category: "puzzle",
+                    rating: 4.6,
+                    poster: "https://picsum.photos/seed/game5/400/200.jpg",
+                    downloads: 11234,
+                    description: "Challenging puzzles with beautiful graphics."
+                }
+            ];
+            this.saveGames();
+        }
+    }
+    
+    saveGames() {
+        localStorage.setItem('adminGames', JSON.stringify(this.games));
+        this.updateUI();
+    }
+    
+    setupEventListeners() {
+        // Add event listeners for admin CRUD operations
+        document.addEventListener('DOMContentLoaded', () => {
+            this.setupAdminPanel();
+        });
+    }
+    
+    setupAdminPanel() {
+        // Check if admin is logged in
+        if (window.location.pathname.includes('admin.html')) {
+            this.renderGamesTable();
+            this.setupAddGameForm();
+        }
+    }
+    
+    addGame(gameData) {
+        const newGame = {
+            id: Date.now(),
+            ...gameData,
+            downloads: 0,
+            rating: parseFloat(gameData.rating) || 0
+        };
+        
+        this.games.push(newGame);
+        this.saveGames();
+        this.showToast('✅ Game added successfully!', 'success');
+        return newGame;
+    }
+    
+    updateGame(id, gameData) {
+        const index = this.games.findIndex(game => game.id === id);
+        if (index !== -1) {
+            this.games[index] = { ...this.games[index], ...gameData };
+            this.saveGames();
+            this.showToast('✅ Game updated successfully!', 'success');
+            return this.games[index];
+        }
+        return null;
+    }
+    
+    deleteGame(id) {
+        const index = this.games.findIndex(game => game.id === id);
+        if (index !== -1) {
+            const deletedGame = this.games.splice(index, 1)[0];
+            this.saveGames();
+            this.showToast('🗑️ Game deleted successfully!', 'info');
+            return deletedGame;
+        }
+        return null;
+    }
+    
+    getGame(id) {
+        return this.games.find(game => game.id === id);
+    }
+    
+    getAllGames() {
+        return this.games;
+    }
+    
+    updateUI() {
+        // Update featured games section
+        this.updateFeaturedGames();
+        // Update statistics
+        this.updateStatistics();
+    }
+    
+    updateFeaturedGames() {
+        const featuredContainer = document.getElementById('featuredGamesContainer');
+        if (!featuredContainer) return;
+        
+        const featuredGames = this.games.slice(0, 5);
+        featuredContainer.innerHTML = featuredGames.map(game => `
+            <div class="featured-game-card">
+                <img src="${game.poster}" alt="${game.title}" class="featured-game-poster">
+                <div class="featured-game-info">
+                    <h3 class="featured-game-title">${game.title}</h3>
+                    <div class="featured-game-rating">
+                        <div class="star-rating">
+                            ${this.generateStars(game.rating)}
+                        </div>
+                        <span class="rating-number">${game.rating}</span>
+                    </div>
+                    <button class="featured-game-action" onclick="downloadGame(${game.id})">Download Now</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    generateStars(rating) {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        let stars = '';
+        
+        for (let i = 0; i < fullStars; i++) {
+            stars += '<span class="star">⭐</span>';
+        }
+        
+        if (hasHalfStar && fullStars < 5) {
+            stars += '<span class="star">⭐</span>';
+        }
+        
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+        for (let i = 0; i < emptyStars; i++) {
+            stars += '<span class="star empty">⭐</span>';
+        }
+        
+        return stars;
+    }
+    
+    updateStatistics() {
+        const statsElements = {
+            totalGames: document.querySelector('.stat-number'),
+            downloadsToday: document.querySelectorAll('.stat-number')[1],
+            activeUsers: document.querySelectorAll('.stat-number')[2],
+            newThisWeek: document.querySelectorAll('.stat-number')[3]
+        };
+        
+        if (statsElements.totalGames) {
+            statsElements.totalGames.textContent = `${this.games.length}+`;
+        }
+        
+        if (statsElements.downloadsToday) {
+            const totalDownloads = this.games.reduce((sum, game) => sum + game.downloads, 0);
+            statsElements.downloadsToday.textContent = this.formatNumber(totalDownloads);
+        }
+    }
+    
+    formatNumber(num) {
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + 'M';
+        } else if (num >= 1000) {
+            return (num / 1000).toFixed(1) + 'K';
+        }
+        return num.toString();
+    }
+    
+    renderGamesTable() {
+        const tableBody = document.querySelector('.admin-table tbody');
+        if (!tableBody) return;
+        
+        tableBody.innerHTML = this.games.map(game => `
+            <tr>
+                <td>${game.title}</td>
+                <td>${game.category}</td>
+                <td>${game.rating}</td>
+                <td>${game.downloads}</td>
+                <td>
+                    <button onclick="adminGameManager.editGame(${game.id})" class="btn btn-secondary">Edit</button>
+                    <button onclick="adminGameManager.deleteGame(${game.id})" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    setupAddGameForm() {
+        const addForm = document.getElementById('addGameForm');
+        if (addForm) {
+            addForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(addForm);
+                const gameData = {
+                    title: formData.get('title'),
+                    category: formData.get('category'),
+                    rating: formData.get('rating'),
+                    poster: formData.get('poster') || `https://picsum.photos/seed/game${Date.now()}/400/200.jpg`,
+                    description: formData.get('description')
+                };
+                
+                this.addGame(gameData);
+                addForm.reset();
+                this.renderGamesTable();
+            });
+        }
+    }
+    
+    editGame(id) {
+        const game = this.getGame(id);
+        if (!game) return;
+        
+        // Populate edit form
+        const editForm = document.getElementById('editGameForm');
+        if (editForm) {
+            editForm.title.value = game.title;
+            editForm.category.value = game.category;
+            editForm.rating.value = game.rating;
+            editForm.poster.value = game.poster;
+            editForm.description.value = game.description;
+            
+            // Set up update handler
+            editForm.onsubmit = (e) => {
+                e.preventDefault();
+                const formData = new FormData(editForm);
+                const gameData = {
+                    title: formData.get('title'),
+                    category: formData.get('category'),
+                    rating: formData.get('rating'),
+                    poster: formData.get('poster'),
+                    description: formData.get('description')
+                };
+                
+                this.updateGame(id, gameData);
+                this.renderGamesTable();
+                editForm.reset();
+            };
+        }
+    }
+    
+    showToast(message, type = 'info') {
+        // Create toast notification
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+            toast.style.transform = 'translateX(400px)';
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+    }
+}
+
+// Initialize Admin Game Manager
+const adminGameManager = new AdminGameManager();
 
 // Dark Mode Toggle
 document.addEventListener('DOMContentLoaded', function() {

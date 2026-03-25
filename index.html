@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Enhanced Navigation Header -->
+    <!-- Premium Glassmorphism Navigation Header -->
     <header class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
@@ -20,36 +20,45 @@
                 <span class="logo-text">Smile Gaming Hub</span>
             </div>
             
-            <!-- Main Navigation Links - Right Aligned -->
-            <nav class="nav-main-links">
-                <a href="#recently-added" class="nav-main-link">Recently Added</a>
-                <a href="#popular-games" class="nav-main-link">Popular</a>
-                <a href="#request-games" class="nav-main-link">Request Games</a>
-                <div class="nav-dropdown">
-                    <button class="nav-main-link nav-dropdown-btn">Categories ▼</button>
-                    <div class="nav-dropdown-content">
-                        <a href="#" class="nav-dropdown-item" data-category="action">Action</a>
-                        <a href="#" class="nav-dropdown-item" data-category="adventure">Adventure</a>
-                        <a href="#" class="nav-dropdown-item" data-category="rpg">RPG</a>
-                        <a href="#" class="nav-dropdown-item" data-category="strategy">Strategy</a>
-                        <a href="#" class="nav-dropdown-item" data-category="sports">Sports</a>
-                        <a href="#" class="nav-dropdown-item" data-category="racing">Racing</a>
-                        <a href="#" class="nav-dropdown-item" data-category="simulation">Simulation</a>
-                        <a href="#" class="nav-dropdown-item" data-category="puzzle">Puzzle</a>
-                        <a href="#" class="nav-dropdown-item" data-category="horror">Horror</a>
-                    </div>
-                </div>
-            </nav>
+            <!-- Mobile Hamburger Menu -->
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             
-            <!-- Right Side Action Buttons -->
-            <div class="nav-action-buttons">
-                <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
-                <button id="subscriptionBtn" class="nav-btn subscription-btn">💎 Subscription</button>
-                <button id="loginBtn" class="nav-btn login-btn">Login</button>
-                <button id="signupBtn" class="nav-btn signup-btn">Sign Up</button>
-                <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none">Dashboard</button>
-                <button id="logoutBtn" class="nav-btn logout-btn" style="display:none">Logout</button>
-                <button id="adminAccessBtn" class="nav-btn admin-btn" onclick="openModal('adminModal')">Admin Access</button>
+            <!-- Right Side Navigation - All Links Far Right -->
+            <div class="nav-right-container">
+                <nav class="nav-main-links">
+                    <a href="#recently-added" class="nav-main-link">Recently Added</a>
+                    <a href="#popular-games" class="nav-main-link">Popular</a>
+                    <a href="#request-games" class="nav-main-link">Request Games</a>
+                    <div class="nav-dropdown">
+                        <button class="nav-main-link nav-dropdown-btn">Categories ▼</button>
+                        <div class="nav-dropdown-content">
+                            <a href="#" class="nav-dropdown-item" data-category="action">Action</a>
+                            <a href="#" class="nav-dropdown-item" data-category="adventure">Adventure</a>
+                            <a href="#" class="nav-dropdown-item" data-category="rpg">RPG</a>
+                            <a href="#" class="nav-dropdown-item" data-category="strategy">Strategy</a>
+                            <a href="#" class="nav-dropdown-item" data-category="sports">Sports</a>
+                            <a href="#" class="nav-dropdown-item" data-category="racing">Racing</a>
+                            <a href="#" class="nav-dropdown-item" data-category="simulation">Simulation</a>
+                            <a href="#" class="nav-dropdown-item" data-category="puzzle">Puzzle</a>
+                            <a href="#" class="nav-dropdown-item" data-category="horror">Horror</a>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- Action Buttons -->
+                <div class="nav-action-buttons">
+                    <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
+                    <button id="subscriptionBtn" class="nav-btn subscription-btn">💎 Subscription</button>
+                    <button id="loginBtn" class="nav-btn login-btn">Login</button>
+                    <button id="signupBtn" class="nav-btn signup-btn">Sign Up</button>
+                    <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none">Dashboard</button>
+                    <button id="logoutBtn" class="nav-btn logout-btn" style="display:none">Logout</button>
+                    <button id="adminAccessBtn" class="nav-btn admin-btn" onclick="openModal('adminModal')">Admin Access</button>
+                </div>
             </div>
         </div>
     </header>
@@ -325,32 +334,7 @@
         </div>
     </section>
 
-    <!-- Download Statistics - Inspired by CroTorrents -->
-    <section class="download-stats-section">
-        <div class="section-header">
-            <h2 class="section-title">📊 Download Statistics</h2>
-            <p>Real-time platform statistics</p>
-        </div>
-        <div class="download-stats">
-            <div class="stat-item">
-                <div class="stat-number" id="totalGames">1,247</div>
-                <div class="stat-label">Total Games</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="downloadsToday">45.2K</div>
-                <div class="stat-label">Downloads Today</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="activeUsers">892</div>
-                <div class="stat-label">Active Users</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="newThisWeek">156</div>
-                <div class="stat-label">New This Week</div>
-            </div>
-        </div>
-    </section>
-
+    
     <!-- Centered Request Games Section -->
     <section id="request-games" class="request-form-centered-section">
         <div class="request-form-glass-container">
