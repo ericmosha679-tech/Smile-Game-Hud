@@ -19,65 +19,74 @@
                 <span class="logo-icon">🎮</span>
                 <span class="logo-text">Smile Gaming Hub</span>
             </div>
-            <nav class="nav-links">
+            
+            <!-- Main Navigation Links - Right Aligned -->
+            <nav class="nav-main-links">
+                <a href="#recently-added" class="nav-main-link">Recently Added</a>
+                <a href="#popular-games" class="nav-main-link">Popular</a>
+                <a href="#request-games" class="nav-main-link">Request Games</a>
                 <div class="nav-dropdown">
-                    <button class="nav-btn nav-dropdown-btn">Categories ▼</button>
+                    <button class="nav-main-link nav-dropdown-btn">Categories ▼</button>
                     <div class="nav-dropdown-content">
                         <a href="#" class="nav-dropdown-item" data-category="action">Action</a>
                         <a href="#" class="nav-dropdown-item" data-category="adventure">Adventure</a>
                         <a href="#" class="nav-dropdown-item" data-category="rpg">RPG</a>
-                        <a href="#" class="nav-dropdown-item" data-category="fps">FPS</a>
-                        <a href="#" class="nav-dropdown-item" data-category="horror">Horror</a>
-                        <a href="#" class="nav-dropdown-item" data-category="indie">Indie</a>
-                        <a href="#" class="nav-dropdown-item" data-category="simulation">Simulation</a>
-                        <a href="#" class="nav-dropdown-item" data-category="sports">Sports</a>
                         <a href="#" class="nav-dropdown-item" data-category="strategy">Strategy</a>
-                        <a href="#" class="nav-dropdown-item" data-category="vr">Virtual Reality</a>
+                        <a href="#" class="nav-dropdown-item" data-category="sports">Sports</a>
+                        <a href="#" class="nav-dropdown-item" data-category="racing">Racing</a>
+                        <a href="#" class="nav-dropdown-item" data-category="simulation">Simulation</a>
+                        <a href="#" class="nav-dropdown-item" data-category="puzzle">Puzzle</a>
+                        <a href="#" class="nav-dropdown-item" data-category="horror">Horror</a>
                     </div>
                 </div>
-                <a href="#recently-added" class="nav-btn">🆕 Recently Added</a>
-                <a href="#popular-games" class="nav-btn">🔥 Popular</a>
-                <a href="#request-section" class="nav-btn">📝 Request Games</a>
-                <button id="themeToggleBtn" class="nav-btn" title="Toggle light/dark mode">🌙</button>
+            </nav>
+            
+            <!-- Right Side Action Buttons -->
+            <div class="nav-action-buttons">
+                <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
                 <button id="subscriptionBtn" class="nav-btn subscription-btn">💎 Subscription</button>
                 <button id="loginBtn" class="nav-btn login-btn">Login</button>
                 <button id="signupBtn" class="nav-btn signup-btn">Sign Up</button>
                 <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none">Dashboard</button>
                 <button id="logoutBtn" class="nav-btn logout-btn" style="display:none">Logout</button>
                 <button id="adminAccessBtn" class="nav-btn admin-btn" onclick="openModal('adminModal')">Admin Access</button>
-            </nav>
+            </div>
         </div>
     </header>
 
-    <!-- Professional Hero Section -->
+    <!-- Modern Glassmorphism Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Welcome to Smile Gaming Hub</h1>
-            <p class="hero-subtitle">Discover, Download & Play Amazing Games</p>
-            <div class="hero-buttons">
-                <button id="exploreBtn" class="btn btn-primary">Start Exploring</button>
-                <a href="#recently-added" class="btn btn-secondary">Browse Games</a>
-            </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <span class="hero-stat-number">1,247+</span>
-                    <span class="hero-stat-label">Total Games</span>
-                </div>
-                <div class="hero-stat">
-                    <span class="hero-stat-number">45.2K</span>
-                    <span class="hero-stat-label">Downloads Today</span>
-                </div>
-                <div class="hero-stat">
-                    <span class="hero-stat-number">892</span>
-                    <span class="hero-stat-label">Active Users</span>
-                </div>
-                <div class="hero-stat">
-                    <span class="hero-stat-number">156</span>
-                    <span class="hero-stat-label">New This Week</span>
+        <div class="hero-background"></div>
+        <div class="hero-glass-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to Smile Gaming Hub</h1>
+                <p class="hero-subtitle">Discover, Download & Play Amazing Games</p>
+                <div class="hero-buttons">
+                    <button id="exploreBtn" class="btn btn-primary">Start Exploring</button>
+                    <a href="#featured-games" class="btn btn-secondary">Browse Games</a>
                 </div>
             </div>
         </div>
-        <div class="hero-background"></div>
+    </section>
+
+    <!-- Horizontal Statistics Grid -->
+    <section class="stats-horizontal-grid">
+        <div class="stat-glass-card">
+            <span class="stat-number">1,247+</span>
+            <span class="stat-label">Total Games</span>
+        </div>
+        <div class="stat-glass-card">
+            <span class="stat-number">45.2K</span>
+            <span class="stat-label">Downloads Today</span>
+        </div>
+        <div class="stat-glass-card">
+            <span class="stat-number">892</span>
+            <span class="stat-label">Active Users</span>
+        </div>
+        <div class="stat-glass-card">
+            <span class="stat-number">156</span>
+            <span class="stat-label">New This Week</span>
+        </div>
     </section>
 
     <!-- Subscription Tiers Section -->
@@ -131,49 +140,131 @@
     </section>
 
     <!-- Enhanced Search & Filter Bar -->
-    <section class="search-filter-section">
-        <div class="search-container">
-            <div style="position: relative; flex: 1;">
-                <span class="search-icon">🔍</span>
-                <input 
-                    type="text" 
-                    id="gameSearch" 
-                    class="search-input enhanced-search" 
-                    placeholder="Search for games, categories, or genres..." 
-                    aria-label="Search games"
-                    onkeyup="handleGameSearch(this.value)"
-                    onfocus="showSearchDropdown()"
-                    onblur="hideSearchDropdown()"
-                >
-                <div id="searchDropdown" class="search-dropdown" style="display: none;">
-                    <div id="searchResults" class="search-results-list"></div>
-                </div>
-            </div>
-            <div class="sort-controls">
-                <label for="sortBy" class="sort-label">Sort by:</label>
-                <select id="sortBy" class="sort-select" onchange="handleGameSort(this.value)" aria-label="Sort games">
-                    <option value="default">Default</option>
-                    <option value="rating-high">⭐ Highest Rating</option>
-                    <option value="rating-low">⭐ Lowest Rating</option>
-                    <option value="downloads-high">⬇️ Most Downloads</option>
-                    <option value="downloads-low">⬇️ Least Downloads</option>
-                    <option value="price-high">💰 Price: High to Low</option>
-                    <option value="price-low">💰 Price: Low to High</option>
-                    <option value="recent">🆕 Recently Added</option>
-                    <option value="popular">🔥 Most Popular</option>
-                </select>
-            </div>
+    <section class="search-filter-enhanced">
+        <div class="search-container-enhanced">
+            <input 
+                type="text" 
+                id="gameSearch" 
+                class="search-input-enhanced" 
+                placeholder="Search for games..." 
+                aria-label="Search games"
+                onkeyup="handleGameSearch(this.value)"
+            >
+            <select id="sortBy" class="sort-dropdown-enhanced" onchange="handleGameSort(this.value)" aria-label="Sort games">
+                <option value="default">Sort by: Default</option>
+                <option value="rating-high">⭐ Highest Rating</option>
+                <option value="rating-low">⭐ Lowest Rating</option>
+                <option value="downloads-high">⬇️ Most Downloads</option>
+                <option value="downloads-low">⬇️ Least Downloads</option>
+                <option value="recent">🆕 Recently Added</option>
+                <option value="popular">🔥 Most Popular</option>
+            </select>
         </div>
         
         <!-- Enhanced Filter Tags -->
-        <div class="filter-tags-container">
-            <div class="filter-tag active" data-filter="all">All Games</div>
-            <div class="filter-tag" data-filter="free">Free</div>
-            <div class="filter-tag" data-filter="premium">Premium</div>
-            <div class="filter-tag" data-filter="multiplayer">Multiplayer</div>
-            <div class="filter-tag" data-filter="co-op">Co-op</div>
-            <div class="filter-tag" data-filter="vr">Virtual Reality</div>
-            <div class="filter-tag" data-filter="latest">Latest Updates</div>
+        <div class="filter-tags-enhanced">
+            <div class="filter-tag-enhanced active" data-filter="all">All Games</div>
+            <div class="filter-tag-enhanced" data-filter="free">Free</div>
+            <div class="filter-tag-enhanced" data-filter="premium">Premium</div>
+            <div class="filter-tag-enhanced" data-filter="multiplayer">Multiplayer</div>
+            <div class="filter-tag-enhanced" data-filter="co-op">Co-op</div>
+            <div class="filter-tag-enhanced" data-filter="vr">Virtual Reality</div>
+            <div class="filter-tag-enhanced" data-filter="latest">Latest Updates</div>
+        </div>
+    </section>
+
+    <!-- Featured Games Section -->
+    <section id="featured-games" class="featured-games-section">
+        <div class="section-header">
+            <h2 class="section-title">⭐ Featured Games</h2>
+            <p>Top-rated and trending games you shouldn't miss</p>
+        </div>
+        <div class="featured-games-container" id="featuredGamesContainer">
+            <div class="featured-game-card">
+                <img src="https://picsum.photos/seed/game1/400/200.jpg" alt="Featured Game" class="featured-game-poster">
+                <div class="featured-game-info">
+                    <h3 class="featured-game-title">Cyberpunk Adventures</h3>
+                    <div class="featured-game-rating">
+                        <div class="star-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                        <span class="rating-number">4.8</span>
+                    </div>
+                    <button class="featured-game-action">Download Now</button>
+                </div>
+            </div>
+            <div class="featured-game-card">
+                <img src="https://picsum.photos/seed/game2/400/200.jpg" alt="Featured Game" class="featured-game-poster">
+                <div class="featured-game-info">
+                    <h3 class="featured-game-title">Racing Champions</h3>
+                    <div class="featured-game-rating">
+                        <div class="star-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star empty">⭐</span>
+                        </div>
+                        <span class="rating-number">4.5</span>
+                    </div>
+                    <button class="featured-game-action">Download Now</button>
+                </div>
+            </div>
+            <div class="featured-game-card">
+                <img src="https://picsum.photos/seed/game3/400/200.jpg" alt="Featured Game" class="featured-game-poster">
+                <div class="featured-game-info">
+                    <h3 class="featured-game-title">Fantasy Quest</h3>
+                    <div class="featured-game-rating">
+                        <div class="star-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                        <span class="rating-number">4.9</span>
+                    </div>
+                    <button class="featured-game-action">Download Now</button>
+                </div>
+            </div>
+            <div class="featured-game-card">
+                <img src="https://picsum.photos/seed/game4/400/200.jpg" alt="Featured Game" class="featured-game-poster">
+                <div class="featured-game-info">
+                    <h3 class="featured-game-title">Battle Arena</h3>
+                    <div class="featured-game-rating">
+                        <div class="star-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star empty">⭐</span>
+                        </div>
+                        <span class="rating-number">4.3</span>
+                    </div>
+                    <button class="featured-game-action">Download Now</button>
+                </div>
+            </div>
+            <div class="featured-game-card">
+                <img src="https://picsum.photos/seed/game5/400/200.jpg" alt="Featured Game" class="featured-game-poster">
+                <div class="featured-game-info">
+                    <h3 class="featured-game-title">Puzzle Master</h3>
+                    <div class="featured-game-rating">
+                        <div class="star-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star empty">⭐</span>
+                        </div>
+                        <span class="rating-number">4.6</span>
+                    </div>
+                    <button class="featured-game-action">Download Now</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -256,6 +347,74 @@
             <div class="stat-item">
                 <div class="stat-number" id="newThisWeek">156</div>
                 <div class="stat-label">New This Week</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Centered Request Games Section -->
+    <section id="request-games" class="request-form-centered-section">
+        <div class="request-form-glass-container">
+            <h2 class="request-form-title">📝 Request Games</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">Can't find what you're looking for? Request it here!</p>
+            <form id="requestForm" onsubmit="submitGameRequest(event)">
+                <div class="request-form-group">
+                    <label for="requestGameName" class="request-form-label">Game Name *</label>
+                    <input 
+                        type="text" 
+                        id="requestGameName" 
+                        class="request-form-input" 
+                        placeholder="Enter the game name you want to request"
+                        required
+                    >
+                </div>
+                <div class="request-form-group">
+                    <label for="requestPlatform" class="request-form-label">Platform *</label>
+                    <select id="requestPlatform" class="request-form-select" required>
+                        <option value="">Select Platform</option>
+                        <option value="pc">PC</option>
+                        <option value="playstation">PlayStation</option>
+                        <option value="xbox">Xbox</option>
+                        <option value="nintendo">Nintendo</option>
+                        <option value="mobile">Mobile</option>
+                    </select>
+                </div>
+                <div class="request-form-group">
+                    <label for="requestEmail" class="request-form-label">Email (Optional)</label>
+                    <input 
+                        type="email" 
+                        id="requestEmail" 
+                        class="request-form-input" 
+                        placeholder="your@email.com"
+                    >
+                </div>
+                <div class="request-form-group">
+                    <label for="requestCategory" class="request-form-label">Category *</label>
+                    <select id="requestCategory" class="request-form-select" required>
+                        <option value="">Select Category</option>
+                        <option value="action">Action</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="rpg">RPG</option>
+                        <option value="strategy">Strategy</option>
+                        <option value="sports">Sports</option>
+                        <option value="racing">Racing</option>
+                        <option value="simulation">Simulation</option>
+                        <option value="puzzle">Puzzle</option>
+                        <option value="horror">Horror</option>
+                    </select>
+                </div>
+                <div class="request-form-group">
+                    <label for="requestDetails" class="request-form-label">Additional Details</label>
+                    <textarea 
+                        id="requestDetails" 
+                        class="request-form-textarea" 
+                        placeholder="Any specific requirements or details about the game request..."
+                        rows="4"
+                    ></textarea>
+                </div>
+                <button type="submit" class="request-form-submit">Submit Request</button>
+            </form>
+            <div id="requestStatus" class="request-status" style="display: none; margin-top: 2rem;">
+                <div class="status-message"></div>
             </div>
         </div>
     </section>

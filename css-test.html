@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <title>CSS Test</title>
+</head>
+<body>
+    <div class="test">Testing CSS</div>
+    <script>
+        // Test if CSS loads without errors
+        window.onload = function() {
+            console.log('CSS loaded successfully');
+            document.body.style.backgroundColor = 'green';
+            setTimeout(() => {
+                document.body.innerHTML = 'CSS is valid and loading correctly!';
+            }, 1000);
+        };
+        
+        // Check for CSS parsing errors
+        window.addEventListener('error', function(e) {
+            if(e.target.tagName === 'LINK') {
+                console.error('CSS loading error:', e);
+                document.body.innerHTML = 'CSS loading error detected';
+                document.body.style.backgroundColor = 'red';
+            }
+        }, true);
+    </script>
+</body>
+</html>

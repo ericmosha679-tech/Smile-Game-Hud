@@ -1497,6 +1497,37 @@ window.addEventListener('scroll', function() {
     }
 });
 
+// Dark Mode Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+    
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        body.classList.add('light-mode');
+        darkModeToggle.textContent = '☀️';
+    }
+    
+    // Toggle dark mode
+    darkModeToggle.addEventListener('click', function() {
+        body.classList.toggle('light-mode');
+        const isLightMode = body.classList.contains('light-mode');
+        
+        // Update icon
+        this.textContent = isLightMode ? '☀️' : '🌙';
+        
+        // Save preference
+        localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        
+        // Add transition effect
+        this.style.transform = 'rotate(360deg)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 300);
+    });
+});
+
 // Professional Smooth Scrolling
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scroll for anchor links
