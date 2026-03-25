@@ -846,6 +846,60 @@
                 </div>
             </div>
 
+            <!-- Downloads Management Tab -->
+            <div id="downloadsTab" class="admin-tab">
+                <div class="admin-section-header">
+                    <h2>📥 My Downloads</h2>
+                </div>
+                <div class="downloads-management-section">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Game Title</th>
+                                <th>Download Date</th>
+                                <th>Size</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="downloadsTable">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <div id="downloadsEmptyState" class="empty-state-cta" style="display: none;">
+                        <h3>No Downloads Yet</h3>
+                        <p>You haven't downloaded any games yet. Start browsing our collection and find your next favorite game!</p>
+                        <a href="index.html" class="btn">Browse Games</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments Management Tab -->
+            <div id="commentsTab" class="admin-tab">
+                <div class="admin-section-header">
+                    <h2>💬 My Comments</h2>
+                </div>
+                <div class="comments-management-section">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Game Title</th>
+                                <th>Comment</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commentsTable">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <div id="commentsEmptyState" class="empty-state-cta" style="display: none;">
+                        <h3>No Comments Yet</h3>
+                        <p>You haven't posted any comments yet. Share your thoughts on games and help the community!</p>
+                        <a href="index.html" class="btn">Browse Games to Comment</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Users Management Tab -->
             <div id="usersTab" class="admin-tab">
                 <div class="admin-section-header">
@@ -861,6 +915,7 @@
                                 <th>Email</th>
                                 <th>Subscription</th>
                                 <th>Downloads</th>
+                                <th>Member Since</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -869,6 +924,11 @@
                             <!-- Populated by JavaScript -->
                         </tbody>
                     </table>
+                    <div id="usersEmptyState" class="empty-state-cta" style="display: none;">
+                        <h3>No Users Yet</h3>
+                        <p>Start by adding your first user to manage your gaming community.</p>
+                        <a href="#" onclick="openAddUserModal()" class="btn">Add First User</a>
+                    </div>
                 </div>
             </div>
         </main>

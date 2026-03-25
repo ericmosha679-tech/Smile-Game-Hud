@@ -51,13 +51,13 @@
                 
                 <!-- Action Buttons -->
                 <div class="nav-action-buttons">
-                    <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
-                    <button id="subscriptionBtn" class="nav-btn subscription-btn">💎 Subscription</button>
-                    <button id="loginBtn" class="nav-btn login-btn">Login</button>
-                    <button id="signupBtn" class="nav-btn signup-btn">Sign Up</button>
-                    <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none">Dashboard</button>
-                    <button id="logoutBtn" class="nav-btn logout-btn" style="display:none">Logout</button>
-                    <button id="adminAccessBtn" class="nav-btn admin-btn" onclick="openModal('adminModal')">Admin Access</button>
+                    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+                    <button id="subscriptionBtn" class="nav-btn subscription-btn" aria-label="View subscription plans" title="View subscription plans">💎 Subscription</button>
+                    <button id="loginBtn" class="nav-btn login-btn" aria-label="Login to your account" title="Login">Login</button>
+                    <button id="signupBtn" class="nav-btn signup-btn" aria-label="Create a new account" title="Sign up">Sign Up</button>
+                    <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none" aria-label="Go to dashboard" title="Dashboard">Dashboard</button>
+                    <button id="logoutBtn" class="nav-btn logout-btn" style="display:none" aria-label="Logout from your account" title="Logout">Logout</button>
+                    <button id="adminAccessBtn" class="nav-btn admin-btn" onclick="openModal('adminModal')" aria-label="Access admin panel" title="Admin Access">Admin Access</button>
                 </div>
             </div>
         </div>
@@ -107,21 +107,20 @@
         <div class="subscription-cards">
             <div class="subscription-card free-tier">
                 <h3>Free Trial</h3>
-                <div class="price">$0<span class="period">/month</span></div>
+                <div class="price">$0.00<span class="period">/month</span></div>
                 <div class="trial-duration">1 Month Trial Only</div>
                 <ul class="features">
                     <li>✓ Access 3 games</li>
                     <li>✓ 1 month free trial</li>
                     <li>✓ Basic support</li>
                     <li>✓ Standard downloads</li>
-                    <li class="warning">⚠️ Cannot use trial again</li>
                 </ul>
                 <button class="btn btn-select" onclick="selectSubscription('free')">Get Free Trial</button>
             </div>
             <div class="subscription-card premium-tier">
                 <div class="featured-badge">Most Popular</div>
                 <h3>Premium</h3>
-                <div class="price">$6.9<span class="period">/month</span></div>
+                <div class="price">$6.99<span class="period">/month</span></div>
                 <div class="free-games">6 Free Games</div>
                 <ul class="features">
                     <li>✓ Access 6 free games</li>
@@ -134,7 +133,7 @@
             </div>
             <div class="subscription-card pro-tier">
                 <h3>Pro Premium</h3>
-                <div class="price">$12.9<span class="period">/month</span></div>
+                <div class="price">$12.99<span class="period">/month</span></div>
                 <div class="free-games">10 Free Games</div>
                 <ul class="features">
                     <li>✓ Access 10 free games</li>
@@ -146,10 +145,18 @@
                 <button class="btn btn-select" onclick="selectSubscription('pro')">Choose Pro Premium</button>
             </div>
         </div>
+        <div class="trial-disclaimer">
+            <p>⚠️ Free trial available for new users only. Cannot be combined with other offers.</p>
+        </div>
+        </div>
     </section>
 
     <!-- Enhanced Search & Filter Bar -->
     <section class="search-filter-enhanced">
+        <div class="search-filter-labels">
+            <span>Filter by:</span>
+            <span>Sort by:</span>
+        </div>
         <div class="search-container-enhanced">
             <input 
                 type="text" 
@@ -160,7 +167,7 @@
                 onkeyup="handleGameSearch(this.value)"
             >
             <select id="sortBy" class="sort-dropdown-enhanced" onchange="handleGameSort(this.value)" aria-label="Sort games">
-                <option value="default">Sort by: Default</option>
+                <option value="default">Default</option>
                 <option value="rating-high">⭐ Highest Rating</option>
                 <option value="rating-low">⭐ Lowest Rating</option>
                 <option value="downloads-high">⬇️ Most Downloads</option>
@@ -172,13 +179,13 @@
         
         <!-- Enhanced Filter Tags -->
         <div class="filter-tags-enhanced">
-            <div class="filter-tag-enhanced active" data-filter="all">All Games</div>
-            <div class="filter-tag-enhanced" data-filter="free">Free</div>
-            <div class="filter-tag-enhanced" data-filter="premium">Premium</div>
-            <div class="filter-tag-enhanced" data-filter="multiplayer">Multiplayer</div>
-            <div class="filter-tag-enhanced" data-filter="co-op">Co-op</div>
-            <div class="filter-tag-enhanced" data-filter="vr">Virtual Reality</div>
-            <div class="filter-tag-enhanced" data-filter="latest">Latest Updates</div>
+            <div class="filter-tag-enhanced active" data-filter="all" onclick="filterGames('all')">All Games</div>
+            <div class="filter-tag-enhanced" data-filter="free" onclick="filterGames('free')">Free</div>
+            <div class="filter-tag-enhanced" data-filter="premium" onclick="filterGames('premium')">Premium</div>
+            <div class="filter-tag-enhanced" data-filter="multiplayer" onclick="filterGames('multiplayer')">Multiplayer</div>
+            <div class="filter-tag-enhanced" data-filter="co-op" onclick="filterGames('co-op')">Co-op</div>
+            <div class="filter-tag-enhanced" data-filter="vr" onclick="filterGames('vr')">Virtual Reality</div>
+            <div class="filter-tag-enhanced" data-filter="latest" onclick="filterGames('latest')">Latest Updates</div>
         </div>
     </section>
 
@@ -287,7 +294,8 @@
             <!-- Games will be populated by JavaScript -->
         </div>
         <div class="load-more-container">
-            <button class="btn btn-secondary" onclick="loadMoreRecentGames()">Load More Games</button>
+            <p class="games-count" id="recentGamesCount">Showing 0 of 0 games</p>
+            <button class="btn btn-secondary" id="loadMoreRecentBtn" onclick="loadMoreRecentGames()">Load More</button>
         </div>
     </section>
 
@@ -349,11 +357,13 @@
                         class="request-form-input" 
                         placeholder="Enter the game name you want to request"
                         required
+                        aria-label="Game name"
+                        aria-required="true"
                     >
                 </div>
                 <div class="request-form-group">
                     <label for="requestPlatform" class="request-form-label">Platform *</label>
-                    <select id="requestPlatform" class="request-form-select" required>
+                    <select id="requestPlatform" class="request-form-select" required aria-label="Select platform" aria-required="true">
                         <option value="">Select Platform</option>
                         <option value="pc">PC</option>
                         <option value="playstation">PlayStation</option>
@@ -373,7 +383,7 @@
                 </div>
                 <div class="request-form-group">
                     <label for="requestCategory" class="request-form-label">Category *</label>
-                    <select id="requestCategory" class="request-form-select" required>
+                    <select id="requestCategory" class="request-form-select" required aria-label="Select category" aria-required="true">
                         <option value="">Select Category</option>
                         <option value="action">Action</option>
                         <option value="adventure">Adventure</option>
@@ -393,6 +403,7 @@
                         class="request-form-textarea" 
                         placeholder="Any specific requirements or details about the game request..."
                         rows="4"
+                        aria-label="Additional details about the game request"
                     ></textarea>
                 </div>
                 <button type="submit" class="request-form-submit">Submit Request</button>
@@ -440,31 +451,7 @@
         </div>
     </section>
 
-    <!-- Featured/Trending Games Table -->
-    <section class="featured-games-section">
-        <div class="section-header">
-            <h2 class="section-title">⭐ Featured Games</h2>
-            <p>The hottest games right now</p>
-        </div>
-        <div class="games-table-container">
-            <table class="games-table">
-                <thead>
-                    <tr>
-                        <th>Game Title</th>
-                        <th>Category</th>
-                        <th>Rating</th>
-                        <th>Price</th>
-                        <th>Downloads</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="featuredTable">
-                    <!-- Populated by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </section>
-
+    
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
@@ -472,14 +459,14 @@
                 <summary>Getting Started</summary>
                 <ul>
                     <li><a href="#" onclick="scrollToCategories()">Browse Games</a></li>
-                    <li><a href="#" onclick="toggleSubscription()">Pricing</a></li>
+                    <li><a href="#" onclick="toggleSubscription()">View Plans</a></li>
                 </ul>
             </details>
             <details class="footer-column">
                 <summary>Solutions</summary>
                 <ul>
-                    <li><a href="#" onclick="toggleSubscription()">Pricing</a></li>
                     <li><a href="#" class="contact-sales">Contact sales</a></li>
+                    <li><a href="#" onclick="scrollToCategories()">Browse Categories</a></li>
                 </ul>
             </details>
             <details class="footer-column">
@@ -658,8 +645,43 @@
                 <button class="modal-close" onclick="closeModal('paymentModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="gameInfo" class="game-payment-info">
-                    <!-- Populated by JavaScript -->
+                <!-- Payment Order Summary -->
+                <div class="payment-order-summary">
+                    <h3>Order Summary</h3>
+                    <div class="order-item">
+                        <div class="order-plan-info">
+                            <h4 id="orderPlanName">Premium Plan</h4>
+                            <p id="orderPlanDetails">Monthly subscription with full access</p>
+                        </div>
+                        <div class="order-price">
+                            <span id="orderPlanPrice">$6.99</span>
+                            <small id="orderBillingPeriod">/month</small>
+                        </div>
+                    </div>
+                    <div class="order-benefits">
+                        <h4>What's Included:</h4>
+                        <ul id="orderBenefits">
+                            <li>✓ Access to 6 free games</li>
+                            <li>✓ Fast downloads</li>
+                            <li>✓ Priority support</li>
+                            <li>✓ Exclusive deals</li>
+                            <li>✓ Ad-free experience</li>
+                        </ul>
+                    </div>
+                    <div class="order-total">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="orderSubtotal">$6.99</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Tax:</span>
+                            <span id="orderTax">$0.00</span>
+                        </div>
+                        <div class="total-row final">
+                            <span>Total:</span>
+                            <span id="orderTotal">$6.99</span>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="payment-methods">
@@ -756,7 +778,8 @@
                 <div id="paymentError" class="error-message"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-complete-payment" onclick="processPayment()">Complete Payment</button>
+                <button class="btn btn-secondary" onclick="closeModal('paymentModal')">Cancel</button>
+                <button class="btn btn-complete-payment" onclick="processPayment()">Confirm Payment</button>
             </div>
         </div>
     </div>

@@ -1833,6 +1833,257 @@ class AdminGameManager {
     }
 }
 
+// Pagination and Load More Functionality
+class GamePagination {
+    constructor() {
+        this.currentPage = 1;
+        this.gamesPerPage = 6;
+        this.totalGames = 0;
+        this.filteredGames = [];
+    }
+    
+    updatePagination(totalGames, filteredGames = []) {
+        this.totalGames = filteredGames.length > 0 ? filteredGames.length : totalGames;
+        this.filteredGames = filteredGames.length > 0 ? filteredGames : [];
+        this.currentPage = 1;
+        
+        this.updateUI();
+    }
+    
+    loadMore() {
+        if (this.currentPage * this.gamesPerPage >= this.totalGames) {
+            return; // All games are already loaded
+        }
+        
+        this.currentPage++;
+        this.updateUI();
+        this.renderNextBatch();
+    }
+    
+    updateUI() {
+        const countElement = document.getElementById('recentGamesCount');
+        const loadMoreBtn = document.getElementById('loadMoreRecentBtn');
+        
+        if (countElement) {
+            const shown = Math.min(this.currentPage * this.gamesPerPage, this.totalGames);
+            countElement.textContent = `Showing ${shown} of ${this.totalGames} games`;
+        }
+        
+        if (loadMoreBtn) {
+            const allLoaded = this.currentPage * this.gamesPerPage >= this.totalGames;
+            loadMoreBtn.disabled = allLoaded;
+            loadMoreBtn.textContent = allLoaded ? 'All Games Loaded' : 'Load More';
+        }
+    }
+    
+    renderNextBatch() {
+        // This will be implemented by the specific game loading function
+        if (typeof loadMoreRecentGames === 'function') {
+            loadMoreRecentGames();
+        }
+    }
+    
+    reset() {
+        this.currentPage = 1;
+        this.totalGames = 0;
+        this.filteredGames = [];
+    }
+}
+
+// Initialize pagination
+const gamePagination = new GamePagination();
+
+// Enhanced load more function
+function loadMoreRecentGames() {
+    gamePagination.loadMore();
+}
+
+// Filter games functionality
+function filterGames(filter) {
+    // Update active filter tag
+    document.querySelectorAll('.filter-tag-enhanced').forEach(tag => {
+        tag.classList.remove('active');
+    });
+    
+    event.target.classList.add('active');
+    
+    // Filter and update pagination
+    const allGames = adminGameManager.getAllGames();
+    let filteredGames = allGames;
+    
+    if (filter !== 'all') {
+        filteredGames = allGames.filter(game => {
+            if (filter === 'free') return game.price === 0 || game.price === '0.00';
+            if (filter === 'premium') return game.price > 0;
+            if (filter === 'multiplayer') return game.category === 'multiplayer';
+            if (filter === 'co-op') return game.category === 'co-op';
+            if (filter === 'vr') return game.category === 'vr';
+            if (filter === 'latest') return game.isNew;
+            return true;
+        });
+    }
+    
+    gamePagination.updatePagination(allGames.length, filteredGames);
+    
+    // Re-render games with filter
+    renderFilteredGames(filteredGames);
+}
+
+function renderFilteredGames(games) {
+    const grid = document.getElementById('recentlyAddedGrid');
+    if (!grid) return;
+    
+    const startIndex = (gamePagination.currentPage - 1) * gamePagination.gamesPerPage;
+    const endIndex = startIndex + gamePagination.gamesPerPage;
+    const gamesToShow = games.slice(startIndex, endIndex);
+    
+    grid.innerHTML = gamesToShow.map(game => `
+        <div class="game-card">
+            <img src="${game.poster}" alt="${game.title}" class="game-image">
+            <div class="game-content">
+                <h3 class="game-title">${game.title}</h3>
+                <div class="game-meta">
+                    <span class="game-category">${game.category}</span>
+                    <span class="game-rating">⭐ ${game.rating}</span>
+                </div>
+                <button class="game-action-btn" onclick="downloadGame(${game.id})">Download</button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Add "New" badge for recent games
+    gamesToShow.forEach((game, index) => {
+        const gameCard = grid.children[index];
+        if (gameCard) {
+            const isNewGame = (new Date() - new Date(game.addedDate || Date.now())) <= 7 * 24 * 60 * 60 * 1000;
+            if (isNewGame) {
+                const newBadge = document.createElement('span');
+                newBadge.className = 'new-badge';
+                newBadge.textContent = 'NEW';
+                gameCard.appendChild(newBadge);
+            }
+        }
+    });
+}
+
+// Payment Order Summary Functions
+function updateOrderSummary(planType) {
+    const planDetails = {
+        free: {
+            name: 'Free Trial',
+            price: '$0.00',
+            period: '/month',
+            details: '1 month free trial with basic access',
+            benefits: [
+                '✓ Access to 3 games',
+                '✓ 1 month free trial',
+                '✓ Basic support',
+                '✓ Standard downloads'
+            ]
+        },
+        premium: {
+            name: 'Premium',
+            price: '$6.99',
+            period: '/month',
+            details: 'Monthly subscription with enhanced features',
+            benefits: [
+                '✓ Access to 6 free games',
+                '✓ Fast downloads',
+                '✓ Priority support',
+                '✓ Exclusive deals',
+                '✓ Ad-free experience'
+            ]
+        },
+        pro: {
+            name: 'Pro Premium',
+            price: '$12.99',
+            period: '/month',
+            details: 'Monthly subscription with all features',
+            benefits: [
+                '✓ Access to 10 free games',
+                '✓ Ultra-fast downloads',
+                '✓ VIP support (24/7)',
+                '✓ Early access to new games',
+                '✓ Premium content'
+            ]
+        }
+    };
+    
+    const plan = planDetails[planType] || planDetails.premium;
+    
+    // Update order summary elements
+    document.getElementById('orderPlanName').textContent = plan.name;
+    document.getElementById('orderPlanDetails').textContent = plan.details;
+    document.getElementById('orderPlanPrice').textContent = plan.price;
+    document.getElementById('orderBillingPeriod').textContent = plan.period;
+    
+    // Update benefits list
+    const benefitsList = document.getElementById('orderBenefits');
+    benefitsList.innerHTML = plan.benefits.map(benefit => `<li>${benefit}</li>`).join('');
+    
+    // Update totals
+    const price = parseFloat(plan.price.replace('$', ''));
+    const tax = price * 0.08; // 8% tax rate
+    const total = price + tax;
+    
+    document.getElementById('orderSubtotal').textContent = `$${price.toFixed(2)}`;
+    document.getElementById('orderTax').textContent = `$${tax.toFixed(2)}`;
+    document.getElementById('orderTotal').textContent = `$${total.toFixed(2)}`;
+}
+
+// Enhanced Payment Validation
+function validatePaymentForm() {
+    const paymentMethod = document.getElementById('paymentMethodSelect').value;
+    let isValid = true;
+    let errorMessage = '';
+    
+    if (paymentMethod === 'card') {
+        const cardholderName = document.getElementById('cardholderName').value.trim();
+        const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+        const expiryDate = document.getElementById('expiryDate').value;
+        const cvv = document.getElementById('cvv').value;
+        
+        if (!cardholderName) {
+            errorMessage = 'Cardholder name is required';
+            isValid = false;
+        } else if (cardNumber.length < 13 || cardNumber.length > 19) {
+            errorMessage = 'Invalid card number';
+            isValid = false;
+        } else if (!expiryDate) {
+            errorMessage = 'Expiry date is required';
+            isValid = false;
+        } else if (!cvv || cvv.length !== 3) {
+            errorMessage = 'CVV must be 3 digits';
+            isValid = false;
+        }
+    } else if (paymentMethod === 'mobile') {
+        const phoneNumber = document.getElementById('phoneNumber').value.trim();
+        const provider = document.getElementById('mobileProvider').value;
+        
+        if (!phoneNumber) {
+            errorMessage = 'Phone number is required';
+            isValid = false;
+        } else if (!provider) {
+            errorMessage = 'Please select a mobile money provider';
+            isValid = false;
+        }
+    }
+    
+    // Show/hide error message
+    const errorElement = document.getElementById('paymentError');
+    if (errorElement) {
+        errorElement.textContent = errorMessage;
+        errorElement.style.display = errorMessage ? 'block' : 'none';
+    }
+    
+    return isValid;
+}
+
+// Format currency function
+function formatCurrency(amount) {
+    return `$${parseFloat(amount).toFixed(2)}`;
+}
+
 // Initialize Admin Game Manager
 const adminGameManager = new AdminGameManager();
 
