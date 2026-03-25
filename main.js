@@ -2333,6 +2333,8 @@ class HeaderComponent {
     constructor() {
         this.isMobileMenuOpen = false;
         this.isCategoryDropdownOpen = false;
+        this.focusTrapElements = [];
+        this.previousFocusElement = null;
         this.init();
     }
     
@@ -2398,6 +2400,14 @@ class HeaderComponent {
             mobileMenuToggle.addEventListener('click', () => {
                 this.toggleMobileMenu();
             });
+            
+            // Enhanced keyboard support for hamburger button
+            mobileMenuToggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.toggleMobileMenu();
+                }
+            });
         }
         
         if (mobileMenuClose && mobileMenuPanel) {
@@ -2434,19 +2444,23 @@ class HeaderComponent {
             });
         });
         
-        // Mobile footer buttons
-        const mobileButtons = ['mobileSubscriptionBtn', 'mobileLoginBtn', 'mobileSignupBtn', 'mobileAdminBtn'];
-        mobileButtons.forEach(btnId => {
-            const btn = document.getElementById(btnId);
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    this.closeMobileMenu();
-                    // Trigger the corresponding main button click
-                    const mainBtnId = btnId.replace('mobile', '').toLowerCase();
-                    const mainBtn = document.getElementById(mainBtnId + 'Btn');
-                    if (mainBtn) mainBtn.click();
-                });
-            }
+        // Enhanced mobile utility buttons with modal integration
+        const mobileUtilityButtons = document.querySelectorAll('.mobile-utility-btn');
+        mobileUtilityButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const action = btn.getAttribute('data-action');
+                this.handleMobileUtilityAction(action, btn);
+            });
+            
+            // Keyboard support
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const action = btn.getAttribute('data-action');
+                    this.handleMobileUtilityAction(action, btn);
+                }
+            });
         });
         
         // Escape key to close menus
@@ -2460,6 +2474,97 @@ class HeaderComponent {
                 }
             }
         });
+        
+        // Close mobile menu when clicking outside (only on small screens)
+        document.addEventListener('click', (e) => {
+            if (this.isMobileMenuOpen && window.innerWidth <= 480) {
+                if (!mobileMenuPanel.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    this.closeMobileMenu();
+                }
+            }
+        });
+    }
+    
+    handleMobileUtilityAction(action, button) {
+        // Store the button for potential focus restoration
+        this.lastUtilityButton = button;
+        
+        switch (action) {
+            case 'subscription':
+                this.closeMobileMenu(() => {
+                    // Open subscription modal or navigate to plans
+                    this.openSubscriptionModal();
+                });
+                break;
+                
+            case 'login':
+                this.closeMobileMenu(() => {
+                    // Open login modal
+                    this.openLoginModal();
+                });
+                break;
+                
+            case 'signup':
+                this.closeMobileMenu(() => {
+                    // Open signup modal
+                    this.openSignupModal();
+                });
+                break;
+                
+            case 'admin':
+                this.closeMobileMenu(() => {
+                    // Open admin password modal
+                    this.openAdminModal();
+                });
+                break;
+                
+            default:
+                console.warn('Unknown mobile utility action:', action);
+        }
+    }
+    
+    openSubscriptionModal() {
+        // Try to open subscription modal
+        const subscriptionBtn = document.getElementById('subscriptionBtn');
+        if (subscriptionBtn) {
+            subscriptionBtn.click();
+        } else {
+            // Fallback: navigate to plans section
+            window.location.hash = 'pricing';
+        }
+    }
+    
+    openLoginModal() {
+        // Try to open login modal
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.click();
+        } else {
+            // Fallback: navigate to login section
+            window.location.hash = 'login';
+        }
+    }
+    
+    openSignupModal() {
+        // Try to open signup modal
+        const signupBtn = document.getElementById('signupBtn');
+        if (signupBtn) {
+            signupBtn.click();
+        } else {
+            // Fallback: navigate to signup section
+            window.location.hash = 'signup';
+        }
+    }
+    
+    openAdminModal() {
+        // Try to open admin password modal
+        const adminBtn = document.getElementById('adminAccessBtn');
+        if (adminBtn) {
+            adminBtn.click();
+        } else {
+            // Fallback: navigate to admin section
+            window.location.hash = 'admin';
+        }
     }
     
     setupResponsiveBehavior() {
@@ -2588,35 +2693,113 @@ class HeaderComponent {
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileMenuPanel = document.getElementById('mobileMenuPanel');
         
+        // Store previous focus element
+        this.previousFocusElement = document.activeElement;
+        
         mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        mobileMenuToggle.setAttribute('aria-label', 'Close main menu');
         mobileMenuPanel.setAttribute('aria-hidden', 'false');
         this.isMobileMenuOpen = true;
         
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
         
-        // Focus first menu item
-        const firstItem = mobileMenuPanel.querySelector('.mobile-nav-item');
-        if (firstItem) {
-            setTimeout(() => firstItem.focus(), 100);
+        // Setup focus trap
+        this.setupFocusTrap(mobileMenuPanel);
+        
+        // Focus first menu item (utility buttons first)
+        const firstUtilityBtn = mobileMenuPanel.querySelector('.mobile-utility-btn');
+        if (firstUtilityBtn) {
+            setTimeout(() => firstUtilityBtn.focus(), 100);
+        } else {
+            // Fallback to first nav item
+            const firstNavItem = mobileMenuPanel.querySelector('.mobile-nav-item');
+            if (firstNavItem) {
+                setTimeout(() => firstNavItem.focus(), 100);
+            }
         }
     }
     
-    closeMobileMenu() {
+    closeMobileMenu(callback) {
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileMenuPanel = document.getElementById('mobileMenuPanel');
         
         mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        mobileMenuToggle.setAttribute('aria-label', 'Open main menu');
         mobileMenuPanel.setAttribute('aria-hidden', 'true');
         this.isMobileMenuOpen = false;
         
         // Restore body scroll
         document.body.style.overflow = '';
         
-        // Return focus to toggle button
-        if (mobileMenuToggle) {
+        // Remove focus trap
+        this.removeFocusTrap();
+        
+        // Return focus to toggle button or previous element
+        if (this.previousFocusElement && this.previousFocusElement !== document.body) {
+            this.previousFocusElement.focus();
+        } else if (mobileMenuToggle) {
             mobileMenuToggle.focus();
         }
+        
+        // Execute callback if provided
+        if (callback && typeof callback === 'function') {
+            setTimeout(callback, 150); // Small delay for animation
+        }
+    }
+    
+    setupFocusTrap(container) {
+        // Get all focusable elements within the container
+        const focusableElements = container.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        
+        this.focusTrapElements = Array.from(focusableElements);
+        
+        if (this.focusTrapElements.length === 0) return;
+        
+        // Add keydown listener for focus trap
+        this.focusTrapHandler = (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                
+                const firstElement = this.focusTrapElements[0];
+                const lastElement = this.focusTrapElements[this.focusTrapElements.length - 1];
+                
+                if (e.shiftKey) {
+                    // Shift + Tab (going backwards)
+                    if (document.activeElement === firstElement) {
+                        lastElement.focus();
+                    } else {
+                        const currentIndex = this.focusTrapElements.indexOf(document.activeElement);
+                        const prevIndex = currentIndex - 1 < 0 ? this.focusTrapElements.length - 1 : currentIndex - 1;
+                        this.focusTrapElements[prevIndex].focus();
+                    }
+                } else {
+                    // Tab (going forwards)
+                    if (document.activeElement === lastElement) {
+                        firstElement.focus();
+                    } else {
+                        const currentIndex = this.focusTrapElements.indexOf(document.activeElement);
+                        const nextIndex = (currentIndex + 1) % this.focusTrapElements.length;
+                        this.focusTrapElements[nextIndex].focus();
+                    }
+                }
+            }
+        };
+        
+        container.addEventListener('keydown', this.focusTrapHandler);
+    }
+    
+    removeFocusTrap() {
+        if (this.focusTrapHandler) {
+            const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+            if (mobileMenuPanel) {
+                mobileMenuPanel.removeEventListener('keydown', this.focusTrapHandler);
+            }
+            this.focusTrapHandler = null;
+        }
+        this.focusTrapElements = [];
     }
     
     toggleMobileCategoryMenu(toggle, menu) {

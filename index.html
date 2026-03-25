@@ -150,9 +150,10 @@
                         id="mobileMenuToggle" 
                         class="utility-btn mobile-menu-toggle" 
                         type="button"
-                        aria-label="Toggle mobile menu"
+                        aria-label="Open main menu"
                         aria-expanded="false"
-                        title="Open menu"
+                        aria-controls="mobileMenuPanel"
+                        title="Open main menu"
                         style="display:none"
                     >
                         <span class="hamburger-icon" aria-hidden="true">
@@ -166,56 +167,132 @@
         </div>
         
         <!-- Mobile Menu Panel -->
-        <div id="mobileMenuPanel" class="mobile-menu-panel" aria-hidden="true">
+        <div id="mobileMenuPanel" class="mobile-menu-panel" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="mobileMenuTitle">
             <div class="mobile-menu-content">
                 <div class="mobile-menu-header">
-                    <h2 class="mobile-menu-title">Menu</h2>
+                    <h2 id="mobileMenuTitle" class="mobile-menu-title">Main Menu</h2>
                     <button 
                         id="mobileMenuClose" 
                         class="mobile-menu-close" 
                         type="button"
-                        aria-label="Close mobile menu"
+                        aria-label="Close main menu"
                     >
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
-                    <a href="#home" class="mobile-nav-item">Home</a>
-                    <a href="#all-games" class="mobile-nav-item">All Games (A–Z)</a>
-                    <div class="mobile-category-section">
-                        <button class="mobile-category-toggle" aria-expanded="false">
-                            Categories
-                            <span class="mobile-category-arrow" aria-hidden="true">▼</span>
-                        </button>
-                        <div class="mobile-category-menu">
-                            <a href="#" class="mobile-category-item" data-category="all">All Games</a>
-                            <a href="#" class="mobile-category-item" data-category="action">Action</a>
-                            <a href="#" class="mobile-category-item" data-category="rpg">RPG</a>
-                            <a href="#" class="mobile-category-item" data-category="strategy">Strategy</a>
-                            <a href="#" class="mobile-category-item" data-category="sports">Sports</a>
-                            <a href="#" class="mobile-category-item" data-category="racing">Racing</a>
-                            <a href="#" class="mobile-category-item" data-category="simulation">Simulation</a>
-                            <a href="#" class="mobile-category-item" data-category="puzzle">Puzzle</a>
-                            <a href="#" class="mobile-category-item" data-category="horror">Horror</a>
-                            <a href="#" class="mobile-category-item" data-category="multiplayer">Multiplayer</a>
-                            <a href="#" class="mobile-category-item" data-category="adventure">Adventure</a>
-                            <a href="#" class="mobile-category-item" data-category="casual">Casual</a>
-                            <a href="#" class="mobile-category-item" data-category="indie">Indie</a>
-                        </div>
-                    </div>
-                    <a href="#latest-news" class="mobile-nav-item">Latest News</a>
-                    <a href="#most-downloaded" class="mobile-nav-item">Most Downloaded</a>
-                    <a href="#my-library" class="mobile-nav-item">My Library</a>
-                    <a href="#faq-support" class="mobile-nav-item">FAQ & Support</a>
-                    <a href="#requests" class="mobile-nav-item">Requests</a>
-                    <a href="#recently-updated" class="mobile-nav-item">Recently Updated</a>
-                </nav>
-                <div class="mobile-menu-footer">
-                    <button id="mobileSubscriptionBtn" class="btn btn-primary">💎 Subscription</button>
-                    <button id="mobileLoginBtn" class="btn btn-secondary">Login</button>
-                    <button id="mobileSignupBtn" class="btn btn-primary">Sign Up</button>
-                    <button id="mobileAdminBtn" class="btn btn-outline admin-btn">Admin</button>
+                
+                <!-- Utility Actions Section -->
+                <div class="mobile-utilities-section">
+                    <h3 class="mobile-section-title">Account & Settings</h3>
+                    <ul class="mobile-utilities-list" role="menu">
+                        <li role="none">
+                            <button 
+                                id="mobileSubscriptionBtn" 
+                                class="mobile-utility-btn" 
+                                type="button"
+                                role="menuitem"
+                                aria-label="View subscription plans"
+                                data-action="subscription"
+                            >
+                                <span class="mobile-utility-icon" aria-hidden="true">💎</span>
+                                <span class="mobile-utility-text">Subscription</span>
+                            </button>
+                        </li>
+                        <li role="none">
+                            <button 
+                                id="mobileLoginBtn" 
+                                class="mobile-utility-btn" 
+                                type="button"
+                                role="menuitem"
+                                aria-label="Login to your account"
+                                data-action="login"
+                            >
+                                <span class="mobile-utility-icon" aria-hidden="true">🔑</span>
+                                <span class="mobile-utility-text">Login</span>
+                            </button>
+                        </li>
+                        <li role="none">
+                            <button 
+                                id="mobileSignupBtn" 
+                                class="mobile-utility-btn" 
+                                type="button"
+                                role="menuitem"
+                                aria-label="Create a new account"
+                                data-action="signup"
+                            >
+                                <span class="mobile-utility-icon" aria-hidden="true">📝</span>
+                                <span class="mobile-utility-text">Sign Up</span>
+                            </button>
+                        </li>
+                        <li role="none">
+                            <button 
+                                id="mobileAdminBtn" 
+                                class="mobile-utility-btn mobile-admin-btn" 
+                                type="button"
+                                role="menuitem"
+                                aria-label="Access admin panel"
+                                data-action="admin"
+                            >
+                                <span class="mobile-utility-icon" aria-hidden="true">⚙️</span>
+                                <span class="mobile-utility-text">Admin</span>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
+                
+                <!-- Primary Navigation Section -->
+                <nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+                    <h3 class="mobile-section-title">Navigation</h3>
+                    <ul class="mobile-nav-list" role="menu">
+                        <li role="none">
+                            <a href="#home" class="mobile-nav-item" role="menuitem">Home</a>
+                        </li>
+                        <li role="none">
+                            <a href="#all-games" class="mobile-nav-item" role="menuitem">All Games (A–Z)</a>
+                        </li>
+                        <li role="none">
+                            <div class="mobile-category-section">
+                                <button class="mobile-category-toggle" aria-expanded="false" role="menuitem">
+                                    <span>Categories</span>
+                                    <span class="mobile-category-arrow" aria-hidden="true">▼</span>
+                                </button>
+                                <ul class="mobile-category-menu" role="menu">
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="all">All Games</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="action">Action</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="rpg">RPG</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="strategy">Strategy</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="sports">Sports</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="racing">Racing</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="simulation">Simulation</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="puzzle">Puzzle</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="horror">Horror</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="multiplayer">Multiplayer</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="adventure">Adventure</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="casual">Casual</a></li>
+                                    <li role="none"><a href="#" class="mobile-category-item" role="menuitem" data-category="indie">Indie</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li role="none">
+                            <a href="#latest-news" class="mobile-nav-item" role="menuitem">Latest News</a>
+                        </li>
+                        <li role="none">
+                            <a href="#most-downloaded" class="mobile-nav-item" role="menuitem">Most Downloaded</a>
+                        </li>
+                        <li role="none">
+                            <a href="#my-library" class="mobile-nav-item" role="menuitem">My Library</a>
+                        </li>
+                        <li role="none">
+                            <a href="#faq-support" class="mobile-nav-item" role="menuitem">FAQ & Support</a>
+                        </li>
+                        <li role="none">
+                            <a href="#requests" class="mobile-nav-item" role="menuitem">Requests</a>
+                        </li>
+                        <li role="none">
+                            <a href="#recently-updated" class="mobile-nav-item" role="menuitem">Recently Updated</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </header>
