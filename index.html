@@ -12,151 +12,79 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Componentized Header -->
-    <header class="header" role="banner">
-        <div class="navbar-container">
-            <div class="navbar-content">
-                <!-- Logo Component -->
-                <div class="header-logo">
-                    <a href="#home" class="logo-link" aria-label="Smile Gaming Hub - Home">
-                        <span class="logo-icon" aria-hidden="true">🎮</span>
-                        <span class="logo-text">Smile Gaming Hub</span>
+    <!-- Modern Header - Inspired by GameHub Style -->
+    <header class="modern-header" role="banner">
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo -->
+                <div class="nav-brand">
+                    <a href="#home" class="brand-link">
+                        <span class="brand-icon">🎮</span>
+                        <span class="brand-text">Smile Gaming Hub</span>
                     </a>
                 </div>
                 
-                <!-- Primary Navigation Component -->
-                <nav class="primary-nav" role="navigation" aria-label="Main navigation">
-                    <a href="#home" class="primary-nav-item nav-item-secondary">Home</a>
-                    <a href="#all-games" class="primary-nav-item nav-item-secondary">All Games (A–Z)</a>
-                    
-                    <!-- Category Dropdown Component -->
-                    <div class="category-dropdown">
-                        <button 
-                            class="category-dropdown-btn nav-item-secondary" 
-                            onclick="toggleCategoryDropdown(this)"
-                            aria-expanded="false"
-                            aria-haspopup="menu"
-                            aria-label="Browse game categories"
-                        >
-                            <span>Categories</span>
-                            <span class="dropdown-arrow" aria-hidden="true">▼</span>
-                        </button>
-                        <div class="category-dropdown-menu" role="menu">
-                            <a href="#" class="category-item" role="menuitem" data-category="all">All Games</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="action">Action</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="rpg">RPG</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="strategy">Strategy</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="sports">Sports</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="racing">Racing</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="simulation">Simulation</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="puzzle">Puzzle</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="horror">Horror</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="multiplayer">Multiplayer</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="adventure">Adventure</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="casual">Casual</a>
-                            <a href="#" class="category-item" role="menuitem" data-category="indie">Indie</a>
-                        </div>
-                    </div>
-                    
-                    <a href="#latest-news" class="primary-nav-item nav-item-secondary">Latest News</a>
-                    <a href="#most-downloaded" class="primary-nav-item nav-item-secondary">Most Downloaded</a>
-                    <a href="#my-library" class="primary-nav-item nav-item-secondary">My Library</a>
-                    <a href="#faq-support" class="primary-nav-item nav-item-secondary">FAQ & Support</a>
-                    <a href="#requests" class="primary-nav-item nav-item-secondary">Requests</a>
-                    <a href="#recently-updated" class="primary-nav-item nav-item-secondary">Recently Updated</a>
-                </nav>
+                <!-- Desktop Navigation -->
+                <div class="nav-menu">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#home" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#games" class="nav-link">Games</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#categories" class="nav-link dropdown-toggle">
+                                Categories
+                                <span class="dropdown-arrow">▼</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="dropdown-item" data-category="action">Action</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="adventure">Adventure</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="anime">Anime</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="horror">Horror</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="multiplayer">Multiplayer</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="open-world">Open World</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="racing">Racing</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="shooting">Shooting</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="simulation">Simulation</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="sports">Sports</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="strategy">Strategy</a></li>
+                                <li><a href="#" class="dropdown-item" data-category="rpg">RPG</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#about" class="nav-link">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact" class="nav-link">Contact</a>
+                        </li>
+                    </ul>
+                </div>
                 
-                <!-- Utility Controls Component -->
-                <div class="header-utilities" role="toolbar" aria-label="Account and settings">
-                    <!-- Theme Toggle -->
-                    <button 
-                        id="darkModeToggle" 
-                        class="utility-btn theme-toggle" 
-                        type="button"
-                        aria-label="Toggle dark mode"
-                        title="Toggle dark mode"
-                    >
-                        <span class="theme-icon" aria-hidden="true">🌙</span>
-                    </button>
-                    
-                    <!-- Subscription CTA -->
-                    <button 
-                        id="subscriptionBtn" 
-                        class="utility-btn btn-primary" 
-                        type="button"
-                        aria-label="View subscription plans"
-                        title="View subscription plans"
-                    >
-                        <span class="btn-icon" aria-hidden="true">💎</span>
-                        <span class="btn-text">Subscription</span>
-                    </button>
-                    
-                    <!-- Authentication Controls -->
-                    <div class="auth-controls">
-                        <button 
-                            id="loginBtn" 
-                            class="utility-btn btn-secondary" 
-                            type="button"
-                            aria-label="Login to your account"
-                            title="Login"
-                        >
-                            Login
-                        </button>
-                        <button 
-                            id="signupBtn" 
-                            class="utility-btn btn-primary" 
-                            type="button"
-                            aria-label="Create a new account"
-                            title="Sign up"
-                        >
-                            Sign Up
-                        </button>
-                        <button 
-                            id="dashboardBtn" 
-                            class="utility-btn btn-secondary" 
-                            type="button"
-                            style="display:none"
-                            aria-label="Go to dashboard"
-                            title="Dashboard"
-                        >
-                            Dashboard
-                        </button>
-                        <button 
-                            id="logoutBtn" 
-                            class="utility-btn btn-secondary" 
-                            type="button"
-                            style="display:none"
-                            aria-label="Logout from your account"
-                            title="Logout"
-                        >
-                            Logout
+                <!-- Right Side Actions -->
+                <div class="nav-actions">
+                    <!-- Cart -->
+                    <div class="cart-wrapper">
+                        <button class="cart-btn" aria-label="Shopping cart">
+                            <span class="cart-icon">�</span>
+                            <span class="cart-count">0</span>
                         </button>
                     </div>
                     
-                    <!-- Admin Access (Reduced Visual Prominence) -->
-                    <button 
-                        id="adminAccessBtn" 
-                        class="utility-btn btn-outline admin-btn" 
-                        type="button"
-                        onclick="openModal('adminModal')"
-                        aria-label="Access admin panel"
-                        title="Admin Access"
-                    >
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle-btn" aria-label="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    
+                    <!-- Admin Access -->
+                    <button class="admin-btn" onclick="openModal('adminModal')" aria-label="Admin access">
                         Admin
                     </button>
                     
                     <!-- Mobile Menu Toggle -->
-                    <button 
-                        id="mobileMenuToggle" 
-                        class="utility-btn mobile-menu-toggle" 
-                        type="button"
-                        aria-label="Open main menu"
-                        aria-expanded="false"
-                        aria-controls="mobileMenuPanel"
-                        title="Open main menu"
-                        style="display:none"
-                    >
-                        <span class="hamburger-icon" aria-hidden="true">
+                    <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                        <span class="hamburger">
                             <span class="hamburger-line"></span>
                             <span class="hamburger-line"></span>
                             <span class="hamburger-line"></span>
@@ -164,7 +92,8 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </nav>
+    </header>
         
         <!-- Mobile Menu Panel -->
         <div id="mobileMenuPanel" class="mobile-menu-panel" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="mobileMenuTitle">

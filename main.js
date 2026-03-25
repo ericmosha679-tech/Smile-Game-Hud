@@ -2897,6 +2897,148 @@ class HeaderComponent {
     }
 }
 
+// Modern Header JavaScript
+class ModernHeader {
+    constructor() {
+        this.isScrolled = false;
+        this.init();
+    }
+    
+    init() {
+        this.setupScrollEffect();
+        this.setupDropdowns();
+        this.setupMobileMenu();
+        this.setupThemeToggle();
+        this.setupCart();
+    }
+    
+    setupScrollEffect() {
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.modern-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
+    
+    setupDropdowns() {
+        // Handle dropdown hover and click
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            
+            // Click to toggle on mobile
+            toggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    const isOpen = menu.style.opacity === '1';
+                    
+                    // Close all other dropdowns
+                    document.querySelectorAll('.dropdown-menu').forEach(m => {
+                        m.style.opacity = '0';
+                        m.style.visibility = 'hidden';
+                    });
+                    
+                    // Toggle current dropdown
+                    if (!isOpen) {
+                        menu.style.opacity = '1';
+                        menu.style.visibility = 'visible';
+                    }
+                }
+            });
+            
+            // Handle dropdown item clicks
+            const items = dropdown.querySelectorAll('.dropdown-item');
+            items.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const category = item.getAttribute('data-category');
+                    if (category) {
+                        // Trigger category filtering
+                        if (typeof filterGamesByCategory === 'function') {
+                            filterGamesByCategory(category);
+                        }
+                    }
+                    
+                    // Close dropdown
+                    menu.style.opacity = '0';
+                    menu.style.visibility = 'hidden';
+                });
+            });
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.style.opacity = '0';
+                    menu.style.visibility = 'hidden';
+                });
+            }
+        });
+    }
+    
+    setupMobileMenu() {
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        
+        mobileToggle.addEventListener('click', () => {
+            // Toggle mobile menu (existing functionality)
+            if (typeof headerComponent !== 'undefined' && headerComponent.toggleMobileMenu) {
+                headerComponent.toggleMobileMenu();
+            }
+        });
+    }
+    
+    setupThemeToggle() {
+        const themeToggle = document.querySelector('.theme-toggle-btn');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLightMode = document.body.classList.contains('light-mode');
+            
+            // Update icon
+            themeToggle.querySelector('.theme-icon').textContent = isLightMode ? '☀️' : '🌙';
+            
+            // Save preference
+            localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        });
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+    }
+    
+    setupCart() {
+        const cartBtn = document.querySelector('.cart-btn');
+        const cartCount = document.querySelector('.cart-count');
+        
+        cartBtn.addEventListener('click', () => {
+            // Open cart modal or navigate to cart page
+            showToast('Cart functionality coming soon!', 'info');
+        });
+        
+        // Update cart count (placeholder)
+        this.updateCartCount(0);
+    }
+    
+    updateCartCount(count) {
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            cartCount.textContent = count;
+        }
+    }
+}
+
+// Initialize modern header
+const modernHeader = new ModernHeader();
+
 // Initialize header component
 const headerComponent = new HeaderComponent();
 
