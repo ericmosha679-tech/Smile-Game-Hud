@@ -3592,29 +3592,99 @@ function selectGame(gameTitle) {
 function verifyAdminPassword() {
     const password = document.getElementById('adminPassword').value.trim();
     const errorDiv = document.getElementById('adminError');
+    const submitBtn = document.querySelector('#adminModal .btn-primary');
 
+    // Clear previous errors
     errorDiv.textContent = '';
+    errorDiv.classList.remove('active');
 
     if (!password) {
-        errorDiv.textContent = 'Please enter a admin password';
+        errorDiv.textContent = 'Please enter admin password';
+        errorDiv.classList.add('active');
+        document.getElementById('adminPassword').focus();
         return;
     }
 
-    if (password === 'Ciontatenx83') {
-        showToast('✅ Admin access granted!', 'success');
-        // Clear password field
-        document.getElementById('adminPassword').value = '';
-        // Redirect to admin panel
-        setTimeout(() => {
-            window.location.href = 'admin.html';
-        }, 500);
-    } else {
-        errorDiv.textContent = 'Incorrect password. Access denied.';
-        showToast('❌ Invalid admin password', 'error');
-        // Clear password field on error
-        document.getElementById('adminPassword').value = '';
-    }
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Verifying...';
+    submitBtn.style.opacity = '0.7';
+
+    // Simulate verification delay for better UX
+    setTimeout(() => {
+        if (password === 'Ciontatenx83') {
+            // Success
+            showToast('✅ Admin access granted! Redirecting...', 'success');
+            
+            // Clear password field
+            document.getElementById('adminPassword').value = '';
+            
+            // Close modal
+            closeModal('adminModal');
+            
+            // Redirect to admin panel
+            setTimeout(() => {
+                window.location.href = 'admin.html';
+            }, 1000);
+        } else {
+            // Error
+            errorDiv.textContent = 'Incorrect password. Access denied.';
+            errorDiv.classList.add('active');
+            showToast('❌ Invalid admin password', 'error');
+            
+            // Clear password field on error
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminPassword').focus();
+            
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Access Admin Panel';
+            submitBtn.style.opacity = '1';
+            
+            // Add shake animation to modal
+            const modal = document.querySelector('#adminModal .modal-content');
+            modal.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                modal.style.animation = '';
+            }, 500);
+        }
+    }, 800);
 }
+
+// Enhanced admin modal open function
+function openAdminModal() {
+    openModal('adminModal');
+    
+    // Focus on password field
+    setTimeout(() => {
+        const passwordField = document.getElementById('adminPassword');
+        if (passwordField) {
+            passwordField.focus();
+            
+            // Add enter key handler
+            passwordField.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    verifyAdminPassword();
+                }
+            };
+        }
+    }, 100);
+}
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+        20%, 40%, 60%, 80% { transform: translateX(10px); }
+    }
+    
+    .admin-modal .modal-content {
+        animation: none;
+    }
+`;
+document.head.appendChild(style);
 
 // ============ GAME DETAILS & WISHLIST ============
 

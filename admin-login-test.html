@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login Test - Smile Gaming Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .test-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: rgba(13, 27, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .test-title {
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+        }
+        .test-info {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+        .test-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">🔐 Admin Login Test</h1>
+        
+        <div class="test-info">
+            <h3>Test Information:</h3>
+            <p><strong>Admin Password:</strong> <code>Ciontatenx83</code></p>
+            <p><strong>Steps to test:</strong></p>
+            <ol>
+                <li>Click the button below to open admin modal</li>
+                <li>Enter the password: <code>Ciontatenx83</code></li>
+                <li>Click "Access Admin Panel"</li>
+                <li>You should be redirected to admin.html</li>
+            </ol>
+        </div>
+        
+        <button class="test-button" onclick="testAdminLogin()">
+            🧪 Test Admin Login
+        </button>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-secondary); text-decoration: none;">
+                ← Back to Main Site
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Modal (Copy from main site) -->
+    <div class="modal" id="adminModal" style="display: none;">
+        <div class="modal-content admin-modal">
+            <div class="modal-header">
+                <h2>🔐 Admin Access</h2>
+                <button class="modal-close" onclick="closeAdminModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="adminPassword">Enter Admin Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="adminPassword" placeholder="Enter password" class="form-input">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('adminPassword')" title="Show/Hide Password">👁️</button>
+                </div>
+                <div id="adminError" class="error-message"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAdminModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="verifyAdminPassword()">Access Admin Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Test function
+        function testAdminLogin() {
+            openAdminModal();
+        }
+
+        // Modal functions
+        function openAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.style.display = 'flex';
+            document.getElementById('adminPassword').focus();
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminError').textContent = '';
+        }
+
+        // Password visibility toggle
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            
+            const button = input.closest('.password-input-wrapper')?.querySelector('.password-toggle');
+            if (button) {
+                button.textContent = isPassword ? '🙈' : '👁️';
+            }
+        }
+
+        // Admin password verification
+        function verifyAdminPassword() {
+            const password = document.getElementById('adminPassword').value.trim();
+            const errorDiv = document.getElementById('adminError');
+
+            errorDiv.textContent = '';
+
+            if (!password) {
+                errorDiv.textContent = 'Please enter an admin password';
+                return;
+            }
+
+            if (password === 'Ciontatenx83') {
+                showToast('✅ Admin access granted!', 'success');
+                // Clear password field
+                document.getElementById('adminPassword').value = '';
+                // Redirect to admin panel
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 500);
+            } else {
+                errorDiv.textContent = 'Incorrect password. Access denied.';
+                showToast('❌ Invalid admin password', 'error');
+                // Clear password field on error
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAdminModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('adminModal').addEventListener('click', (e) => {
+            if (e.target.id === 'adminModal') {
+                closeAdminModal();
+            }
+        });
+
+        // Handle Enter key in password field
+        document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                verifyAdminPassword();
+            }
+        });
+    </script>
+</body>
+</html>
