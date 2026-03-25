@@ -568,22 +568,39 @@ class AdminPanel {
             return;
         }
         
+        console.log('🔧 Editing game:', game);
+        
         // Populate edit form
         const form = document.getElementById('editGameForm');
         if (form) {
-            form.gameId.value = game.id;
-            form.title.value = game.title;
-            form.category.value = game.category;
-            form.price.value = game.price;
-            form.rating.value = game.rating;
-            form.description.value = game.description || '';
+            const gameIdField = document.getElementById('editGameId');
+            const titleField = document.getElementById('editGameTitle');
+            const categoryField = document.getElementById('editGameCategory');
+            const priceField = document.getElementById('editGamePrice');
+            const ratingField = document.getElementById('editGameRating');
+            const descriptionField = document.getElementById('editGameDescription');
+            
+            if (gameIdField) gameIdField.value = game.id;
+            if (titleField) titleField.value = game.title;
+            if (categoryField) categoryField.value = game.category;
+            if (priceField) priceField.value = game.price;
+            if (ratingField) ratingField.value = game.rating;
+            if (descriptionField) descriptionField.value = game.description || '';
         }
         
         // Show current image in preview
         this.showEditGameImagePreview(game.imageUrl);
         
+        // Clear any previous file selection
+        const fileInput = document.getElementById('editGameImageUpload');
+        if (fileInput) {
+            fileInput.value = '';
+        }
+        
         // Open modal
         this.openModal('editGameModal');
+        
+        console.log('✅ Edit modal opened for game:', game.title);
     }
     
     duplicateGame(gameId) {

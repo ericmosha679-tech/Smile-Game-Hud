@@ -1991,19 +1991,69 @@ textarea {
 }
 
 .social-icon-link {
-    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     text-decoration: none;
-    font-size: 1.5rem;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 .social-icon-link:hover {
-    color: #ff6b35;
+    transform: translateY(-3px);
+}
+
+/* Instagram - Purple/Pink Gradient */
+.social-icon-link.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    border: 2px solid transparent;
+}
+
+.social-icon-link.instagram:hover {
+    box-shadow: 0 8px 16px rgba(225, 48, 108, 0.3);
+}
+
+.social-icon-link.instagram svg {
+    stroke: white;
+    fill: none;
+}
+
+/* TikTok - Black */
+.social-icon-link.tiktok {
+    background: #000000;
+    border: 2px solid #25F4EE;
+}
+
+.social-icon-link.tiktok:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-color: #FE2C55;
+}
+
+.social-icon-link.tiktok svg {
+    fill: white;
+}
+
+/* Facebook - Blue */
+.social-icon-link.facebook {
+    background: #1877F2;
+    border: 2px solid #1877F2;
+}
+
+.social-icon-link.facebook:hover {
+    box-shadow: 0 8px 16px rgba(24, 119, 242, 0.3);
+    background: #0D66D3;
+}
+
+.social-icon-link.facebook svg {
+    fill: white;
 }
 
 .social-icon-link svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
 .footer-legal {
