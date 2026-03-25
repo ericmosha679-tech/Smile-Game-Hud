@@ -1483,10 +1483,193 @@ function selectSubscription(tier) {
     toggleSubscription();
 }
 
-// ============ ENHANCED FEATURES ============
+// ============ PROFESSIONAL ENHANCEMENTS ============
+
+// Professional Navbar Scroll Effect
+window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+});
+
+// Professional Smooth Scrolling
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const offsetTop = target.offsetTop - 80; // Account for navbar height
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Navigation Dropdown Functionality
+    initializeNavigation();
+    
+    // Initialize enhanced features
+    initializeEnhancedFeatures();
+    
+    // Add scroll animations
+    initializeScrollAnimations();
+    
+    // Initialize professional loading
+    initializeProfessionalLoading();
+});
+
+function initializeNavigation() {
+    // Handle navigation dropdowns
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+    dropdowns.forEach(dropdown => {
+        const btn = dropdown.querySelector('.nav-dropdown-btn');
+        const content = dropdown.querySelector('.nav-dropdown-content');
+        
+        if (btn && content) {
+            // Mouse events
+            dropdown.addEventListener('mouseenter', () => {
+                content.style.display = 'block';
+                setTimeout(() => {
+                    content.style.opacity = '1';
+                    content.style.transform = 'translateY(0)';
+                }, 10);
+            });
+            
+            dropdown.addEventListener('mouseleave', () => {
+                content.style.opacity = '0';
+                content.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    content.style.display = 'none';
+                }, 300);
+            });
+            
+            // Touch events for mobile
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isVisible = content.style.display === 'block';
+                if (isVisible) {
+                    content.style.opacity = '0';
+                    content.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        content.style.display = 'none';
+                    }, 300);
+                } else {
+                    content.style.display = 'block';
+                    setTimeout(() => {
+                        content.style.opacity = '1';
+                        content.style.transform = 'translateY(0)';
+                    }, 10);
+                }
+            });
+        }
+    });
+    
+    // Handle category dropdown items
+    const categoryItems = document.querySelectorAll('.nav-dropdown-item[data-category]');
+    categoryItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const category = this.dataset.category;
+            if (typeof filterGamesByCategory === 'function') {
+                filterGamesByCategory(category);
+            }
+            
+            // Add visual feedback
+            this.style.background = 'rgba(255, 107, 53, 0.3)';
+            setTimeout(() => {
+                this.style.background = '';
+            }, 200);
+        });
+    });
+}
+
+function initializeScrollAnimations() {
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all sections
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+    
+    // Observe all cards
+    document.querySelectorAll('.card, .game-card, .popular-game-card, .recently-added-card').forEach(card => {
+        observer.observe(card);
+    });
+}
+
+function initializeProfessionalLoading() {
+    // Add loading states to buttons
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function() {
+            if (!this.classList.contains('loading')) {
+                this.classList.add('loading');
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="btn-spinner"></span> Loading...';
+                this.disabled = true;
+                
+                // Simulate loading (remove this in production)
+                setTimeout(() => {
+                    this.classList.remove('loading');
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }, 2000);
+            }
+        });
+    });
+}
+
+// Professional Button Loading Spinner
+const style = document.createElement('style');
+style.textContent = `
+    .btn.loading {
+        position: relative;
+        color: transparent !important;
+    }
+    
+    .btn-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);
 
 // Navigation Dropdown Functionality
-document.addEventListener('DOMContentLoaded', function() {
+function initializeEnhancedFeatures() {
     // Handle navigation dropdowns
     const dropdowns = document.querySelectorAll('.nav-dropdown');
     dropdowns.forEach(dropdown => {
