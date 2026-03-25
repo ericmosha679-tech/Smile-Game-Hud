@@ -1285,9 +1285,17 @@ body {
 .primary-nav {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     flex: 1;
     justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.primary-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .primary-nav-item {
@@ -1298,6 +1306,8 @@ body {
     transition: all var(--animation-duration) ease;
     position: relative;
     white-space: nowrap;
+    font-size: 0.85rem;
+    flex-shrink: 0;
 }
 
 /* Secondary Style (Outline/Ghost) for Primary Nav */
@@ -1815,13 +1825,15 @@ body {
     }
     
     .primary-nav {
-        gap: 0.25rem;
+        gap: 0.125rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .primary-nav-item,
     .category-dropdown-btn {
-        --nav-item-padding: 0.6rem 1rem;
-        font-size: 0.9rem;
+        --nav-item-padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
     }
     
     .header-utilities {
@@ -1839,6 +1851,25 @@ body {
     
     .btn-icon {
         margin: 0;
+    }
+}
+
+/* Medium Screens - Hide some nav items */
+@media (max-width: 900px) {
+    .primary-nav {
+        gap: 0.125rem;
+    }
+    
+    .primary-nav-item,
+    .category-dropdown-btn {
+        --nav-item-padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Hide less important nav items on medium screens */
+    .primary-nav-item[href="#faq-support"],
+    .primary-nav-item[href="#requests"] {
+        display: none;
     }
 }
 
