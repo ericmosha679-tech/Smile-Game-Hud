@@ -12,52 +12,198 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Premium Glassmorphism Navigation Header -->
-    <header class="navbar">
+    <!-- Componentized Header -->
+    <header class="header" role="banner">
         <div class="navbar-container">
-            <div class="navbar-logo">
-                <span class="logo-icon">🎮</span>
-                <span class="logo-text">Smile Gaming Hub</span>
-            </div>
-            
-            <!-- Mobile Hamburger Menu -->
-            <button class="hamburger-menu" id="hamburgerMenu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <!-- Right Side Navigation - All Links Far Right -->
-            <div class="nav-right-container">
-                <nav class="nav-main-links">
-                    <a href="#recently-added" class="nav-main-link">Recently Added</a>
-                    <a href="#popular-games" class="nav-main-link">Popular</a>
-                    <a href="#request-games" class="nav-main-link">Request Games</a>
-                    <div class="nav-dropdown">
-                        <button class="nav-main-link nav-dropdown-btn">Categories ▼</button>
-                        <div class="nav-dropdown-content">
-                            <a href="#" class="nav-dropdown-item" data-category="action">Action</a>
-                            <a href="#" class="nav-dropdown-item" data-category="adventure">Adventure</a>
-                            <a href="#" class="nav-dropdown-item" data-category="rpg">RPG</a>
-                            <a href="#" class="nav-dropdown-item" data-category="strategy">Strategy</a>
-                            <a href="#" class="nav-dropdown-item" data-category="sports">Sports</a>
-                            <a href="#" class="nav-dropdown-item" data-category="racing">Racing</a>
-                            <a href="#" class="nav-dropdown-item" data-category="simulation">Simulation</a>
-                            <a href="#" class="nav-dropdown-item" data-category="puzzle">Puzzle</a>
-                            <a href="#" class="nav-dropdown-item" data-category="horror">Horror</a>
+            <div class="navbar-content">
+                <!-- Logo Component -->
+                <div class="header-logo">
+                    <a href="#home" class="logo-link" aria-label="Smile Gaming Hub - Home">
+                        <span class="logo-icon" aria-hidden="true">🎮</span>
+                        <span class="logo-text">Smile Gaming Hub</span>
+                    </a>
+                </div>
+                
+                <!-- Primary Navigation Component -->
+                <nav class="primary-nav" role="navigation" aria-label="Main navigation">
+                    <a href="#recently-added" class="primary-nav-item nav-item-secondary">Recently Added</a>
+                    <a href="#popular-games" class="primary-nav-item nav-item-secondary">Popular</a>
+                    <a href="#request-games" class="primary-nav-item nav-item-secondary">Request Games</a>
+                    
+                    <!-- Category Dropdown Component -->
+                    <div class="category-dropdown">
+                        <button 
+                            class="category-dropdown-btn nav-item-secondary" 
+                            onclick="toggleCategoryDropdown(this)"
+                            aria-expanded="false"
+                            aria-haspopup="menu"
+                            aria-label="Browse game categories"
+                        >
+                            <span>Categories</span>
+                            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="category-dropdown-menu" role="menu">
+                            <a href="#" class="category-item" role="menuitem" data-category="all">All Games</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="action">Action</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="rpg">RPG</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="strategy">Strategy</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="sports">Sports</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="racing">Racing</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="simulation">Simulation</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="puzzle">Puzzle</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="horror">Horror</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="multiplayer">Multiplayer</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="adventure">Adventure</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="casual">Casual</a>
+                            <a href="#" class="category-item" role="menuitem" data-category="indie">Indie</a>
                         </div>
                     </div>
                 </nav>
                 
-                <!-- Action Buttons -->
-                <div class="nav-action-buttons">
-                    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
-                    <button id="subscriptionBtn" class="nav-btn subscription-btn" aria-label="View subscription plans" title="View subscription plans">💎 Subscription</button>
-                    <button id="loginBtn" class="nav-btn login-btn" aria-label="Login to your account" title="Login">Login</button>
-                    <button id="signupBtn" class="nav-btn signup-btn" aria-label="Create a new account" title="Sign up">Sign Up</button>
-                    <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none" aria-label="Go to dashboard" title="Dashboard">Dashboard</button>
-                    <button id="logoutBtn" class="nav-btn logout-btn" style="display:none" aria-label="Logout from your account" title="Logout">Logout</button>
-                    <button id="adminAccessBtn" class="nav-btn admin-btn" onclick="openModal('adminModal')" aria-label="Access admin panel" title="Admin Access">Admin Access</button>
+                <!-- Utility Controls Component -->
+                <div class="header-utilities" role="toolbar" aria-label="Account and settings">
+                    <!-- Theme Toggle -->
+                    <button 
+                        id="darkModeToggle" 
+                        class="utility-btn theme-toggle" 
+                        type="button"
+                        aria-label="Toggle dark mode"
+                        title="Toggle dark mode"
+                    >
+                        <span class="theme-icon" aria-hidden="true">🌙</span>
+                    </button>
+                    
+                    <!-- Subscription CTA -->
+                    <button 
+                        id="subscriptionBtn" 
+                        class="utility-btn btn-primary" 
+                        type="button"
+                        aria-label="View subscription plans"
+                        title="View subscription plans"
+                    >
+                        <span class="btn-icon" aria-hidden="true">💎</span>
+                        <span class="btn-text">Subscription</span>
+                    </button>
+                    
+                    <!-- Authentication Controls -->
+                    <div class="auth-controls">
+                        <button 
+                            id="loginBtn" 
+                            class="utility-btn btn-secondary" 
+                            type="button"
+                            aria-label="Login to your account"
+                            title="Login"
+                        >
+                            Login
+                        </button>
+                        <button 
+                            id="signupBtn" 
+                            class="utility-btn btn-primary" 
+                            type="button"
+                            aria-label="Create a new account"
+                            title="Sign up"
+                        >
+                            Sign Up
+                        </button>
+                        <button 
+                            id="dashboardBtn" 
+                            class="utility-btn btn-secondary" 
+                            type="button"
+                            style="display:none"
+                            aria-label="Go to dashboard"
+                            title="Dashboard"
+                        >
+                            Dashboard
+                        </button>
+                        <button 
+                            id="logoutBtn" 
+                            class="utility-btn btn-secondary" 
+                            type="button"
+                            style="display:none"
+                            aria-label="Logout from your account"
+                            title="Logout"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                    
+                    <!-- Admin Access (Reduced Visual Prominence) -->
+                    <button 
+                        id="adminAccessBtn" 
+                        class="utility-btn btn-outline admin-btn" 
+                        type="button"
+                        onclick="openModal('adminModal')"
+                        aria-label="Access admin panel"
+                        title="Admin Access"
+                    >
+                        Admin
+                    </button>
+                    
+                    <!-- Mobile Menu Toggle -->
+                    <button 
+                        id="mobileMenuToggle" 
+                        class="utility-btn mobile-menu-toggle" 
+                        type="button"
+                        aria-label="Toggle mobile menu"
+                        aria-expanded="false"
+                        title="Open menu"
+                        style="display:none"
+                    >
+                        <span class="hamburger-icon" aria-hidden="true">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div id="mobileMenuPanel" class="mobile-menu-panel" aria-hidden="true">
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <h2 class="mobile-menu-title">Menu</h2>
+                    <button 
+                        id="mobileMenuClose" 
+                        class="mobile-menu-close" 
+                        type="button"
+                        aria-label="Close mobile menu"
+                    >
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+                    <a href="#recently-added" class="mobile-nav-item">Recently Added</a>
+                    <a href="#popular-games" class="mobile-nav-item">Popular</a>
+                    <a href="#request-games" class="mobile-nav-item">Request Games</a>
+                    <div class="mobile-category-section">
+                        <button class="mobile-category-toggle" aria-expanded="false">
+                            Categories
+                            <span class="mobile-category-arrow" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="mobile-category-menu">
+                            <a href="#" class="mobile-category-item" data-category="all">All Games</a>
+                            <a href="#" class="mobile-category-item" data-category="action">Action</a>
+                            <a href="#" class="mobile-category-item" data-category="rpg">RPG</a>
+                            <a href="#" class="mobile-category-item" data-category="strategy">Strategy</a>
+                            <a href="#" class="mobile-category-item" data-category="sports">Sports</a>
+                            <a href="#" class="mobile-category-item" data-category="racing">Racing</a>
+                            <a href="#" class="mobile-category-item" data-category="simulation">Simulation</a>
+                            <a href="#" class="mobile-category-item" data-category="puzzle">Puzzle</a>
+                            <a href="#" class="mobile-category-item" data-category="horror">Horror</a>
+                            <a href="#" class="mobile-category-item" data-category="multiplayer">Multiplayer</a>
+                            <a href="#" class="mobile-category-item" data-category="adventure">Adventure</a>
+                            <a href="#" class="mobile-category-item" data-category="casual">Casual</a>
+                            <a href="#" class="mobile-category-item" data-category="indie">Indie</a>
+                        </div>
+                    </div>
+                </nav>
+                <div class="mobile-menu-footer">
+                    <button id="mobileSubscriptionBtn" class="btn btn-primary">💎 Subscription</button>
+                    <button id="mobileLoginBtn" class="btn btn-secondary">Login</button>
+                    <button id="mobileSignupBtn" class="btn btn-primary">Sign Up</button>
+                    <button id="mobileAdminBtn" class="btn btn-outline admin-btn">Admin</button>
                 </div>
             </div>
         </div>
