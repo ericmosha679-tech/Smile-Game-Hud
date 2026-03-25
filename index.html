@@ -37,7 +37,7 @@
             <p class="hero-subtitle">Discover, Download & Play Amazing Games</p>
             <div class="hero-buttons">
                 <button id="exploreBtn" class="btn btn-primary">Start Exploring</button>
-                <a href="admin.html" id="adminAccessBtn" class="btn btn-secondary">Admin Panel</a>
+                <button id="adminAccessBtn" class="btn btn-secondary" onclick="openModal('adminModal')">Admin Access</button>
             </div>
         </div>
         <div class="hero-background"></div>
@@ -286,7 +286,28 @@
         </div>
     </div>
 
-    
+    <!-- Admin Password Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content admin-modal">
+            <div class="modal-header">
+                <h2>🔐 Admin Access</h2>
+                <button class="modal-close" onclick="closeModal('adminModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="adminPassword">Enter Admin Password:</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="adminPassword" placeholder="Enter password" class="form-input">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('adminPassword')" title="Show/Hide Password">👁️</button>
+                </div>
+                <div id="adminError" class="error-message"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('adminModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="verifyAdminPassword()">Access Admin Panel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Login Modal -->
     <div class="modal" id="loginModal">
         <div class="modal-content">

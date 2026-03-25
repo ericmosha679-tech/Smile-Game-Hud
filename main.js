@@ -1484,7 +1484,33 @@ function selectSubscription(tier) {
 }
 
 // ============ ADMIN ACCESS ============
-// Admin access is now direct link - no password required
+
+function verifyAdminPassword() {
+    const password = document.getElementById('adminPassword').value.trim();
+    const errorDiv = document.getElementById('adminError');
+
+    errorDiv.textContent = '';
+
+    if (!password) {
+        errorDiv.textContent = 'Please enter a admin password';
+        return;
+    }
+
+    if (password === 'Ciontatenx83') {
+        showToast('✅ Admin access granted!', 'success');
+        // Clear password field
+        document.getElementById('adminPassword').value = '';
+        // Redirect to admin panel
+        setTimeout(() => {
+            window.location.href = 'admin.html';
+        }, 500);
+    } else {
+        errorDiv.textContent = 'Incorrect password. Access denied.';
+        showToast('❌ Invalid admin password', 'error');
+        // Clear password field on error
+        document.getElementById('adminPassword').value = '';
+    }
+}
 
 // ============ GAME DETAILS & WISHLIST ============
 
@@ -1564,6 +1590,13 @@ function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('active');
+        // Clear admin password field when closing admin modal
+        if (modalId === 'adminModal') {
+            const passwordField = document.getElementById('adminPassword');
+            const errorDiv = document.getElementById('adminError');
+            if (passwordField) passwordField.value = '';
+            if (errorDiv) errorDiv.textContent = '';
+        }
     }
 }
 
