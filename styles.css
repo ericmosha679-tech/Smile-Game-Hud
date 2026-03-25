@@ -3206,6 +3206,44 @@ body {
     margin: 0;
 }
 
+/* Request Form Status */
+.request-status {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.status-message {
+    padding: 1.5rem;
+    border-radius: 12px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status-message.success {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: rgba(76, 175, 80, 0.4);
+    color: #4CAF50;
+}
+
+.status-message.error {
+    background: rgba(244, 67, 54, 0.2);
+    border-color: rgba(244, 67, 54, 0.4);
+    color: #f44336;
+}
+
+.status-message h4 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.status-message p {
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+}
+
 #wishlistIndicator {
     margin-top: 1rem;
     padding: 1rem;

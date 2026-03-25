@@ -1951,7 +1951,7 @@ function renderFilteredGames(games) {
         </div>
     `).join('');
     
-    // Add "New" badge for recent games
+    // Add "New" badge for recent games (within 7 days)
     gamesToShow.forEach((game, index) => {
         const gameCard = grid.children[index];
         if (gameCard) {
@@ -2084,11 +2084,263 @@ function formatCurrency(amount) {
     return `$${parseFloat(amount).toFixed(2)}`;
 }
 
+// Initialize sample games data if not exists
+function initializeSampleGames() {
+    const existingGames = adminGameManager.getAllGames();
+    if (existingGames.length === 0) {
+        const sampleGames = [
+            {
+                id: 1,
+                title: "Cyberpunk Adventures",
+                poster: "https://picsum.photos/seed/game1/400/200.jpg",
+                category: "action",
+                price: 6.99,
+                rating: 4.8,
+                downloads: 15420,
+                addedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: true
+            },
+            {
+                id: 2,
+                title: "Racing Champions",
+                poster: "https://picsum.photos/seed/game2/400/200.jpg",
+                category: "racing",
+                price: 0.00,
+                rating: 4.5,
+                downloads: 12350,
+                addedDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            },
+            {
+                id: 3,
+                title: "Fantasy Quest",
+                poster: "https://picsum.photos/seed/game3/400/200.jpg",
+                category: "rpg",
+                price: 12.99,
+                rating: 4.9,
+                downloads: 18930,
+                addedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: true
+            },
+            {
+                id: 4,
+                title: "Battle Arena",
+                poster: "https://picsum.photos/seed/game4/400/200.jpg",
+                category: "multiplayer",
+                price: 6.99,
+                rating: 4.3,
+                downloads: 8760,
+                addedDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            },
+            {
+                id: 5,
+                title: "Puzzle Master",
+                poster: "https://picsum.photos/seed/game5/400/200.jpg",
+                category: "puzzle",
+                price: 0.00,
+                rating: 4.6,
+                downloads: 9870,
+                addedDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            },
+            {
+                id: 6,
+                title: "Strategy Empire",
+                poster: "https://picsum.photos/seed/game6/400/200.jpg",
+                category: "strategy",
+                price: 12.99,
+                rating: 4.7,
+                downloads: 11200,
+                addedDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            },
+            {
+                id: 7,
+                title: "Sports Legends",
+                poster: "https://picsum.photos/seed/game7/400/200.jpg",
+                category: "sports",
+                price: 6.99,
+                rating: 4.4,
+                downloads: 14560,
+                addedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: true
+            },
+            {
+                id: 8,
+                title: "Horror Nights",
+                poster: "https://picsum.photos/seed/game8/400/200.jpg",
+                category: "horror",
+                price: 0.00,
+                rating: 4.2,
+                downloads: 6780,
+                addedDate: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            },
+            {
+                id: 9,
+                title: "Simulation City",
+                poster: "https://picsum.photos/seed/game9/400/200.jpg",
+                category: "simulation",
+                price: 12.99,
+                rating: 4.6,
+                downloads: 13200,
+                addedDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            },
+            {
+                id: 10,
+                title: "Casual Fun",
+                poster: "https://picsum.photos/seed/game10/400/200.jpg",
+                category: "casual",
+                price: 0.00,
+                rating: 4.1,
+                downloads: 9450,
+                addedDate: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            },
+            {
+                id: 11,
+                title: "Adventure Quest 2",
+                poster: "https://picsum.photos/seed/game11/400/200.jpg",
+                category: "adventure",
+                price: 6.99,
+                rating: 4.8,
+                downloads: 16780,
+                addedDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: true
+            },
+            {
+                id: 12,
+                title: "Indie Dreams",
+                poster: "https://picsum.photos/seed/game12/400/200.jpg",
+                category: "indie",
+                price: 0.00,
+                rating: 4.3,
+                downloads: 7890,
+                addedDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+                isNew: false
+            }
+        ];
+        
+        sampleGames.forEach(game => adminGameManager.addGame(game));
+    }
+}
+
+// Log duplicate image URLs for review
+function logDuplicateImages() {
+    const allGames = adminGameManager.getAllGames();
+    const imageMap = {};
+    const duplicates = [];
+    
+    allGames.forEach(game => {
+        if (imageMap[game.poster]) {
+            duplicates.push({
+                imageUrl: game.poster,
+                gameIds: [imageMap[game.poster], game.id]
+            });
+        } else {
+            imageMap[game.poster] = game.id;
+        }
+    });
+    
+    if (duplicates.length > 0) {
+        console.group('🔍 Duplicate Image URLs Found for Review:');
+        duplicates.forEach(dup => {
+            console.warn(`Image URL: ${dup.imageUrl}`);
+            console.warn(`Games sharing this image: ${dup.gameIds.join(', ')}`);
+        });
+        console.groupEnd();
+    } else {
+        console.log('✅ No duplicate image URLs found');
+    }
+}
+
+// Standardize date formatting
+function formatDate(dateString, format = 'human') {
+    const date = new Date(dateString);
+    
+    if (format === 'iso') {
+        return date.toISOString();
+    } else if (format === 'human') {
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+    
+    return dateString;
+}
+
+// Handle game request submission
+function submitGameRequest(event) {
+    event.preventDefault();
+    
+    const gameName = document.getElementById('requestGameName').value.trim();
+    const platform = document.getElementById('requestPlatform').value;
+    const email = document.getElementById('requestEmail').value.trim();
+    const category = document.getElementById('requestCategory').value;
+    const details = document.getElementById('requestDetails').value.trim();
+    
+    // Validation
+    if (!gameName || !platform || !category) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    // Store request (in real app, this would go to backend)
+    const request = {
+        gameName,
+        platform,
+        email,
+        category,
+        details,
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+    };
+    
+    // Save to localStorage for demo purposes
+    const requests = JSON.parse(localStorage.getItem('gameRequests') || '[]');
+    requests.push(request);
+    localStorage.setItem('gameRequests', JSON.stringify(requests));
+    
+    // Show success message
+    const statusElement = document.getElementById('requestStatus');
+    statusElement.innerHTML = `
+        <div class="status-message success">
+            <h4>✅ Request Submitted Successfully!</h4>
+            <p>Thank you for requesting "${gameName}". We'll review your request and notify you when it's available.</p>
+            <p><strong>Request ID:</strong> #${requests.length}</p>
+        </div>
+    `;
+    statusElement.style.display = 'block';
+    
+    // Reset form
+    document.getElementById('requestForm').reset();
+    
+    showToast('Game request submitted successfully!', 'success');
+    
+    // Log for admin review
+    console.log('Game Request Submitted:', request);
+}
+
 // Initialize Admin Game Manager
 const adminGameManager = new AdminGameManager();
 
 // Dark Mode Toggle
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize sample games if no data exists
+    initializeSampleGames();
+    
+    // Log duplicate images for review
+    logDuplicateImages();
+    
+    // Initialize pagination with actual games
+    const allGames = adminGameManager.getAllGames();
+    gamePagination.updatePagination(allGames.length);
+    renderFilteredGames(allGames);
+    
     const darkModeToggle = document.getElementById('darkModeToggle');
     const body = document.body;
     
