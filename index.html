@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Header -->
+    <!-- Enhanced Navigation Header -->
     <header class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
@@ -20,12 +20,31 @@
                 <span class="logo-text">Smile Gaming Hub</span>
             </div>
             <nav class="nav-links">
+                <div class="nav-dropdown">
+                    <button class="nav-btn nav-dropdown-btn">Categories ▼</button>
+                    <div class="nav-dropdown-content">
+                        <a href="#" class="nav-dropdown-item" data-category="action">Action</a>
+                        <a href="#" class="nav-dropdown-item" data-category="adventure">Adventure</a>
+                        <a href="#" class="nav-dropdown-item" data-category="rpg">RPG</a>
+                        <a href="#" class="nav-dropdown-item" data-category="fps">FPS</a>
+                        <a href="#" class="nav-dropdown-item" data-category="horror">Horror</a>
+                        <a href="#" class="nav-dropdown-item" data-category="indie">Indie</a>
+                        <a href="#" class="nav-dropdown-item" data-category="simulation">Simulation</a>
+                        <a href="#" class="nav-dropdown-item" data-category="sports">Sports</a>
+                        <a href="#" class="nav-dropdown-item" data-category="strategy">Strategy</a>
+                        <a href="#" class="nav-dropdown-item" data-category="vr">Virtual Reality</a>
+                    </div>
+                </div>
+                <a href="#recently-added" class="nav-btn">🆕 Recently Added</a>
+                <a href="#popular-games" class="nav-btn">🔥 Popular</a>
+                <a href="#request-section" class="nav-btn">📝 Request Games</a>
                 <button id="themeToggleBtn" class="nav-btn" title="Toggle light/dark mode">🌙</button>
                 <button id="subscriptionBtn" class="nav-btn subscription-btn">💎 Subscription</button>
                 <button id="loginBtn" class="nav-btn login-btn">Login</button>
                 <button id="signupBtn" class="nav-btn signup-btn">Sign Up</button>
                 <button id="dashboardBtn" class="nav-btn dashboard-btn" style="display:none">Dashboard</button>
                 <button id="logoutBtn" class="nav-btn logout-btn" style="display:none">Logout</button>
+                <button id="adminAccessBtn" class="nav-btn admin-btn" onclick="openModal('adminModal')">Admin Access</button>
             </nav>
         </div>
     </header>
@@ -93,15 +112,16 @@
         </div>
     </section>
 
-    <!-- Game Search & Filter Bar -->
+    <!-- Enhanced Search & Filter Bar -->
     <section class="search-filter-section">
         <div class="search-container">
             <div style="position: relative; flex: 1;">
+                <span class="search-icon">🔍</span>
                 <input 
                     type="text" 
                     id="gameSearch" 
-                    class="search-input" 
-                    placeholder="🔍 Search games by title..." 
+                    class="search-input enhanced-search" 
+                    placeholder="Search for games, categories, or genres..." 
                     aria-label="Search games"
                     onkeyup="handleGameSearch(this.value)"
                     onfocus="showSearchDropdown()"
@@ -121,8 +141,35 @@
                     <option value="downloads-low">⬇️ Least Downloads</option>
                     <option value="price-high">💰 Price: High to Low</option>
                     <option value="price-low">💰 Price: Low to High</option>
+                    <option value="recent">🆕 Recently Added</option>
+                    <option value="popular">🔥 Most Popular</option>
                 </select>
             </div>
+        </div>
+        
+        <!-- Enhanced Filter Tags -->
+        <div class="filter-tags-container">
+            <div class="filter-tag active" data-filter="all">All Games</div>
+            <div class="filter-tag" data-filter="free">Free</div>
+            <div class="filter-tag" data-filter="premium">Premium</div>
+            <div class="filter-tag" data-filter="multiplayer">Multiplayer</div>
+            <div class="filter-tag" data-filter="co-op">Co-op</div>
+            <div class="filter-tag" data-filter="vr">Virtual Reality</div>
+            <div class="filter-tag" data-filter="latest">Latest Updates</div>
+        </div>
+    </section>
+
+    <!-- Recently Added Section - Inspired by SteamUnlocked -->
+    <section id="recently-added" class="recently-added-section">
+        <div class="section-header">
+            <h2 class="section-title">🆕 Recently Added</h2>
+            <p>Latest games added to our collection</p>
+        </div>
+        <div class="recently-added-grid" id="recentlyAddedGrid">
+            <!-- Games will be populated by JavaScript -->
+        </div>
+        <div class="load-more-container">
+            <button class="btn btn-secondary" onclick="loadMoreRecentGames()">Load More Games</button>
         </div>
     </section>
 
@@ -155,6 +202,80 @@
         </div>
         <div class="games-grid" id="gamesGrid">
             <!-- Games populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Popular Games Section - Inspired by SteamRIP -->
+    <section id="popular-games" class="popular-games-section">
+        <div class="section-header">
+            <h2 class="section-title">🔥 Popular Games</h2>
+            <p>Most downloaded and trending games</p>
+        </div>
+        <div class="popular-games-grid" id="popularGamesGrid">
+            <!-- Games will be populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Download Statistics - Inspired by CroTorrents -->
+    <section class="download-stats-section">
+        <div class="section-header">
+            <h2 class="section-title">📊 Download Statistics</h2>
+            <p>Real-time platform statistics</p>
+        </div>
+        <div class="download-stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalGames">1,247</div>
+                <div class="stat-label">Total Games</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="downloadsToday">45.2K</div>
+                <div class="stat-label">Downloads Today</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="activeUsers">892</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="newThisWeek">156</div>
+                <div class="stat-label">New This Week</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Request System - Like SteamUnlocked -->
+    <section id="request-section" class="request-section">
+        <div class="section-header">
+            <h2 class="section-title">📝 Request Games</h2>
+            <p>Can't find a game? Request it here!</p>
+        </div>
+        <div class="request-container">
+            <form id="requestForm" class="request-form">
+                <div class="form-group">
+                    <label for="requestGameName">Game Name *</label>
+                    <input type="text" id="requestGameName" class="form-input" placeholder="Enter the game name" required>
+                </div>
+                <div class="form-group">
+                    <label for="requestPlatform">Platform</label>
+                    <select id="requestPlatform" class="form-select">
+                        <option value="">Select Platform</option>
+                        <option value="pc">PC</option>
+                        <option value="playstation">PlayStation</option>
+                        <option value="xbox">Xbox</option>
+                        <option value="nintendo">Nintendo</option>
+                        <option value="mobile">Mobile</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="requestEmail">Your Email (optional)</label>
+                    <input type="email" id="requestEmail" class="form-input" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="requestDetails">Additional Details</label>
+                    <textarea id="requestDetails" class="form-textarea" placeholder="Any specific version, DLCs, or requirements?" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+            </form>
+            <div id="requestStatus" class="request-status"></div>
         </div>
     </section>
 

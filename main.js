@@ -1483,6 +1483,318 @@ function selectSubscription(tier) {
     toggleSubscription();
 }
 
+// ============ ENHANCED FEATURES ============
+
+// Navigation Dropdown Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle navigation dropdowns
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+    dropdowns.forEach(dropdown => {
+        const btn = dropdown.querySelector('.nav-dropdown-btn');
+        const content = dropdown.querySelector('.nav-dropdown-content');
+        
+        if (btn && content) {
+            // Mouse events
+            dropdown.addEventListener('mouseenter', () => {
+                content.style.display = 'block';
+            });
+            
+            dropdown.addEventListener('mouseleave', () => {
+                content.style.display = 'none';
+            });
+            
+            // Touch events for mobile
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                content.style.display = content.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+    });
+    
+    // Handle category dropdown items
+    const categoryItems = document.querySelectorAll('.nav-dropdown-item[data-category]');
+    categoryItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const category = this.dataset.category;
+            if (typeof filterGamesByCategory === 'function') {
+                filterGamesByCategory(category);
+            }
+        });
+    });
+    
+    // Initialize enhanced features
+    initializeEnhancedFeatures();
+});
+
+function initializeEnhancedFeatures() {
+    // Initialize filter tags
+    initializeFilterTags();
+    
+    // Initialize recently added games
+    loadRecentlyAddedGames();
+    
+    // Initialize popular games
+    loadPopularGames();
+    
+    // Initialize request system
+    initializeRequestSystem();
+    
+    // Initialize download statistics
+    initializeDownloadStats();
+}
+
+// Filter Tags Functionality
+function initializeFilterTags() {
+    const filterTags = document.querySelectorAll('.filter-tag');
+    filterTags.forEach(tag => {
+        tag.addEventListener('click', function() {
+            // Remove active class from all tags
+            filterTags.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tag
+            this.classList.add('active');
+            
+            const filter = this.dataset.filter;
+            console.log('Filter selected:', filter);
+            
+            // Apply filter to games
+            applyFilter(filter);
+        });
+    });
+}
+
+function applyFilter(filter) {
+    const games = document.querySelectorAll('.game-card');
+    games.forEach(game => {
+        if (filter === 'all') {
+            game.style.display = 'block';
+        } else {
+            // Check if game has the filter attribute
+            const gameFilters = game.dataset.filters || '';
+            if (gameFilters.includes(filter)) {
+                game.style.display = 'block';
+            } else {
+                game.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Recently Added Games
+function loadRecentlyAddedGames() {
+    const recentGrid = document.getElementById('recentlyAddedGrid');
+    if (!recentGrid) return;
+    
+    const recentGames = [
+        {
+            title: "Merchant of the Six Kingdoms",
+            version: "v6.3",
+            category: "Strategy",
+            date: "March 24, 2026",
+            size: "2.5 GB",
+            multiplayer: false
+        },
+        {
+            title: "DEATH STRANDING 2: ON THE BEACH",
+            version: "v1.0.48.0",
+            dlc: "ALL DLCs",
+            category: "Action • Adventure",
+            date: "March 23, 2026",
+            size: "75 GB",
+            multiplayer: true
+        },
+        {
+            title: "Black Myth: Wukong",
+            version: "v1.0.21.23831",
+            dlc: "4 DLCs",
+            category: "RPG • Action",
+            date: "March 22, 2026",
+            size: "85 GB",
+            multiplayer: false
+        },
+        {
+            title: "Hi-Fi RUSH",
+            dlc: "Incl. ALL DLCs",
+            category: "Action • Rhythm",
+            date: "March 21, 2026",
+            size: "12 GB",
+            multiplayer: false
+        },
+        {
+            title: "Minecraft: Bedrock Edition",
+            version: "v1.21.130",
+            category: "Simulation • Multiplayer",
+            date: "March 20, 2026",
+            size: "1.2 GB",
+            multiplayer: true
+        },
+        {
+            title: "Slay the Spire 2",
+            version: "v0.99.1",
+            category: "Strategy • Card Game",
+            date: "March 19, 2026",
+            size: "1.8 GB",
+            multiplayer: false
+        }
+    ];
+    
+    recentGrid.innerHTML = recentGames.map(game => `
+        <div class="recently-added-card" onclick="selectGame('${game.title}')">
+            <div class="game-date">${game.date}</div>
+            <div class="game-title">
+                ${game.title}
+                ${game.version ? `<span class="version-tag">${game.version}</span>` : ''}
+                ${game.dlc ? `<span class="dlc-tag">${game.dlc}</span>` : ''}
+            </div>
+            <div class="game-info">${game.category} • ${game.multiplayer ? 'Multiplayer' : 'Single Player'} • ${game.size}</div>
+            ${game.multiplayer ? '<div class="multiplayer-badge">Multiplayer</div>' : ''}
+        </div>
+    `).join('');
+}
+
+// Popular Games
+function loadPopularGames() {
+    const popularGrid = document.getElementById('popularGamesGrid');
+    if (!popularGrid) return;
+    
+    const popularGames = [
+        { title: "Elden Ring Deluxe Edition", category: "RPG • Open World", multiplayer: true },
+        { title: "Hollow Knight: Silksong", category: "Action • Platformer", multiplayer: false },
+        { title: "The Sims 4", category: "Simulation • Life Sim", multiplayer: true },
+        { title: "Forza Horizon 5 Premium", category: "Racing • Open World", multiplayer: true },
+        { title: "Cyberpunk 2077", category: "RPG • Sci-Fi", multiplayer: false },
+        { title: "Dying Light 2", category: "Horror • Survival", multiplayer: true },
+        { title: "Palworld", category: "Survival • Crafting", multiplayer: true },
+        { title: "Baldur's Gate 3", category: "RPG • Turn-Based", multiplayer: true }
+    ];
+    
+    popularGrid.innerHTML = popularGames.map(game => `
+        <div class="popular-game-card" onclick="selectGame('${game.title}')">
+            <div class="game-title">${game.title}</div>
+            <div class="game-info">${game.category}</div>
+            ${game.multiplayer ? '<div class="multiplayer-badge">Multiplayer</div>' : ''}
+        </div>
+    `).join('');
+}
+
+// Request System
+function initializeRequestSystem() {
+    const requestForm = document.getElementById('requestForm');
+    if (!requestForm) return;
+    
+    requestForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const gameName = document.getElementById('requestGameName').value;
+        const platform = document.getElementById('requestPlatform').value;
+        const email = document.getElementById('requestEmail').value;
+        const details = document.getElementById('requestDetails').value;
+        
+        // Validate required fields
+        if (!gameName.trim()) {
+            showRequestStatus('Please enter a game name', 'error');
+            return;
+        }
+        
+        // Simulate request submission
+        showRequestStatus('Submitting request...', 'info');
+        
+        setTimeout(() => {
+            // Store request (in real app, this would send to server)
+            const request = {
+                gameName,
+                platform,
+                email,
+                details,
+                date: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            console.log('Game request submitted:', request);
+            
+            showRequestStatus('✅ Game request submitted successfully! We\'ll notify you when it\'s available.', 'success');
+            requestForm.reset();
+        }, 1500);
+    });
+}
+
+function showRequestStatus(message, type) {
+    const statusDiv = document.getElementById('requestStatus');
+    if (!statusDiv) return;
+    
+    statusDiv.textContent = message;
+    statusDiv.className = `request-status ${type}`;
+    
+    if (type === 'success') {
+        setTimeout(() => {
+            statusDiv.textContent = '';
+            statusDiv.className = 'request-status';
+        }, 5000);
+    }
+}
+
+// Download Statistics
+function initializeDownloadStats() {
+    // Simulate real-time statistics updates
+    setInterval(() => {
+        updateDownloadStats();
+    }, 5000);
+}
+
+function updateDownloadStats() {
+    const downloadsToday = document.getElementById('downloadsToday');
+    const activeUsers = document.getElementById('activeUsers');
+    const newThisWeek = document.getElementById('newThisWeek');
+    
+    if (downloadsToday) {
+        const current = parseFloat(downloadsToday.textContent.replace('K', '')) * 1000;
+        const increment = Math.floor(Math.random() * 10) + 1;
+        const newTotal = current + increment;
+        downloadsToday.textContent = (newTotal / 1000).toFixed(1) + 'K';
+    }
+    
+    if (activeUsers) {
+        const current = parseInt(activeUsers.textContent);
+        const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
+        const newTotal = Math.max(850, current + change);
+        activeUsers.textContent = newTotal;
+    }
+    
+    if (newThisWeek) {
+        const current = parseInt(newThisWeek.textContent);
+        const increment = Math.random() > 0.7 ? 1 : 0; // 30% chance to increase
+        const newTotal = current + increment;
+        newThisWeek.textContent = newTotal;
+    }
+}
+
+// Load More Games
+function loadMoreRecentGames() {
+    console.log('Loading more recent games...');
+    // In a real app, this would load more games from the server
+    showToast('Loading more games...', 'info');
+    
+    setTimeout(() => {
+        showToast('All games loaded!', 'success');
+    }, 1000);
+}
+
+// Game Selection
+function selectGame(gameTitle) {
+    console.log('Game selected:', gameTitle);
+    // Open game details modal or navigate to game page
+    if (typeof openGameDetails === 'function') {
+        // Find the game and open details
+        const games = DataManager.getGames();
+        const game = games.find(g => g.title === gameTitle);
+        if (game) {
+            openGameDetails(game.id);
+        }
+    } else {
+        showToast(`Selected: ${gameTitle}`, 'info');
+    }
+}
+
 // ============ ADMIN ACCESS ============
 
 function verifyAdminPassword() {
