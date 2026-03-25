@@ -258,6 +258,23 @@ class AdminPanel {
         if (addUserForm) {
             addUserForm.addEventListener('submit', (e) => this.handleAddUser(e));
         }
+        
+        // Game image upload listeners
+        this.setupGameImageUploadListeners();
+    }
+    
+    setupGameImageUploadListeners() {
+        // Add game image upload
+        const addGameImageInput = document.getElementById('gameImageUpload');
+        if (addGameImageInput) {
+            addGameImageInput.addEventListener('change', (e) => this.handleAddGameImageUpload(e));
+        }
+        
+        // Edit game image upload
+        const editGameImageInput = document.getElementById('editGameImageUpload');
+        if (editGameImageInput) {
+            editGameImageInput.addEventListener('change', (e) => this.handleEditGameImageUpload(e));
+        }
     }
     
     setupKeyboardShortcuts() {
@@ -436,6 +453,15 @@ class AdminPanel {
         
         try {
             const formData = new FormData(event.target);
+            const fileInput = document.getElementById('gameImageUpload');
+            const imageFile = fileInput.files[0];
+            
+            // Get image data
+            let imageUrl = `https://via.placeholder.com/150x150?text=${encodeURIComponent(formData.get('title'))}`;
+            if (imageFile) {
+                imageUrl = await this.fileToDataUrl(imageFile);
+            }
+            
             const gameData = {
                 id: Date.now(),
                 title: formData.get('title'),
@@ -444,13 +470,17 @@ class AdminPanel {
                 rating: parseFloat(formData.get('rating')),
                 downloads: 0,
                 description: formData.get('description'),
-                imageUrl: formData.get('imageUrl') || `https://via.placeholder.com/150x150?text=${encodeURIComponent(formData.get('title'))}`,
+                imageUrl: imageUrl,
                 releaseDate: new Date().toISOString().split('T')[0]
             };
             
             // Validate
             if (!gameData.title || !gameData.category) {
                 throw new Error('Title and category are required');
+            }
+            
+            if (!imageFile) {
+                throw new Error('Game image is required');
             }
             
             // Add to state
@@ -467,8 +497,9 @@ class AdminPanel {
             // Close modal
             this.closeModal('addGameModal');
             
-            // Reset form
+            // Reset form and preview
             event.target.reset();
+            this.resetAddGameImagePreview();
             
             this.showNotification('Game added successfully', 'success');
             console.log('✅ Game added:', gameData);
@@ -486,9 +517,17 @@ class AdminPanel {
             const formData = new FormData(event.target);
             const gameId = parseInt(formData.get('gameId'));
             const gameIndex = this.state.games.findIndex(g => g.id === gameId);
+            const fileInput = document.getElementById('editGameImageUpload');
+            const imageFile = fileInput.files[0];
             
             if (gameIndex === -1) {
                 throw new Error('Game not found');
+            }
+            
+            // Get image data (keep existing if no new image uploaded)
+            let imageUrl = this.state.games[gameIndex].imageUrl;
+            if (imageFile) {
+                imageUrl = await this.fileToDataUrl(imageFile);
             }
             
             // Update game data
@@ -499,7 +538,7 @@ class AdminPanel {
                 price: parseFloat(formData.get('price')),
                 rating: parseFloat(formData.get('rating')),
                 description: formData.get('description'),
-                imageUrl: formData.get('imageUrl')
+                imageUrl: imageUrl
             };
             
             // Save to DataManager
@@ -538,8 +577,10 @@ class AdminPanel {
             form.price.value = game.price;
             form.rating.value = game.rating;
             form.description.value = game.description || '';
-            form.imageUrl.value = game.imageUrl;
         }
+        
+        // Show current image in preview
+        this.showEditGameImagePreview(game.imageUrl);
         
         // Open modal
         this.openModal('editGameModal');
@@ -1125,6 +1166,58 @@ class AdminPanel {
         };
     }
     
+    // ============================================
+    // GAME IMAGE UPLOAD HANDLERS
+    // ============================================
+    
+    handleAddGameImageUpload(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('addGameImagePreview');
+        const previewImg = document.getElementById('addGamePreviewImg');
+        
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+    
+    handleEditGameImageUpload(event) {
+        const file = event.target.files[0];
+        const previewImg = document.getElementById('editGamePreviewImg');
+        
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    showEditGameImagePreview(imageUrl) {
+        const previewImg = document.getElementById('editGamePreviewImg');
+        if (previewImg) {
+            previewImg.src = imageUrl;
+        }
+    }
+    
+    resetAddGameImagePreview() {
+        const preview = document.getElementById('addGameImagePreview');
+        const previewImg = document.getElementById('addGamePreviewImg');
+        if (preview) {
+            preview.style.display = 'none';
+        }
+        if (previewImg) {
+            previewImg.src = '';
+        }
+    }
+
     // ============================================
     // CLEANUP
     // ============================================
