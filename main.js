@@ -594,23 +594,89 @@ function createGameCard(game) {
 
 function displayFeaturedGames(games) {
     const sortedGames = [...games].sort((a, b) => b.rating - a.rating).slice(0, 5);
-    const tableBody = document.getElementById('featuredTable');
-    tableBody.innerHTML = '';
+    const container = document.getElementById('featuredGamesContainer');
+    
+    if (!container) {
+        console.warn('featuredGamesContainer not found');
+        return;
+    }
+    
+    container.innerHTML = '';
 
     sortedGames.forEach(game => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><strong>${game.title}</strong></td>
-            <td>${capitalizeFirst(game.category)}</td>
-            <td>⭐ ${game.rating}</td>
-            <td>${game.price === 0 ? 'FREE' : '$' + game.price.toFixed(2)}</td>
-            <td>${game.downloads}</td>
-            <td>
-                <button class="table-action-btn" onclick="initiateDownload(${game.id}, '${game.title}')">Download</button>
-            </td>
+        const card = document.createElement('div');
+        card.className = 'featured-game-card';
+        card.innerHTML = `
+            <img src="${game.imageUrl || `https://picsum.photos/seed/game${game.id}/400/200.jpg`}" alt="${game.title}" class="featured-game-poster">
+            <div class="featured-game-info">
+                <h3 class="featured-game-title">${game.title}</h3>
+                <div class="featured-game-rating">
+                    <div class="star-rating">
+                        ${generateStarRating(game.rating)}
+                    </div>
+                    <span class="rating-number">${game.rating}</span>
+                </div>
+                <button class="featured-game-action" onclick="initiateDownload(${game.id}, '${game.title}')">
+                    ${game.price === 0 ? 'Download Now' : '$' + game.price.toFixed(2)}
+                </button>
+            </div>
         `;
-        tableBody.appendChild(row);
+        container.appendChild(card);
     });
+}
+
+function generateStarRating(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let stars = '';
+    for (let i = 0; i < fullStars; i++) {
+        stars += '<span class="star">⭐</span>';
+    }
+    if (hasHalfStar) {
+        stars += '<span class="star">⭐</span>';
+    }
+    for (let i = 0; i < emptyStars; i++) {
+        stars += '<span class="star empty">☆</span>';
+    }
+    return stars;
+}
+
+function clearAllFilters() {
+    try {
+        // Reset category filter
+        currentCategory = 'all';
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        categoryButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-category') === 'all') {
+                btn.classList.add('active');
+            }
+        });
+
+        // Reset search
+        currentSearchQuery = '';
+        const searchInput = document.getElementById('gameSearch');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+
+        // Reset sort
+        currentSortOption = 'default';
+        const sortSelect = document.getElementById('sortBy');
+        if (sortSelect) {
+            sortSelect.value = 'default';
+        }
+
+        // Reload games
+        loadGamesGrid();
+        
+        showToast('Filters cleared', 'info');
+    } catch (error) {
+        console.error('Error clearing filters:', error);
+        showToast('Error clearing filters', 'error');
+    }
 }
 
 function updateCategoryCounts(games) {
@@ -2834,21 +2900,55 @@ class HeaderComponent {
 // Initialize header component
 const headerComponent = new HeaderComponent();
 
-// Dark Mode Toggle
+// Consolidated DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize sample games if no data exists
-    initializeSampleGames();
-    
-    // Log duplicate images for review
-    logDuplicateImages();
-    
-    // Initialize pagination with actual games
-    const allGames = adminGameManager.getAllGames();
-    gamePagination.updatePagination(allGames.length);
-    renderFilteredGames(allGames);
-    
+    try {
+        console.log('🚀 Initializing Smile Gaming Hub...');
+        
+        // Initialize data and games
+        DataManager.init();
+        initializeSampleGames();
+        logDuplicateImages();
+        
+        // Initialize pagination with actual games
+        const allGames = adminGameManager.getAllGames();
+        gamePagination.updatePagination(allGames.length);
+        renderFilteredGames(allGames);
+        
+        // Initialize UI components
+        initializeUI();
+        setupEventListeners();
+        checkUserSession();
+        
+        // Initialize theme
+        initializeTheme();
+        
+        // Initialize navigation and features
+        initializeNavigation();
+        initializeProfessionalFeatures();
+        initializeEnhancedFeatures();
+        initializeScrollAnimations();
+        initializeSmoothScrolling();
+        
+        // Setup real-time listeners
+        setupRealtimeGameListener();
+        loadGamesGrid();
+        
+        console.log('✅ Smile Gaming Hub initialized successfully');
+    } catch (error) {
+        console.error('❌ Error initializing application:', error);
+        showToast('❌ Error loading application. Please refresh the page.', 'error');
+    }
+});
+
+function initializeTheme() {
     const darkModeToggle = document.getElementById('darkModeToggle');
     const body = document.body;
+    
+    if (!darkModeToggle) {
+        console.warn('Dark mode toggle not found');
+        return;
+    }
     
     // Check for saved theme preference
     const savedTheme = localStorage.getItem('theme');
@@ -2874,10 +2974,10 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = '';
         }, 300);
     });
-});
+}
 
-// Professional Smooth Scrolling
-document.addEventListener('DOMContentLoaded', function() {
+// Smooth scrolling functionality
+function initializeSmoothScrolling() {
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -2892,19 +2992,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
-    // Navigation Dropdown Functionality
-    initializeNavigation();
-    
-    // Initialize enhanced features
-    initializeEnhancedFeatures();
-    
-    // Add scroll animations
-    initializeScrollAnimations();
-    
-    // Initialize professional loading
-    initializeProfessionalLoading();
-});
+}
 
 function initializeNavigation() {
     // Handle navigation dropdowns
