@@ -64,7 +64,7 @@ const DataManager = {
                 rating: 4.4,
                 downloads: 28900,
                 releaseDate: '2024-02-10',
-                description: 'Challenging puzzles that will test your brain. Over 500 levels of mind-bending gameplay with beautiful minimalist design.',
+                description: 'Challenging puzzles with engaging gameplay. Over 500 levels of mind-bending challenges with beautiful minimalist design.',
                 imageUrl: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=300&fit=crop'
             },
             {

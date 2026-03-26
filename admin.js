@@ -31,8 +31,6 @@ class AdminPanel {
     
     async init() {
         try {
-            console.log('🚀 Initializing Professional Admin Panel...');
-            
             // Initialize Firebase
             await this.initializeFirebase();
             
@@ -48,11 +46,9 @@ class AdminPanel {
             // Apply device optimizations
             this.applyDeviceOptimizations();
             
-            console.log('✅ Admin Panel initialized successfully');
             this.showNotification('Admin Panel loaded successfully', 'success');
             
         } catch (error) {
-            console.error('❌ Failed to initialize admin panel:', error);
             this.showNotification('Failed to load admin panel', 'error');
         }
     }
@@ -62,12 +58,10 @@ class AdminPanel {
             if (typeof firebase !== 'undefined') {
                 this.firebase = firebase;
                 this.database = firebase.database();
-                console.log('✅ Firebase initialized successfully');
             } else {
                 throw new Error('Firebase not available');
             }
         } catch (error) {
-            console.error('❌ Firebase initialization failed:', error);
             // Fallback to localStorage only
             this.showNotification('Using offline mode - Firebase unavailable', 'warning');
         }
@@ -96,7 +90,6 @@ class AdminPanel {
             this.updateAllSections();
             
         } catch (error) {
-            console.error('❌ Error loading initial data:', error);
             this.showNotification('Error loading data', 'error');
         } finally {
             this.setLoading(false);
@@ -111,14 +104,11 @@ class AdminPanel {
         try {
             if (typeof DataManager !== 'undefined') {
                 this.state.games = DataManager.getGames();
-                console.log(`📊 Loaded ${this.state.games.length} games`);
             } else {
                 // Fallback data
                 this.state.games = this.getDefaultGames();
-                console.log('📊 Using default games data');
             }
         } catch (error) {
-            console.error('❌ Error loading games:', error);
             this.state.games = [];
         }
     }
@@ -127,13 +117,10 @@ class AdminPanel {
         try {
             if (typeof DataManager !== 'undefined') {
                 this.state.users = DataManager.getUsers();
-                console.log(`👥 Loaded ${this.state.users.length} users`);
             } else {
                 this.state.users = this.getDefaultUsers();
-                console.log('👥 Using default users data');
             }
         } catch (error) {
-            console.error('❌ Error loading users:', error);
             this.state.users = [];
         }
     }
@@ -143,10 +130,9 @@ class AdminPanel {
             if (typeof DataManager !== 'undefined') {
                 this.state.theme = DataManager.getTheme();
                 this.applyThemeToUI();
-                console.log('🎨 Theme loaded and applied');
             }
         } catch (error) {
-            console.error('❌ Error loading theme:', error);
+            // Silent theme loading error
         }
     }
     
@@ -155,10 +141,9 @@ class AdminPanel {
             if (typeof DataManager !== 'undefined') {
                 this.state.backgroundImages = DataManager.getBackgroundImages();
                 this.setupBackgroundControls();
-                console.log(`🖼️ Loaded ${this.state.backgroundImages.length} background images`);
             }
         } catch (error) {
-            console.error('❌ Error loading background images:', error);
+            // Silent background loading error
         }
     }
     
@@ -167,10 +152,9 @@ class AdminPanel {
             if (typeof DataManager !== 'undefined') {
                 this.state.analytics = DataManager.getAnalytics();
                 this.updateAnalyticsDisplay();
-                console.log('📈 Analytics loaded');
             }
         } catch (error) {
-            console.error('❌ Error loading analytics:', error);
+            // Silent analytics loading error
         }
     }
     
@@ -304,8 +288,6 @@ class AdminPanel {
     
     switchTab(tabName) {
         try {
-            console.log(`🔄 Switching to ${tabName} tab`);
-            
             // Update state
             this.state.currentTab = tabName;
             
@@ -324,10 +306,7 @@ class AdminPanel {
             // Load tab-specific data
             this.loadTabData(tabName);
             
-            console.log(`✅ Switched to ${tabName} tab`);
-            
         } catch (error) {
-            console.error('❌ Error switching tab:', error);
             this.showNotification('Error switching tab', 'error');
         }
     }
@@ -383,20 +362,14 @@ class AdminPanel {
                 return;
             }
             
-            this.state.games.forEach(game => {
-                const row = this.createGameRow(game);
-                tableBody.appendChild(row);
-            });
-            
-            console.log(`✅ Updated games table with ${this.state.games.length} games`);
-            
-        } catch (error) {
-            console.error('❌ Error updating games table:', error);
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="error-state">
-                        <div class="error-icon">❌</div>
-                        <div class="error-text">Error loading games</div>
+                    <td colspan="5" class="empty-state">
+                        <div class="empty-icon">🎮</div>
+                        <div class="empty-text">No games found</div>
+                        <button class="btn btn-primary" onclick="adminPanel.openAddGameModal()">
+                            Add Your First Game
+                        </button>
                         <button class="btn btn-secondary" onclick="adminPanel.updateGamesTable()">
                             Retry
                         </button>
@@ -502,10 +475,8 @@ class AdminPanel {
             this.resetAddGameImagePreview();
             
             this.showNotification('Game added successfully', 'success');
-            console.log('✅ Game added:', gameData);
             
         } catch (error) {
-            console.error('❌ Error adding game:', error);
             this.showNotification(error.message || 'Error adding game', 'error');
         }
     }
@@ -553,10 +524,8 @@ class AdminPanel {
             this.closeModal('editGameModal');
             
             this.showNotification('Game updated successfully', 'success');
-            console.log('✅ Game updated:', this.state.games[gameIndex]);
             
         } catch (error) {
-            console.error('❌ Error editing game:', error);
             this.showNotification(error.message || 'Error editing game', 'error');
         }
     }
@@ -567,8 +536,6 @@ class AdminPanel {
             this.showNotification('Game not found', 'error');
             return;
         }
-        
-        console.log('🔧 Editing game:', game);
         
         // Populate edit form
         const form = document.getElementById('editGameForm');
@@ -599,8 +566,6 @@ class AdminPanel {
         
         // Open modal
         this.openModal('editGameModal');
-        
-        console.log('✅ Edit modal opened for game:', game.title);
     }
     
     duplicateGame(gameId) {
@@ -651,10 +616,8 @@ class AdminPanel {
             this.updateGamesTable();
             
             this.showNotification('Game deleted successfully', 'success');
-            console.log('✅ Game deleted:', game);
             
         } catch (error) {
-            console.error('❌ Error deleting game:', error);
             this.showNotification('Error deleting game', 'error');
         }
     }
@@ -691,10 +654,8 @@ class AdminPanel {
                 DataManager.saveTheme(theme);
             }
             
-            console.log('✅ Theme updated:', theme);
-            
         } catch (error) {
-            console.error('❌ Error updating theme:', error);
+            // Silent theme update error
         }
     }
     
@@ -797,10 +758,8 @@ class AdminPanel {
             }
             
             this.showNotification(`${newImages.length} images uploaded successfully`, 'success');
-            console.log(`✅ Uploaded ${newImages.length} background images`);
             
         } catch (error) {
-            console.error('❌ Error uploading backgrounds:', error);
             this.showNotification('Error uploading images', 'error');
         } finally {
             this.setLoading(false);
@@ -893,15 +852,12 @@ class AdminPanel {
             currentIndex = (currentIndex + 1) % this.state.backgroundImages.length;
             this.updateBackgroundPreview(currentIndex);
         }, 4000);
-        
-        console.log('✅ Background shuffle started');
     }
     
     stopBackgroundShuffle() {
         if (this.backgroundShuffleInterval) {
             clearInterval(this.backgroundShuffleInterval);
             this.backgroundShuffleInterval = null;
-            console.log('⏹️ Background shuffle stopped');
         }
     }
     
