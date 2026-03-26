@@ -3269,11 +3269,6 @@ function initializeEnhancedFeatures() {
         });
     });
     
-    // Initialize enhanced features
-    initializeEnhancedFeatures();
-});
-
-function initializeEnhancedFeatures() {
     // Initialize filter tags
     initializeFilterTags();
     
@@ -3289,6 +3284,7 @@ function initializeEnhancedFeatures() {
     // Initialize download statistics
     initializeDownloadStats();
 }
+
 
 // Filter Tags Functionality
 function initializeFilterTags() {
