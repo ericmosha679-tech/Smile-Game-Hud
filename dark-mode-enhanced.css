@@ -1,0 +1,725 @@
+/* ============================================ */
+/* ENHANCED DARK MODE - COMPREHENSIVE FIX */
+/* ============================================ */
+
+/* CSS Variables - Enhanced Theme System */
+:root {
+    /* Dark Mode Variables (Default) */
+    --primary-bg: #0d1b2a;
+    --secondary-bg: #1a2e47;
+    --tertiary-bg: #243447;
+    --quaternary-bg: #2c3e50;
+    
+    --glass-color: rgba(59, 89, 152, 0.3);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-light: rgba(255, 255, 255, 0.05);
+    --glass-heavy: rgba(255, 255, 255, 0.1);
+    
+    --accent-color: #ff6b35;
+    --accent-light: #ff8c5a;
+    --accent-dark: #e55a2b;
+    --accent-gradient: linear-gradient(45deg, #ff6b35, #ff8c5a);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #b0b8c1;
+    --text-tertiary: #8b95a7;
+    --text-inverse: #0d1b2a;
+    
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-light: rgba(255, 255, 255, 0.05);
+    --border-heavy: rgba(255, 255, 255, 0.2);
+    
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-heavy: rgba(0, 0, 0, 0.5);
+    
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --error-color: #f44336;
+    --info-color: #2196f3;
+    
+    --animation-duration: 0.3s;
+    --animation-fast: 0.15s;
+    --animation-slow: 0.5s;
+    
+    /* Transition for theme switching */
+    --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Light Mode Variables */
+body.light-mode {
+    --primary-bg: #f8f9fa;
+    --secondary-bg: #ffffff;
+    --tertiary-bg: #e9ecef;
+    --quaternary-bg: #dee2e6;
+    
+    --glass-color: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-light: rgba(0, 0, 0, 0.03);
+    --glass-heavy: rgba(0, 0, 0, 0.1);
+    
+    --accent-color: #2d4c7d;
+    --accent-light: #4276a5;
+    --accent-dark: #1e3a5f;
+    --accent-gradient: linear-gradient(45deg, #2d4c7d, #4276a5);
+    
+    --text-primary: #1b263d;
+    --text-secondary: #3f5c7f;
+    --text-tertiary: #6c829f;
+    --text-inverse: #ffffff;
+    
+    --border-color: rgba(0, 0, 0, 0.1);
+    --border-light: rgba(0, 0, 0, 0.05);
+    --border-heavy: rgba(0, 0, 0, 0.2);
+    
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-heavy: rgba(0, 0, 0, 0.2);
+}
+
+/* Global Theme Transition */
+* {
+    transition: var(--theme-transition);
+}
+
+/* Exceptions for performance */
+*:not(img):not(video):not(canvas):not(svg):not(.theme-icon) {
+    transition: var(--theme-transition);
+}
+
+/* Base Body Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--primary-bg);
+    background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    transition: var(--theme-transition);
+}
+
+/* ============================================ */
+/* ENHANCED COMPONENTS - DARK MODE READY */
+/* ============================================ */
+
+/* Modern Header */
+.modern-header {
+    background: rgba(13, 27, 42, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.light-mode .modern-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Navigation */
+.navbar {
+    background: var(--glass-color);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--border-heavy);
+    transition: var(--theme-transition);
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    transition: var(--theme-transition);
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+}
+
+.light-mode .nav-link {
+    color: var(--text-secondary);
+}
+
+.light-mode .nav-link:hover {
+    color: var(--text-primary);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    background: var(--secondary-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px var(--shadow-color);
+    transition: var(--theme-transition);
+}
+
+.light-mode .dropdown-menu {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px var(--shadow-light);
+}
+
+.dropdown-item {
+    color: var(--text-secondary);
+    transition: var(--theme-transition);
+}
+
+.dropdown-item:hover {
+    background: var(--glass-light);
+    color: var(--accent-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+    border: 1px solid var(--accent-color);
+    transition: var(--theme-transition);
+}
+
+.btn-primary:hover {
+    background: var(--accent-light);
+    border-color: var(--accent-light);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+.btn-secondary {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.btn-secondary:hover {
+    background: var(--glass-heavy);
+    border-color: var(--border-heavy);
+    transform: translateY(-2px);
+}
+
+.light-mode .btn-secondary {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.light-mode .btn-secondary:hover {
+    background: var(--glass-heavy);
+    border-color: var(--border-heavy);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.theme-toggle-btn:hover {
+    background: var(--glass-heavy);
+    transform: rotate(180deg);
+}
+
+.light-mode .theme-toggle-btn {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+/* Admin Button */
+.admin-btn {
+    background: rgba(244, 67, 54, 0.1);
+    color: rgba(244, 67, 54, 0.9);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    transition: var(--theme-transition);
+}
+
+.admin-btn:hover {
+    background: rgba(244, 67, 54, 0.2);
+    border-color: rgba(244, 67, 54, 0.5);
+}
+
+.light-mode .admin-btn {
+    background: rgba(244, 67, 54, 0.1);
+    color: rgba(244, 67, 54, 0.9);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* Cart Button */
+.cart-btn {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.cart-btn:hover {
+    background: var(--glass-heavy);
+    border-color: var(--border-heavy);
+}
+
+.light-mode .cart-btn {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.cart-count {
+    background: var(--accent-color);
+    color: white;
+}
+
+/* Forms */
+.form-input,
+.form-select,
+.form-textarea {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: var(--glass-heavy);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+.light-mode .form-input,
+.light-mode .form-select,
+.light-mode .form-textarea {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.light-mode .form-input:focus,
+.light-mode .form-select:focus,
+.light-mode .form-textarea:focus {
+    background: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(45, 76, 125, 0.2);
+}
+
+/* Game Cards */
+.game-card {
+    background: var(--glass-light);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-color);
+    border-color: var(--accent-color);
+}
+
+.light-mode .game-card {
+    background: white;
+    border: 1px solid var(--border-color);
+}
+
+.light-mode .game-card:hover {
+    box-shadow: 0 10px 30px var(--shadow-light);
+}
+
+.game-title {
+    color: var(--text-primary);
+}
+
+.game-description {
+    color: var(--text-secondary);
+}
+
+.game-category {
+    background: var(--glass-light);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+/* Tabs */
+.game-tabs {
+    background: var(--glass-light);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.tab-btn {
+    background: var(--glass-light);
+    color: var(--text-secondary);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.tab-btn:hover {
+    background: var(--glass-heavy);
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
+.light-mode .game-tabs {
+    background: var(--tertiary-bg);
+    border: 1px solid var(--border-color);
+}
+
+.light-mode .tab-btn {
+    background: var(--secondary-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.light-mode .tab-btn:hover {
+    background: var(--tertiary-bg);
+    color: var(--text-primary);
+}
+
+/* Tab Content */
+.tab-content {
+    background: var(--glass-light);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.light-mode .tab-content {
+    background: white;
+    border: 1px solid var(--border-color);
+}
+
+.tab-panel h3 {
+    color: var(--text-primary);
+}
+
+.tab-panel p {
+    color: var(--text-secondary);
+}
+
+/* Modals */
+.modal {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    transition: var(--theme-transition);
+}
+
+.modal-content {
+    background: var(--secondary-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    transition: var(--theme-transition);
+}
+
+.light-mode .modal-content {
+    background: white;
+    border: 1px solid var(--border-color);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-header h2 {
+    color: var(--text-primary);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--glass-border);
+}
+
+/* Mobile Menu */
+.mobile-menu-panel {
+    background: var(--secondary-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: var(--theme-transition);
+}
+
+.light-mode .mobile-menu-panel {
+    background: white;
+    border: 1px solid var(--border-color);
+}
+
+.mobile-utility-btn,
+.mobile-nav-item {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.mobile-utility-btn:hover,
+.mobile-nav-item:hover {
+    background: var(--glass-heavy);
+    transform: translateX(5px);
+}
+
+.light-mode .mobile-utility-btn,
+.light-mode .mobile-nav-item {
+    background: var(--tertiary-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.mobile-admin-btn {
+    background: rgba(244, 67, 54, 0.1);
+    color: rgba(244, 67, 54, 0.9);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+    transition: var(--theme-transition);
+}
+
+.hero-title {
+    color: var(--text-primary);
+    background: linear-gradient(45deg, var(--text-primary), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    color: var(--text-secondary);
+}
+
+.light-mode .hero {
+    background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+}
+
+/* Sections */
+.games-section,
+.about-section,
+.contact-section {
+    background: var(--primary-bg);
+    transition: var(--theme-transition);
+}
+
+.light-mode .games-section,
+.light-mode .about-section,
+.light-mode .contact-section {
+    background: var(--primary-bg);
+}
+
+.section-title {
+    color: var(--text-primary);
+}
+
+/* About Section */
+.about-text p {
+    color: var(--text-secondary);
+}
+
+.about-features li {
+    color: var(--text-primary);
+}
+
+.stat-item {
+    background: var(--glass-light);
+    border: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.light-mode .stat-item {
+    background: white;
+    border: 1px solid var(--border-color);
+}
+
+.stat-number {
+    color: var(--accent-color);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+/* Contact Section */
+.contact-info h3,
+.contact-form h3 {
+    color: var(--text-primary);
+}
+
+.contact-info p {
+    color: var(--text-secondary);
+}
+
+.contact-info a {
+    color: var(--accent-color);
+}
+
+/* Footer */
+.footer {
+    background: var(--secondary-bg);
+    border-top: 1px solid var(--glass-border);
+    transition: var(--theme-transition);
+}
+
+.light-mode .footer {
+    background: var(--secondary-bg);
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-section h4 {
+    color: var(--text-primary);
+}
+
+.footer-section p {
+    color: var(--text-secondary);
+}
+
+.footer-section ul li a {
+    color: var(--text-secondary);
+}
+
+.footer-section ul li a:hover {
+    color: var(--accent-color);
+}
+
+.social-link {
+    background: var(--glass-light);
+    color: var(--text-primary);
+    transition: var(--theme-transition);
+}
+
+.social-link:hover {
+    background: var(--accent-color);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--glass-border);
+}
+
+.footer-bottom p {
+    color: var(--text-secondary);
+}
+
+.footer-bottom a {
+    color: var(--accent-color);
+}
+
+/* Toast Notifications */
+.toast {
+    background: var(--secondary-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    transition: var(--theme-transition);
+}
+
+.toast.success {
+    background: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.toast.error {
+    background: var(--error-color);
+    border-color: var(--error-color);
+}
+
+.toast.info {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.light-mode .toast {
+    background: var(--secondary-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+/* Error Messages */
+.error-message {
+    color: var(--error-color);
+}
+
+/* Loading State */
+.loading {
+    color: var(--text-secondary);
+}
+
+/* No Results */
+.no-results {
+    color: var(--text-secondary);
+    background: var(--glass-light);
+    border: 1px solid var(--glass-border);
+}
+
+.light-mode .no-results {
+    background: var(--tertiary-bg);
+    border: 1px solid var(--border-color);
+}
+
+/* ============================================ */
+/* ENHANCED RESPONSIVE DESIGN */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    .modern-header {
+        background: rgba(13, 27, 42, 0.98);
+    }
+    
+    .light-mode .modern-header {
+        background: rgba(255, 255, 255, 0.98);
+    }
+}
+
+/* ============================================ */
+/* ACCESSIBILITY & PERFORMANCE */
+/* ============================================ */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    :root {
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    body.light-mode {
+        --glass-border: rgba(0, 0, 0, 0.3);
+        --border-color: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus Styles for Accessibility */
+.btn:focus,
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+.nav-link:focus,
+.tab-btn:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .modern-header,
+    .mobile-menu-panel,
+    .theme-toggle-btn,
+    .admin-btn,
+    .cart-btn {
+        display: none !important;
+    }
+}
